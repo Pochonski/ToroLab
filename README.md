@@ -35,8 +35,18 @@ En «Factores» se pueden seleccionar los puntos de la escena o sus botones con 
 
 El sitio contiene diez referencias enlazadas y modelos educativos de movimiento, estructura y cantidad por volumen. Las fotografías y los modelos generados con IA no son resultados de laboratorio ni tienen escala diagnóstica. No hay videos, descargas ficticias ni estadísticas inventadas. La tipografía puede descargarse desde Google Fonts; si no está disponible, se usan fuentes del dispositivo. Los enlaces bibliográficos abren las páginas externas solo al seleccionarlos.
 
-La publicación solicitada es privada mediante Sites. El acceso lo aplica el alojamiento; `noindex` es complementario y no sustituye la autenticación. No cambiar la audiencia a pública sin una nueva solicitud del propietario.
+La publicación en Vercel es pública por solicitud del propietario. El repositorio de GitHub conserva sus permisos independientes. La configuración anterior de Sites se conserva en `.openai/hosting.json`; no interviene en los despliegues de Vercel. La etiqueta `noindex` se mantiene para esta versión de revisión académica y no limita el acceso mediante enlace.
 
 ## Autoría académica
 
 Dikson Aarón Guzmán Sibaja y José Ángel Aguirre Reyes. Instituto Tecnológico de Costa Rica, Campus Local San Carlos. La identificación del proyecto no implica una aprobación institucional de la herramienta o de sus criterios.
+
+## Despliegue automático en Vercel
+
+Repositorio: https://github.com/Pochonski/calidad-seminal-bovina
+
+Proyecto Vercel: `calidad-seminal-bovina`, equipo `pochonskis-projects`. La rama de producción es `main` y la conexión nativa de GitHub inicia un despliegue con cada push. Las demás ramas generan vistas previas.
+
+`vercel.json` selecciona el proyecto estático, omite la instalación de dependencias y ejecuta `npm run check` antes de servir `dist/`. Si una comprobación falla, ese cambio no sustituye la versión publicada.
+
+Para publicar una actualización, revisar los cambios y usar `git add`, `git commit` y `git push origin main`. No se necesita ejecutar un despliegue manual ni guardar un token de Vercel en GitHub Actions. Los datos locales de Vercel y los archivos `.env` están excluidos del repositorio.

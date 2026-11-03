@@ -12,6 +12,7 @@ Desde esta carpeta, `npm run dev` inicia la web en http://127.0.0.1:4173. No req
 
 - `dist/index.html`, `styles.css`, `app.js`: estructura, diseño e interacción accesible.
 - `dist/content.js`: grupos, cuestionario, reglas educativas provisionales, fuentes y función de interpretación por condición.
+- `dist/factor-scenes.js`: cinco escenas vectoriales distintas con puntos seleccionables, explicaciones breves y acceso a la pregunta correspondiente de «Mi caso».
 - `docs/criterios-revision.md`: matriz completa para revisar con el docente, con límites y trazabilidad bibliográfica.
 - `docs/imagen-principal.md`: origen, prompt y uso de la imagen generada.
 - `tests/criteria.test.mjs`: escenarios de información desconocida, independencia de condiciones e integridad editorial.
@@ -22,6 +23,10 @@ Desde esta carpeta, `npm run dev` inicia la web en http://127.0.0.1:4173. No req
 Las respuestas se guardan en `sessionStorage`, solo en la pestaña de la visita, bajo `calidad-seminal-caso-v1`. No se transmiten a una API, no hay analítica ni formulario de datos personales. Recargar conserva la visita; cerrar la sesión de la pestaña termina su almacenamiento normal según el navegador. Las respuestas se validan contra las opciones reconocidas antes de restaurarlas.
 
 Los estados son `adequate`, `attention`, `priority`, `unknown` y `context`. No se suman, promedian ni producen una etiqueta global. Una respuesta desconocida o ausente siempre es `unknown`; edad y raza nunca generan calificaciones. Revisar los criterios con el docente antes de cualquier difusión pública.
+
+El cuestionario tiene 15 preguntas. La edad aproximada y el momento del periodo reproductivo se registran exclusivamente como contexto (azul); sus opciones desconocidas son información insuficiente (gris). Los rangos de edad son agrupaciones descriptivas y no umbrales clínicos. Las visitas que habían completado la versión de 13 preguntas conservan todas sus respuestas y se reanudan en el primer grupo con una pregunta nueva pendiente.
+
+En «Factores» se pueden seleccionar los puntos de la escena o sus botones con texto. La selección abre una explicación educativa y no registra respuestas. «Relacionarlo con mi caso» lleva al grupo correspondiente y enfoca la pregunta, sin seleccionar ninguna opción. El contenido se puede recorrer con teclado sin completar el caso.
 
 ## Recursos y acceso
 

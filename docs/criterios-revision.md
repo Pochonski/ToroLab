@@ -8,7 +8,7 @@ Esta matriz acompaña una herramienta de divulgación para productores ganaderos
 
 Cada condición se interpreta por separado. No hay suma, ponderación, promedio, clasificación general del reproductor, porcentaje de calidad seminal ni predicción de fertilidad. Todas las condiciones verdes significan solamente que **no se declara la situación concreta consultada**; no significan un toro sano, apto o fértil.
 
-Los estados de contexto no son una aprobación ni una advertencia clínica. Una evaluación previa o una monta completada no garantizan calidad seminal actual. Edad y raza no generan colores ni reglas automáticas.
+Los estados de contexto no son una aprobación ni una advertencia clínica. Una evaluación previa o una monta completada no garantizan calidad seminal actual. La edad y el momento del periodo reproductivo se registran como datos de contexto, sin calificación. La raza no genera reglas automáticas. Los rangos de edad «Menos de 2 años», «De 2 a 5 años» y «Más de 5 años» son una agrupación editorial; no proceden de umbrales de los artículos ni representan límites de madurez, aptitud o fertilidad.
 
 «Últimos dos meses» es un marco de observación elegido para ayudar a recordar antecedentes, **no un umbral diagnóstico, periodo universal de recuperación ni regla derivada de un estudio**. Los periodos biológicos citados por la literatura varían y requieren interpretación profesional. No se aplican temperaturas, proporciones toro:vacas, puntuaciones de condición corporal ni intervalos de repetición inventados.
 
@@ -22,6 +22,8 @@ Los estados de contexto no son una aprobación ni una advertencia clínica. Una 
 | unknown | ⚪ Información insuficiente | No hay información para interpretar esa condición. |
 | context | 🔵 Dato de contexto | Información que ayuda a planificar u observar; no se asigna valoración clínica. |
 
+Todas las respuestas conocidas de edad y periodo reproductivo tienen estado `context`; ninguna produce verde, amarillo o rojo. «No hay un periodo de monta definido» también es contexto, sin calificar la modalidad de manejo. «No sé» y las respuestas ausentes de estas preguntas conservan `unknown`.
+
 Cada pregunta tiene exactamente una opción «No sé» con valor `unknown` y estado `unknown`. Una respuesta ausente, no reconocida o sin contestar también devuelve `unknown`; nunca se convierte en verde. La opción «Aún no hay resultados del periodo» indica contexto de seguimiento, no una afirmación sobre el semen.
 
 ## Evidencia y decisiones editoriales
@@ -34,7 +36,7 @@ Cada pregunta tiene exactamente una opción «No sé» con valor `unknown` y est
 
 ## Matriz completa de respuestas
 
-Cada fila muestra el mensaje efectivo para esa opción. Las fuentes sostienen el contexto general; **la asignación del color/estado no está validada por esas publicaciones**.
+Cada fila muestra el mensaje efectivo para esa opción. Las fuentes sostienen el contexto general; **la asignación del color/estado no está validada por esas publicaciones**. Las dos preguntas de edad y periodo solo registran contexto; sus opciones conocidas no califican al reproductor.
 
 ### Ambiente
 
@@ -128,6 +130,17 @@ Observe desde una distancia segura. No intente manipular al toro para responder.
 
 ### El reproductor
 
+**¿Cuál es la edad aproximada del toro?** (`edad`)
+
+Los rangos solo describen la edad. No indican madurez, aptitud ni fertilidad.
+
+| Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
+| --- | --- | --- | --- | --- |
+| Menos de 2 años (`under2`) | 🔵 Dato de contexto | Se registra una edad aproximada menor de 2 años como dato de contexto. Este rango no determina madurez ni calidad seminal. | Conserve la fecha de nacimiento o la estimación disponible para compartirla durante la evaluación profesional. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Netherton et al., 2022](https://doi.org/10.1038/s41598-022-17708-9) |
+| De 2 a 5 años (`2to5`) | 🔵 Dato de contexto | Se registra una edad aproximada de 2 a 5 años como dato de contexto. Este rango no indica aptitud reproductiva ni fertilidad. | Conserve la fecha de nacimiento o la estimación disponible junto con los antecedentes individuales del toro. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Netherton et al., 2022](https://doi.org/10.1038/s41598-022-17708-9) |
+| Más de 5 años (`over5`) | 🔵 Dato de contexto | Se registra una edad aproximada mayor de 5 años como dato de contexto. Este rango no califica al reproductor ni informa sobre su semen. | Comparta la edad estimada y los antecedentes individuales con el profesional, sin deducir un resultado a partir de la edad. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Netherton et al., 2022](https://doi.org/10.1038/s41598-022-17708-9) |
+| No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Netherton et al., 2022](https://doi.org/10.1038/s41598-022-17708-9) |
+
 **¿Cuenta con una evaluación andrológica profesional para el periodo de monta actual o próximo?** (`evaluacion`)
 
 Una evaluación incluye más que mirar al toro o comprobar que monta.
@@ -151,6 +164,18 @@ Piense en indicaciones anteriores específicas de este toro; no en su edad o raz
 | No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
 
 ### Manejo reproductivo
+
+**¿En qué momento del periodo reproductivo se encuentra el toro?** (`periodo`)
+
+Esta respuesta describe el momento de manejo. Ninguna etapa determina por sí sola la calidad seminal.
+
+| Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
+| --- | --- | --- | --- | --- |
+| Antes de iniciar la monta (`before`) | 🔵 Dato de contexto | Se registra que el toro está antes del periodo de monta. Es un dato para situar las observaciones, sin calificar su estado reproductivo. | Anote el periodo previsto y comparta esa información junto con los antecedentes del toro durante la revisión profesional. | [Araya-Zúñiga et al., 2024](https://doi.org/10.3390/ani14010132); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| Durante la monta (`during`) | 🔵 Dato de contexto | Se registra que el toro está en monta. Esta etapa por sí sola no demuestra una alteración ni una condición favorable del semen. | Sitúe en este periodo los registros de manejo y las observaciones del reproductor, sin convertirlos en un diagnóstico. | [Araya-Zúñiga et al., 2024](https://doi.org/10.3390/ani14010132); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| Después de terminar la monta (`after`) | 🔵 Dato de contexto | Se registra que terminó el periodo de monta. Esto describe el manejo y no permite concluir cómo está el semen. | Conserve las fechas y observaciones del periodo para comentarlas con el profesional. | [Araya-Zúñiga et al., 2024](https://doi.org/10.3390/ani14010132); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| No hay un periodo de monta definido (`undefined`) | 🔵 Dato de contexto | Se registra que la finca no tiene un periodo de monta definido. Esta modalidad de manejo no genera una calificación del toro. | Describa cómo se organiza la monta en la finca y comparta ese contexto al revisar los antecedentes reproductivos. | [Araya-Zúñiga et al., 2024](https://doi.org/10.3390/ani14010132); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Araya-Zúñiga et al., 2024](https://doi.org/10.3390/ani14010132); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
 
 **¿Aumentó la demanda de monta sin revisar el plan de trabajo del toro?** (`demanda`)
 
@@ -215,7 +240,7 @@ Se conservaron las siete referencias del Word y se añadieron tres guías univer
 
 ## Revisión pendiente antes de presentar como contenido final
 
-1. Revisión docente de las 13 preguntas, su claridad para el público y cada nivel editorial propuesto.
+1. Revisión docente de las 15 preguntas, su claridad para el público y cada nivel editorial propuesto.
 2. Revisión por un profesional de andrología de las recomendaciones y del alcance del seguimiento sanitario.
 3. Confirmar que la interfaz muestra la explicación y recomendación de la opción seleccionada cuando existen; en su ausencia, usa las de la pregunta.
 4. Comprobar que resultados omitidos/desconocidos son grises con «Información insuficiente», y contexto se presenta como contexto, sin verde automático.

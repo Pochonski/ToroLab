@@ -1,4 +1,5 @@
 import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from './content.js';
+import { FACTOR_SCENES, sceneTopic, renderFactorScene, renderSceneDetail } from './factor-scenes.js';
 
 const main = document.querySelector('main');
 const nav = document.querySelector('#primary-nav');
@@ -46,11 +47,21 @@ function loadState() {
     for (const q of QUESTIONS) {
       if (q.options.some(o => o.value === saved.answers?.[q.id])) answers[q.id] = saved.answers[q.id];
     }
-    return { answers, step: Number.isInteger(saved.step) && saved.step >= 0 && saved.step < FACTORS.length ? saved.step : 0, completed: saved.completed === true && Object.keys(answers).length === QUESTIONS.length };
+    const completed = saved.completed === true && Object.keys(answers).length === QUESTIONS.length;
+    let step = Number.isInteger(saved.step) && saved.step >= 0 && saved.step < FACTORS.length ? saved.step : 0;
+    // Existing visits keep their answers. A previously complete case resumes at
+    // its first new question when the questionnaire gains contextual questions.
+    if (saved.completed === true && !completed) {
+      const missing = QUESTIONS.find(q => !answers[q.id]);
+      if (missing) step = Math.max(0, FACTORS.findIndex(f => f.id === missing.group));
+    }
+    return { answers, step, completed };
   } catch { return empty; }
 }
 let state = loadState();
 let activeFactor = 'ambiente';
+const sceneSelections = {};
+let pendingQuestionFocus = null;
 let movement = 'progressive';
 let density = 'less';
 let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -86,17 +97,12 @@ function homePage() {
   </section>`;
 }
 
-function farmIllustration(factor) {
-  return `<svg class="farm-illustration" viewBox="0 0 340 210" role="img" aria-label="Ilustración educativa de un toro, sombra, agua y pasto en una finca"><rect width="340" height="210" fill="#edf3e6"/><path d="M0 150Q70 110 150 142T340 128v82H0Z" fill="#dce7cc"/><path d="M0 180Q120 147 340 173v37H0Z" fill="#c7d9b3"/><circle cx="270" cy="42" r="21" fill="#e5cb82"/><g stroke="#e5cb82" stroke-width="2"><path d="M270 9V2m0 80v-8m33-32h9m-84 0h9m9-24-7-7m55 55 7 7m-7-55 7-7"/></g><path d="M59 139V71m-1 25-18-18m19 29 19-20" stroke="#6a7952" stroke-width="7" fill="none"/><path d="M24 71c-16-24 12-48 30-39 9-22 45-6 41 13 25 1 27 29 8 38-14 9-31 4-40-3-22 13-39 7-39-9Z" fill="#78985e"/><path d="M28 153h69" stroke="#afc69b" stroke-width="5" stroke-linecap="round"/><g fill="#315846"><path d="M127 113q7-17 28-15h43l15-14 17 7-4 20-12 8-9-4-3 23-7 22h-8l3-23-27 1-10 25h-9l5-28-16-8-2 32h-8l-3-41Z"/><path d="m207 87 1-11 8 9 10-5 2 9m-101 18-13 17 1 20-4 3-3-25 14-18"/></g><circle cx="221" cy="98" r="1.7" fill="#edf3e6"/><path d="M257 151h56l-7 24h-43Z" fill="#a5bca1" stroke="#6e8d75" stroke-width="2"/><path d="M261 154h48" stroke="#82acb4" stroke-width="6"/><path d="M282 147v-18h12v8" fill="none" stroke="#6e8d75" stroke-width="3"/><g stroke="#8baa69" stroke-width="2" fill="none"><path d="m94 190 3-10 4 8 5-12m117 19 2-13 4 9 6-11M15 193l3-11 5 8 5-14"/></g><text x="15" y="202" fill="#647951" font-family="Arial,sans-serif" font-size="7">REPRESENTACIÓN EDUCATIVA</text></svg>`;
-}
-
 function factorsPage() {
   const factor = FACTORS.find(f => f.id === activeFactor) || FACTORS[0];
-  const questions = groupQuestions(factor.id);
   return `<section class="container page">${breadcrumb('Factores')}${intro('Cinco grupos para explorar', 'Lo que rodea a tu toro también cuenta', 'Selecciona un grupo y descubre qué observar en tu finca. Puedes aprender a tu ritmo, sin completar el formulario.')}
     <div class="factor-layout"><nav class="factor-nav" aria-label="Grupos de factores">${FACTORS.map(f => `<button class="factor-tab" data-action="factor" data-value="${f.id}" aria-pressed="${f.id === factor.id}">${icon(f.icon)}<span>${esc(f.title)}</span><span class="tab-arrow" aria-hidden="true">→</span></button>`).join('')}</nav>
-      <article class="factor-content"><div class="factor-content-top"><div><p class="eyebrow">${String(FACTORS.indexOf(factor) + 1).padStart(2, '0')} · ${esc(factor.short)}</p><h2>${esc(factor.title)}</h2><p>${esc(factor.description)}</p></div>${farmIllustration(factor)}</div>
-      <div class="factor-body"><h3>Qué puedes observar</h3><ul class="factor-points">${questions.map(q => `<li>${icon('check')}<span>${esc(q.title)}</span></li>`).join('')}</ul>
+      <article class="factor-content"><div class="factor-content-top"><div><p class="eyebrow">${String(FACTORS.indexOf(factor) + 1).padStart(2, '0')} · ${esc(factor.short)}</p><h2>${esc(factor.title)}</h2><p>${esc(factor.description)}</p></div></div>
+      <div class="factor-body">${renderFactorScene(factor.id,sceneSelections[factor.id])}
         <details class="technical"><summary>¿Quieres saber más? · Nivel técnico</summary><p>${esc(factor.technical)}</p>${sourceLinks(factor.sourceIds)}</details>
         <div class="factor-cta"><p>Relaciona lo aprendido con las condiciones de tu propio reproductor.</p><button class="button" data-action="start-group" data-value="${factor.id}">Explorar este grupo ${icon('arrow')}</button></div>
       </div></article></div><p class="educational-note"><strong>Cada reproductor es diferente.</strong> La presencia de un factor no permite predecir por sí sola la calidad seminal de un toro. Las condiciones se interpretan dentro de una evaluación integral.</p>
@@ -112,7 +118,7 @@ function casePage() {
       <div class="progress" role="progressbar" aria-label="Avance por grupos" aria-valuenow="${state.step + 1}" aria-valuemin="1" aria-valuemax="${FACTORS.length}"><span style="width:${(state.step + 1) * 20}%"></span></div>
       <p class="case-description">${state.step === 0 ? 'Comencemos por el lugar donde permanece habitualmente. Selecciona una respuesta por pregunta.' : 'Selecciona una respuesta por pregunta. Puedes volver al grupo anterior sin perder lo que has respondido.'}</p><div class="form-error" id="form-error" role="alert"></div>
       ${questions.map(q => `<fieldset class="question"><legend><span class="question-number">${questionNumbers.get(q.id)}.</span>${esc(q.title)}</legend><p class="question-hint" id="hint-${q.id}">${esc(q.hint)}</p><div class="options">${q.options.map(o => `<label class="radio-option"><input type="radio" name="${q.id}" value="${o.value}" aria-describedby="hint-${q.id}" required ${state.answers[q.id] === o.value ? 'checked' : ''}><span>${esc(o.label)}</span></label>`).join('')}</div></fieldset>`).join('')}
-      <div class="form-actions">${state.step > 0 ? `<button type="button" class="button button-outline" data-action="previous">${icon('back')} Anterior</button>` : '<span>13 preguntas · 5 grupos</span>'}<button class="button" type="submit">${state.step === FACTORS.length - 1 ? 'Ver mis puntos' : 'Siguiente grupo'} ${icon('arrow')}</button></div>
+      <div class="form-actions">${state.step > 0 ? `<button type="button" class="button button-outline" data-action="previous">${icon('back')} Anterior</button>` : `<span>${QUESTIONS.length} preguntas · ${FACTORS.length} grupos</span>`}<button class="button" type="submit">${state.step === FACTORS.length - 1 ? 'Ver mis puntos' : 'Siguiente grupo'} ${icon('arrow')}</button></div>
     </form><p class="privacy-note">${icon('lock')} Tus respuestas se conservan solo en esta pestaña durante la visita. No se envían ni se piden datos personales.</p></div></div>
   </section>`;
 }
@@ -121,7 +127,7 @@ function resultsPage() {
   if (!answeredCount()) return `<section class="container page">${breadcrumb('Mis puntos')}${intro('Relaciona lo aprendido', 'Tus puntos de atención', 'Aquí podrás consultar las condiciones de tu caso, una por una.')}<div class="empty-state"><span class="icon-box">${icon('clipboard')}</span><h2>Comienza por conocer tu caso</h2><p>Responde sobre el ambiente, la nutrición, la salud y el manejo de tu toro. Después podrás explorar cada condición y su explicación.</p><a class="button" href="#mi-caso">Explorar mi caso ${icon('arrow')}</a><a class="text-link" href="#factores">Prefiero conocer primero los factores ${icon('arrow', true)}</a></div></section>`;
   const results = evaluateAnswers(state.answers);
   return `<section class="container page">${breadcrumb('Mis puntos')}<div class="page-toolbar">${intro('Una condición a la vez', 'Mis puntos de atención', 'Selecciona una condición para leer su explicación y qué puedes revisar. Estos resultados no califican al toro ni evalúan directamente su semen.')}<a class="button button-outline" href="#mi-caso">Modificar respuestas ${icon('arrow')}</a></div>
-    ${reviewNotice()}${!state.completed ? `<p class="educational-note" style="padding-top:0">Has respondido ${answeredCount()} de ${QUESTIONS.length} preguntas. Las condiciones sin respuesta aparecen como información insuficiente. <a class="text-link" href="#mi-caso">Continuar el caso</a>.</p>` : ''}
+    ${reviewNotice()}${!state.completed ? `<p class="educational-note" style="padding-top:0">Has respondido ${answeredCount()} de ${QUESTIONS.length} preguntas. Las condiciones sin respuesta aparecen como información insuficiente. <button class="text-link scene-case-link" data-action="resume-missing">Completar las preguntas pendientes</button>.</p>` : ''}
     <div class="result-legend" aria-label="Leyenda de los estados">${Object.keys(statusLabels).map(statusLabel).join('')}</div>
     ${FACTORS.map(factor => `<section class="result-group"><h2>${icon(factor.icon)}${esc(factor.title)}</h2>${results.filter(r => r.question.group === factor.id).map(({ question: q, answer, status }) => `<details class="result-card"><summary><div class="result-title"><strong>${esc(q.title)}</strong><p class="answer-line">Tu respuesta: ${esc(answer?.label || 'Sin responder')}</p></div>${statusLabel(status)}</summary><div class="result-detail"><h3>Qué significa esta condición</h3><p>${esc(answer?.explanation || (status === 'unknown' ? 'No hay información suficiente para interpretar esta condición. La ausencia de una respuesta no se considera una condición favorable.' : q.explanation))}</p><h3>Qué puedes revisar</h3><p>${esc(answer?.recommendation || (status === 'unknown' ? 'Puedes modificar la respuesta cuando dispongas de información. No es necesario adivinar; consulta tus registros o conversa con el profesional.' : q.recommendation))}</p>${sourceLinks(q.sourceIds)}</div></details>`).join('')}</section>`).join('')}
     <div class="result-footer"><p>Encontrar un punto de atención no demuestra una alteración seminal. Para conocer el estado del reproductor, se necesita una evaluación andrológica profesional.</p><a class="button" href="#evaluacion">¿Cómo se evalúa? ${icon('arrow')}</a></div>
@@ -182,6 +188,11 @@ function renderPage(focus = true) {
   });
   nav.classList.remove('is-open'); menu.setAttribute('aria-expanded','false');
   if (focus) { main.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }
+  if (route === 'mi-caso' && pendingQuestionFocus) {
+    const target = main.querySelector(`input[name="${pendingQuestionFocus}"]`);
+    pendingQuestionFocus = null;
+    if (target) { target.focus({preventScroll:true}); target.closest('.question').scrollIntoView({block:'center',behavior:'instant'}); }
+  }
 }
 function refreshKeepingFocus() {
   const activeId = document.activeElement?.id;
@@ -202,12 +213,28 @@ nav.addEventListener('click', event => {
 main.addEventListener('click', event => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
-  const { action, value } = button.dataset;
+  const { action, value, group } = button.dataset;
   if (action === 'factor') {
     activeFactor = value;
     history.replaceState(null, '', `#factores/${value}`);
     renderPage(false);
     main.querySelector(`[data-action="factor"][data-value="${value}"]`)?.focus({preventScroll:true});
+  } else if (action === 'scene-topic') {
+    if (!FACTOR_SCENES[group]?.topics.some(t => t.id === value)) return;
+    sceneSelections[group] = value;
+    const scene = main.querySelector('[data-interactive-scene]');
+    scene.querySelectorAll('[data-action="scene-topic"]').forEach(control => control.setAttribute('aria-pressed', String(control.dataset.value === value)));
+    scene.querySelectorAll('[data-scene-object]').forEach(object => object.classList.toggle('is-highlighted',object.dataset.sceneObject === value));
+    scene.querySelector('#scene-detail').innerHTML = renderSceneDetail(group,value);
+  } else if (action === 'start-topic') {
+    if (!FACTOR_SCENES[group]?.topics.some(t => t.id === value)) return;
+    state.step = Math.max(0,FACTORS.findIndex(f => f.id === group));
+    pendingQuestionFocus = sceneTopic(group,value).id;
+    saveState();location.hash = 'mi-caso';
+  } else if (action === 'resume-missing') {
+    const missing = QUESTIONS.find(q => !state.answers[q.id]);
+    if (missing) {state.step = Math.max(0,FACTORS.findIndex(f => f.id === missing.group));pendingQuestionFocus=missing.id;saveState();}
+    location.hash = 'mi-caso';
   } else if (action === 'start-group') {
     state.step = Math.max(0, FACTORS.findIndex(f => f.id === value));saveState();
     location.hash = 'mi-caso';

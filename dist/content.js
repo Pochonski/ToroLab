@@ -215,6 +215,19 @@ export const QUESTIONS = [
     sourceIds: ['mu2026', 'msu2019']
   },
   {
+    id: 'edad', group: 'reproductor', title: '¿Cuál es la edad aproximada del toro?',
+    hint: 'Los rangos solo describen la edad. No indican madurez, aptitud ni fertilidad.',
+    options: [
+      { value: 'under2', label: 'Menos de 2 años', status: 'context', explanation: 'Se registra una edad aproximada menor de 2 años como dato de contexto. Este rango no determina madurez ni calidad seminal.', recommendation: 'Conserve la fecha de nacimiento o la estimación disponible para compartirla durante la evaluación profesional.' },
+      { value: '2to5', label: 'De 2 a 5 años', status: 'context', explanation: 'Se registra una edad aproximada de 2 a 5 años como dato de contexto. Este rango no indica aptitud reproductiva ni fertilidad.', recommendation: 'Conserve la fecha de nacimiento o la estimación disponible junto con los antecedentes individuales del toro.' },
+      { value: 'over5', label: 'Más de 5 años', status: 'context', explanation: 'Se registra una edad aproximada mayor de 5 años como dato de contexto. Este rango no califica al reproductor ni informa sobre su semen.', recommendation: 'Comparta la edad estimada y los antecedentes individuales con el profesional, sin deducir un resultado a partir de la edad.' },
+      unknownOption()
+    ],
+    explanation: 'La edad describe al reproductor. Las agrupaciones de esta pregunta son una decisión editorial, no puntos de corte derivados de los artículos ni criterios de diagnóstico.',
+    recommendation: 'Registre la edad conocida o aproximada como parte de la historia individual; no la use para concluir si el toro es fértil o infértil.',
+    sourceIds: ['msu2019', 'mu2026', 'netherton2022']
+  },
+  {
     id: 'evaluacion', group: 'reproductor', title: '¿Cuenta con una evaluación andrológica profesional para el periodo de monta actual o próximo?',
     hint: 'Una evaluación incluye más que mirar al toro o comprobar que monta.',
     options: [
@@ -239,6 +252,20 @@ export const QUESTIONS = [
     explanation: 'Existe un seguimiento profesional sin completar. La herramienta no reinterpreta el hallazgo ni reemplaza la prueba solicitada.',
     recommendation: 'Retome con el profesional la recomendación pendiente y acuerde cómo completarla.',
     sourceIds: ['msu2019']
+  },
+  {
+    id: 'periodo', group: 'manejo', title: '¿En qué momento del periodo reproductivo se encuentra el toro?',
+    hint: 'Esta respuesta describe el momento de manejo. Ninguna etapa determina por sí sola la calidad seminal.',
+    options: [
+      { value: 'before', label: 'Antes de iniciar la monta', status: 'context', explanation: 'Se registra que el toro está antes del periodo de monta. Es un dato para situar las observaciones, sin calificar su estado reproductivo.', recommendation: 'Anote el periodo previsto y comparta esa información junto con los antecedentes del toro durante la revisión profesional.' },
+      { value: 'during', label: 'Durante la monta', status: 'context', explanation: 'Se registra que el toro está en monta. Esta etapa por sí sola no demuestra una alteración ni una condición favorable del semen.', recommendation: 'Sitúe en este periodo los registros de manejo y las observaciones del reproductor, sin convertirlos en un diagnóstico.' },
+      { value: 'after', label: 'Después de terminar la monta', status: 'context', explanation: 'Se registra que terminó el periodo de monta. Esto describe el manejo y no permite concluir cómo está el semen.', recommendation: 'Conserve las fechas y observaciones del periodo para comentarlas con el profesional.' },
+      { value: 'undefined', label: 'No hay un periodo de monta definido', status: 'context', explanation: 'Se registra que la finca no tiene un periodo de monta definido. Esta modalidad de manejo no genera una calificación del toro.', recommendation: 'Describa cómo se organiza la monta en la finca y comparta ese contexto al revisar los antecedentes reproductivos.' },
+      unknownOption()
+    ],
+    explanation: 'El momento del periodo reproductivo ayuda a ubicar la historia y las observaciones del animal. Se registra como contexto, sin asignar calidad seminal ni aptitud.',
+    recommendation: 'Guarde las fechas o la modalidad de manejo conocidas y consúltelas junto con los demás antecedentes individuales.',
+    sourceIds: ['araya2024', 'unl2021']
   },
   {
     id: 'demanda', group: 'manejo', title: '¿Aumentó la demanda de monta sin revisar el plan de trabajo del toro?',

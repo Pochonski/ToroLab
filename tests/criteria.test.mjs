@@ -5,7 +5,7 @@ import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from '../dist/content.js
 
 test('A case with missing or unrecognized answers never becomes favorable', () => {
   const empty = evaluateAnswers({});
-  assert.equal(empty.length, 13);
+  assert.equal(empty.length, 15);
   assert.ok(empty.every(r => r.status === 'unknown' && r.answer === null));
   const unrecognized = Object.fromEntries(QUESTIONS.map(q => [q.id, 'not-a-valid-answer']));
   assert.ok(evaluateAnswers(unrecognized).every(r => r.status === 'unknown'));
@@ -37,7 +37,31 @@ test('An individual priority never changes other conditions or produces a global
 test('Prior examinations and periods without mating remain contextual', () => {
   const results = evaluateAnswers({ evaluacion: 'yes', monta: 'inactive', demanda: 'planned' });
   for (const id of ['evaluacion','monta','demanda']) assert.equal(results.find(r => r.question.id === id).status, 'context');
-  assert.ok(!QUESTIONS.some(q => ['edad','raza'].includes(q.id)));
+  assert.ok(!QUESTIONS.some(q => q.id === 'raza'));
+});
+
+test('Age ranges and every reproductive period are descriptive context, never fertility classifications', () => {
+  for (const id of ['edad','periodo']) {
+    const q = QUESTIONS.find(q => q.id === id);
+    assert.ok(q, `Missing contextual question ${id}`);
+    for (const option of q.options) {
+      const result = evaluateAnswers({[id]:option.value}).find(r => r.question.id === id);
+      assert.equal(result.status, option.value === 'unknown' ? 'unknown' : 'context');
+    }
+    assert.equal(evaluateAnswers({}).find(r=>r.question.id === id).status,'unknown');
+  }
+});
+
+test('Older cases retain their individual results while the two newly introduced questions remain unknown', () => {
+  const oldAnswers = Object.fromEntries(QUESTIONS.filter(q=>!['edad','periodo'].includes(q.id)).map(q=>[q.id,q.options[0].value]));
+  const oldResults = evaluateAnswers(oldAnswers);
+  for (const result of oldResults) assert.equal(result.status, ['edad','periodo'].includes(result.question.id) ? 'unknown' : result.question.options[0].status);
+  for (const period of QUESTIONS.find(q=>q.id === 'periodo').options) {
+    const changed = evaluateAnswers({...oldAnswers,edad:'under2',periodo:period.value});
+    for (const oldResult of oldResults.filter(r=>!['edad','periodo'].includes(r.question.id))) {
+      assert.equal(changed.find(r=>r.question.id === oldResult.question.id).status,oldResult.status);
+    }
+  }
 });
 
 test('All five groups and every published option have traceable explanations and sources', () => {

@@ -43,6 +43,8 @@ Dikson Aarón Guzmán Sibaja y José Ángel Aguirre Reyes. Instituto Tecnológic
 
 ## Despliegue automático en Vercel
 
+Web pública: https://calidad-seminal-bovina.vercel.app
+
 Repositorio: https://github.com/Pochonski/calidad-seminal-bovina
 
 Proyecto Vercel: `calidad-seminal-bovina`, equipo `pochonskis-projects`. La rama de producción es `main` y la conexión nativa de GitHub inicia un despliegue con cada push. Las demás ramas generan vistas previas.

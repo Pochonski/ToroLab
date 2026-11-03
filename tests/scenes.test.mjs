@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { FACTORS, QUESTIONS } from '../dist/content.js';
 import { FACTOR_SCENES, sceneTopic, renderFactorScene, renderSceneDetail } from '../dist/factor-scenes.js';
 
@@ -14,7 +15,13 @@ test('Every factor has a distinct scene and each interactive topic links to a qu
       assert.ok(QUESTIONS.some(q=>q.id === topic.id && q.group === factor.id),`${factor.id}/${topic.id}`);
       assert.ok(topic.x >= 7 && topic.x <= 93 && topic.y >= 13 && topic.y <= 82);
     }
-    images.add(renderFactorScene(factor.id).match(/<svg[\s\S]*?<\/svg>/)[0]);
+    const rendered = renderFactorScene(factor.id);
+    const photo = rendered.match(/<img[^>]*src="([^"]+)"/)[1];
+    images.add(photo);
+    assert.ok(existsSync(new URL(`../dist/${photo}`,import.meta.url)));
+    assert.ok(existsSync(new URL(`../dist/assets/premium/${factor.id}-960.webp`,import.meta.url)));
+    assert.ok(existsSync(new URL(`../dist/assets/premium/${factor.id}-480.webp`,import.meta.url)));
+    assert.match(rendered,/generada con IA/);
   }
   assert.equal(images.size,5);
 });

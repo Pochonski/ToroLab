@@ -10,9 +10,12 @@ Desde esta carpeta, `npm run dev` inicia la web en http://127.0.0.1:4173. No req
 
 ## Organización
 
-- `dist/index.html`, `styles.css`, `app.js`: estructura, diseño e interacción accesible.
+- `dist/index.html`, `styles.css`, `premium.css`, `app.js`: estructura, diseño e interacción accesible.
 - `dist/content.js`: grupos, cuestionario, reglas educativas provisionales, fuentes y función de interpretación por condición.
-- `dist/factor-scenes.js`: cinco escenas vectoriales distintas con puntos seleccionables, explicaciones breves y acceso a la pregunta correspondiente de «Mi caso».
+- `dist/factor-scenes.js`: cinco escenas fotográficas generadas con IA con puntos seleccionables, explicaciones breves y acceso a la pregunta correspondiente de «Mi caso».
+- `dist/science-visuals.js`: modelo celular generado con IA, selección de partes y comparaciones de movimiento y cantidad, sin escala diagnóstica.
+- `dist/assets/premium/`: siete imágenes nuevas con variantes WebP para móvil; la célula conserva transparencia.
+- `docs/fotografias-premium.md` y `docs/imagenes-cientificas-premium.md`: prompts completos, procedencia y uso de las nuevas imágenes.
 - `docs/criterios-revision.md`: matriz completa para revisar con el docente, con límites y trazabilidad bibliográfica.
 - `docs/imagen-principal.md`: origen, prompt y uso de la imagen generada.
 - `tests/criteria.test.mjs`: escenarios de información desconocida, independencia de condiciones e integridad editorial.
@@ -30,7 +33,7 @@ En «Factores» se pueden seleccionar los puntos de la escena o sus botones con 
 
 ## Recursos y acceso
 
-El sitio contiene diez referencias enlazadas y esquemas educativos de movimiento, estructura y cantidad por volumen. Las ilustraciones no son resultados de laboratorio ni tienen escala diagnóstica. No hay videos, descargas ficticias ni estadísticas inventadas. La tipografía puede descargarse desde Google Fonts; si no está disponible, se usan fuentes del dispositivo. Los enlaces bibliográficos abren las páginas externas solo al seleccionarlos.
+El sitio contiene diez referencias enlazadas y modelos educativos de movimiento, estructura y cantidad por volumen. Las fotografías y los modelos generados con IA no son resultados de laboratorio ni tienen escala diagnóstica. No hay videos, descargas ficticias ni estadísticas inventadas. La tipografía puede descargarse desde Google Fonts; si no está disponible, se usan fuentes del dispositivo. Los enlaces bibliográficos abren las páginas externas solo al seleccionarlos.
 
 La publicación solicitada es privada mediante Sites. El acceso lo aplica el alojamiento; `noindex` es complementario y no sustituye la autenticación. No cambiar la audiencia a pública sin una nueva solicitud del propietario.
 

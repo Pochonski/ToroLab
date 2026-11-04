@@ -54,6 +54,21 @@ export function sceneTopic(group, id) {
   return scene?.topics.find(t => t.id === id) || scene?.topics[0];
 }
 
+// Portadas de identidad visual. Las escenas interactivas conservan sus fotografías
+// de contexto para que los puntos sigan correspondiendo con lo que se observa.
+const COVER_ALTS = {
+  ambiente: 'Árbol de sombra y agua en un potrero tropical. Portada generada con IA.',
+  nutricion: 'Manos con forraje fresco junto a un comedero. Portada generada con IA.',
+  salud: 'Guantes y estetoscopio de atención veterinaria. Portada generada con IA.',
+  reproductor: 'Retrato cercano de un toro de pelaje gris. Portada generada con IA.',
+  manejo: 'Grupo de bovinos en potreros organizados por cercas. Portada generada con IA.'
+};
+
+export function factorCover(group, {className='', sizes='64px', decorative=false} = {}) {
+  if (!Object.hasOwn(COVER_ALTS,group)) return '';
+  return `<img class="${esc(className)}" src="./assets/portadas/${group}.webp" srcset="./assets/portadas/${group}-480.webp 480w, ./assets/portadas/${group}.webp 960w" sizes="${esc(sizes)}" alt="${decorative ? '' : esc(COVER_ALTS[group])}" width="960" height="960" loading="lazy" decoding="async">`;
+}
+
 export function factorPhoto(group, {className='', sizes='(max-width: 700px) 90vw, 600px', loading='lazy', decorative=false} = {}) {
   const scene = FACTOR_SCENES[group];
   if (!scene) return '';

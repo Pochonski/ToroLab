@@ -14,6 +14,7 @@ Desde esta carpeta, `npm run dev` inicia la web en http://127.0.0.1:4173. No req
 - `dist/content.js`: grupos, cuestionario, reglas educativas provisionales, fuentes y función de interpretación por condición.
 - `dist/factor-scenes.js`: cinco escenas fotográficas generadas con IA con puntos seleccionables, explicaciones breves y acceso a la pregunta correspondiente de «Mi caso».
 - `dist/science-visuals.js`: modelo celular generado con IA, selección de partes y comparaciones de movimiento y cantidad, sin escala diagnóstica.
+- `dist/assets/portadas/`: cinco portadas temáticas distintas para tarjetas, selector de categorías y encabezados de resultados; ver `docs/portadas-factores.md`.
 - `dist/assets/premium/`: siete imágenes nuevas con variantes WebP para móvil; la célula conserva transparencia.
 - `docs/fotografias-premium.md` y `docs/imagenes-cientificas-premium.md`: prompts completos, procedencia y uso de las nuevas imágenes.
 - `docs/criterios-revision.md`: matriz completa para revisar con el docente, con límites y trazabilidad bibliográfica.

@@ -66,6 +66,7 @@ h3, h4 { letter-spacing: -.025em; }
 .factor-preview h3 { color: #fff; font-size: 17px; font-weight: 650; max-width: 170px; line-height: 1.4; margin-bottom: 7px; }
 .factor-preview p { color: #e3e9d9; font-size: 11px; max-width: 155px; line-height: 1.6; }
 .factor-preview .card-arrow { color: #fff; bottom: 13px; right: 17px; }
+.cover-credit { margin: 12px 0 0; font-size: 10px; color: var(--muted); }
 .lab-feature { display: grid; grid-template-columns: .9fr 1.1fr; border: 1px solid #e2e3d5; border-radius: 20px; overflow: hidden; background: #efefe4; margin-top: 70px; min-height: 375px; }
 .lab-feature-copy { padding: 48px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
 .lab-feature h2 { font-size: 38px; line-height: 1.2; }

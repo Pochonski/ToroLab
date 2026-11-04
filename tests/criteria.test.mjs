@@ -5,7 +5,7 @@ import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from '../dist/content.js
 
 test('A case with missing or unrecognized answers never becomes favorable', () => {
   const empty = evaluateAnswers({});
-  assert.equal(empty.length, 19);
+  assert.equal(empty.length, 18);
   assert.ok(empty.every(r => r.status === 'unknown' && r.answer === null));
   const unrecognized = Object.fromEntries(QUESTIONS.map(q => [q.id, 'not-a-valid-answer']));
   assert.ok(evaluateAnswers(unrecognized).every(r => r.status === 'unknown'));
@@ -64,14 +64,15 @@ test('Older cases retain their individual results while the two newly introduced
   }
 });
 
-test('The five health questions preserve prior answers and leave new conditions unknown in older visits', () => {
+test('The four health questions preserve prior answers and leave new conditions unknown in older visits', () => {
   const health = QUESTIONS.filter(q => q.group === 'salud');
-  assert.equal(health.length, 5);
+  assert.equal(health.length, 4);
   assert.equal(health[0].id, 'fiebre');
   assert.ok(!health[0].title.includes('fiebre medida'));
-  assert.equal(health[4].id, 'vacunas');
+  assert.equal(health[3].id, 'registro-vacunas');
   assert.ok(!QUESTIONS.some(q => q.id === 'plan-sanitario'));
-  const newIds = ['zona-reproductiva', 'vision', 'vacunas', 'hijas'];
+  assert.ok(!QUESTIONS.some(q => q.id === 'vision' || q.id === 'vacunas'));
+  const newIds = ['zona-reproductiva', 'registro-vacunas', 'hijas'];
   const previousAnswers = Object.fromEntries(QUESTIONS.filter(q => !newIds.includes(q.id)).map(q => [q.id, q.options[0].value]));
   const results = evaluateAnswers(previousAnswers);
   for (const result of results) {
@@ -79,10 +80,13 @@ test('The five health questions preserve prior answers and leave new conditions 
   }
 });
 
-test('Vaccination and father–daughter mating remain separate management conditions, not semen conclusions', () => {
+test('Vaccination records and father–daughter mating remain separate management conditions, not semen conclusions', () => {
   assert.equal(QUESTIONS.filter(q => q.group === 'manejo').length, 5);
-  const results = evaluateAnswers({ vacunas: 'yes', hijas: 'yes' });
-  assert.equal(results.find(r => r.question.id === 'vacunas').status, 'context');
+  const results = evaluateAnswers({ 'registro-vacunas': 'yes', hijas: 'yes' });
+  assert.equal(results.find(r => r.question.id === 'registro-vacunas').status, 'context');
+  assert.equal(evaluateAnswers({'registro-vacunas':'no'}).find(r => r.question.id === 'registro-vacunas').status, 'attention');
+  assert.equal(evaluateAnswers({vacunas:'yes'}).find(r => r.question.id === 'registro-vacunas').status, 'unknown');
+  assert.match(results.find(r => r.question.id === 'registro-vacunas').answer.explanation, /no confirma que el toro esté protegido/);
   assert.equal(results.find(r => r.question.id === 'hijas').status, 'attention');
   assert.match(results.find(r => r.question.id === 'hijas').question.explanation, /no demuestra un problema de calidad seminal/);
   assert.equal(evaluateAnswers({hijas:'unknown'}).find(r => r.question.id === 'hijas').status, 'unknown');
@@ -91,7 +95,7 @@ test('Vaccination and father–daughter mating remain separate management condit
 test('The increased-cow question uses the requested wording and retains independent criteria', () => {
   const q = QUESTIONS.find(q => q.id === 'cantidad-vacas');
   assert.equal(q.title, '¿Se ha aumentado la cantidad de vacas que debe cubrir el toro reproductor sin evaluar si tiene la capacidad para hacerlo?');
-  assert.equal(QUESTIONS.indexOf(q) + 1, 16);
+  assert.equal(QUESTIONS.indexOf(q) + 1, 15);
   assert.equal(evaluateAnswers({'cantidad-vacas':'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'attention');
   assert.equal(evaluateAnswers({'cantidad-vacas':'unknown'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');
   assert.equal(evaluateAnswers({demanda:'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');

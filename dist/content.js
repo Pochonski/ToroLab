@@ -111,9 +111,9 @@ export const FACTORS = [
   },
   {
     id: 'salud', icon: 'heart', title: 'Salud',
-    short: 'Antecedentes, signos y vacunas',
-    description: 'Los antecedentes de fiebre o enfermedad, el movimiento, los ojos, los cambios visibles en la zona reproductiva y las vacunas son información útil para el profesional. Observar al toro por fuera no reemplaza el examen.',
-    technical: 'La evaluación andrológica integra antecedentes, estado físico y aparato reproductor, junto con el análisis seminal cuando corresponde. Enfermedad y fiebre pueden relacionarse con cambios en el semen; lesiones y problemas de visión pueden dificultar el desplazamiento o la monta. Las vacunas necesarias dependen del riesgo y del programa acordado con el veterinario para cada finca.',
+    short: 'Antecedentes, signos y registros',
+    description: 'Los antecedentes de fiebre o enfermedad, el movimiento, los cambios visibles en la zona reproductiva y el registro de vacunas son información útil para el profesional. Observar al toro por fuera no reemplaza el examen.',
+    technical: 'La evaluación andrológica integra antecedentes, estado físico y aparato reproductor, junto con el análisis seminal cuando corresponde. Enfermedad y fiebre pueden relacionarse con cambios en el semen; las lesiones pueden dificultar el desplazamiento o la monta. El registro permite revisar las vacunas indicadas para este toro según el programa acordado con el veterinario.',
     sourceIds: ['mu2026', 'msu2019', 'muVacc2025']
   },
   {
@@ -248,27 +248,15 @@ export const QUESTIONS = [
     sourceIds: ['msu2019', 'unl2021']
   },
   {
-    id: 'vision', group: 'salud', title: '¿Ha notado dificultad para ver o alguna lesión visible en los ojos del toro?',
-    hint: 'Por ejemplo, si tropieza o presenta un cambio visible en los ojos. Observe desde una distancia segura.',
+    id: 'registro-vacunas', group: 'salud', title: '¿El toro cuenta con su registro de vacunas completo?',
+    hint: 'Revise si el registro permite comprobar las vacunas indicadas para este toro por el veterinario, con sus fechas. Un registro completo no prueba por sí solo que la protección esté vigente.',
     options: [
-      { value: 'yes', label: 'Sí, he observado esa dificultad o lesión', status: 'attention' },
-      { value: 'no', label: 'No he observado dificultad ni lesión', status: 'adequate', explanation: 'No se declara un problema visible de visión. Esto no sustituye el examen físico ni informa sobre el semen.', recommendation: 'Mantenga la observación y comente cualquier cambio al profesional.' },
+      { value: 'yes', label: 'Sí, el registro está completo', status: 'context', explanation: 'Se declara que existe un registro completo de vacunas. Esto documenta el manejo sanitario; no confirma que el toro esté protegido ni informa sobre su semen.', recommendation: 'Conserve el registro y revise con el veterinario si las vacunas indicadas están vigentes.' },
+      { value: 'no', label: 'No, está incompleto o no existe', status: 'attention' },
       unknownOption()
     ],
-    explanation: 'La visión ayuda al toro a desplazarse y a encontrar las vacas. Una dificultad observada requiere revisión, pero no permite inferir la calidad de su semen.',
-    recommendation: 'Comente la observación con el veterinario para que valore los ojos y la capacidad de desplazamiento.',
-    sourceIds: ['msu2019', 'mu2026']
-  },
-  {
-    id: 'vacunas', group: 'salud', title: '¿El toro cuenta con todas sus vacunas?',
-    hint: '«Todas» se refiere a las vacunas indicadas por el veterinario para este toro y esta finca; no existe una lista universal.',
-    options: [
-      { value: 'yes', label: 'Sí, están al día según el plan veterinario', status: 'context', explanation: 'Se declara que recibió las vacunas indicadas para este toro. Es un dato de manejo; no confirma ausencia de enfermedad ni calidad seminal normal.', recommendation: 'Conserve el registro de vacunación y revise con el veterinario las próximas fechas.' },
-      { value: 'no', label: 'No, hay vacunas indicadas pendientes', status: 'attention' },
-      unknownOption()
-    ],
-    explanation: 'Una vacuna indicada pendiente es un punto de manejo sanitario para revisar. No demuestra una alteración del semen ni permite juzgar la protección del animal.',
-    recommendation: 'Revise el registro con el veterinario y acuerde qué vacunas corresponden, sin aplicar un calendario universal.',
+    explanation: 'Un registro incompleto dificulta comprobar los antecedentes de vacunación. No demuestra que falte una vacuna, que el toro esté desprotegido o que su semen esté alterado.',
+    recommendation: 'Reúna las fechas y comprobantes disponibles y revise con el veterinario qué vacunas y registros corresponden a este toro.',
     sourceIds: ['muVacc2025', 'unl2021']
   },
   {

@@ -31,7 +31,7 @@ Cada pregunta tiene exactamente una opción «No sé» con valor `unknown` y est
 - **Calor:** Netherton et al. observaron variación estacional y respuestas individuales diferentes; no permiten transferir una clasificación por raza o una respuesta promedio a un toro particular.
 - **Nutrición:** Harrison et al. estudiaron 11 toros Angus. La morfología varió y no detectaron un efecto significativo sobre motilidad. No es correcto afirmar que su estudio demuestra que toda dieta o pérdida de condición reduce la motilidad.
 - **Monta y CASA:** Araya-Zúñiga et al. observaron variaciones en variables cinemáticas y morfométricas a lo largo del periodo de monta. El estudio no demuestra que estar en monta o tener mayor actividad signifique siempre deterioro seminal.
-- **Salud y examen:** las guías universitarias originales de Missouri, Montana y Nebraska sustentan registrar enfermedad, lesiones, capacidad de monta y antecedentes, y realizar una evaluación profesional. Montana describe además la observación de ojos y zona reproductiva. La guía de vacunación de Missouri explica que las vacunas para toros dependen del programa acordado con el veterinario. La elección amarillo/rojo sigue siendo editorial.
+- **Salud y examen:** las guías universitarias originales de Missouri, Montana y Nebraska sustentan registrar enfermedad, lesiones, capacidad de monta y antecedentes, y realizar una evaluación profesional. Montana describe además la observación de la zona reproductiva. La guía de vacunación de Missouri explica que las vacunas para toros dependen del programa acordado con el veterinario. La elección amarillo/rojo sigue siendo editorial.
 - **Parentesco en el manejo:** la guía genética de Missouri describe el cruce padre–hija como consanguinidad y sus posibles efectos sobre la descendencia. Este dato no permite concluir nada sobre el semen del toro. Las fuentes de vacunación y consanguinidad amplían la bibliografía del Word para atender las preguntas añadidas.
 - **Bibliografía del Word:** Morrell es una revisión; Valverde es divulgación y Vergel-Martínez es trabajo de grado. Se identifican como tales y no se presentan como validaciones de este instrumento. Sevilla et al. estudia morfometría en semen descongelado y no autoriza predecir fertilidad individual por subespecie.
 
@@ -139,24 +139,14 @@ Observe desde una distancia segura; no toque ni examine al toro para responder.
 | No he observado esos cambios (`no`) | 🟢 Adecuada según lo declarado | No se declaran cambios visibles en estas zonas. Eso no descarta alteraciones que solo detecta un examen profesional ni demuestra calidad seminal normal. | Continúe observando de forma segura y comunique cualquier cambio al veterinario. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
 | No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
 
-**¿Ha notado dificultad para ver o alguna lesión visible en los ojos del toro?** (`vision`)
+**¿El toro cuenta con su registro de vacunas completo?** (`registro-vacunas`)
 
-Por ejemplo, si tropieza o presenta un cambio visible en los ojos. Observe desde una distancia segura.
-
-| Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
-| --- | --- | --- | --- | --- |
-| Sí, he observado esa dificultad o lesión (`yes`) | 🟡 Merece atención | La visión ayuda al toro a desplazarse y a encontrar las vacas. Una dificultad observada requiere revisión, pero no permite inferir la calidad de su semen. | Comente la observación con el veterinario para que valore los ojos y la capacidad de desplazamiento. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011) |
-| No he observado dificultad ni lesión (`no`) | 🟢 Adecuada según lo declarado | No se declara un problema visible de visión. Esto no sustituye el examen físico ni informa sobre el semen. | Mantenga la observación y comente cualquier cambio al profesional. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011) |
-| No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011) |
-
-**¿El toro cuenta con todas sus vacunas?** (`vacunas`)
-
-«Todas» se refiere a las vacunas indicadas por el veterinario para este toro y esta finca; no existe una lista universal.
+Revise si el registro permite comprobar las vacunas indicadas para este toro por el veterinario, con sus fechas. Un registro completo no prueba por sí solo que la protección esté vigente.
 
 | Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
 | --- | --- | --- | --- | --- |
-| Sí, están al día según el plan veterinario (`yes`) | 🔵 Dato de contexto | Se declara que recibió las vacunas indicadas para este toro. Es un dato de manejo; no confirma ausencia de enfermedad ni calidad seminal normal. | Conserve el registro de vacunación y revise con el veterinario las próximas fechas. | [Payne y Morris, 2025 · Missouri](https://extension.missouri.edu/publications/g2104); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
-| No, hay vacunas indicadas pendientes (`no`) | 🟡 Merece atención | Una vacuna indicada pendiente es un punto de manejo sanitario para revisar. No demuestra una alteración del semen ni permite juzgar la protección del animal. | Revise el registro con el veterinario y acuerde qué vacunas corresponden, sin aplicar un calendario universal. | [Payne y Morris, 2025 · Missouri](https://extension.missouri.edu/publications/g2104); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| Sí, el registro está completo (`yes`) | 🔵 Dato de contexto | Se declara que existe un registro completo de vacunas. Esto documenta el manejo sanitario; no confirma que el toro esté protegido ni informa sobre su semen. | Conserve el registro y revise con el veterinario si las vacunas indicadas están vigentes. | [Payne y Morris, 2025 · Missouri](https://extension.missouri.edu/publications/g2104); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| No, está incompleto o no existe (`no`) | 🟡 Merece atención | Un registro incompleto dificulta comprobar los antecedentes de vacunación. No demuestra que falte una vacuna, que el toro esté desprotegido o que su semen esté alterado. | Reúna las fechas y comprobantes disponibles y revise con el veterinario qué vacunas y registros corresponden a este toro. | [Payne y Morris, 2025 · Missouri](https://extension.missouri.edu/publications/g2104); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
 | No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Payne y Morris, 2025 · Missouri](https://extension.missouri.edu/publications/g2104); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
 
 ### El reproductor
@@ -285,7 +275,7 @@ Se conservaron las siete referencias del Word y se añadieron cinco guías unive
 
 ## Revisión pendiente antes de presentar como contenido final
 
-1. Revisión docente de las 19 preguntas, su claridad para el público y cada nivel editorial propuesto.
+1. Revisión docente de las 18 preguntas, su claridad para el público y cada nivel editorial propuesto.
 2. Revisión por un profesional de andrología de las recomendaciones y del alcance del seguimiento sanitario.
 3. Confirmar que la interfaz muestra la explicación y recomendación de la opción seleccionada cuando existen; en su ausencia, usa las de la pregunta.
 4. Comprobar que resultados omitidos/desconocidos son grises con «Información insuficiente», y contexto se presenta como contexto, sin verde automático.

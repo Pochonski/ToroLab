@@ -61,6 +61,7 @@ function loadState() {
   } catch { return empty; }
 }
 let state = loadState();
+let caseResetNotice = false;
 let activeFactor = 'ambiente';
 const sceneSelections = {};
 let pendingQuestionFocus = null;
@@ -116,14 +117,17 @@ function factorsPage() {
 function casePage() {
   const factor = FACTORS[state.step];
   const questions = groupQuestions(factor.id);
+  const resetNotice = caseResetNotice ? '<p class="case-reset-notice" role="status" tabindex="-1">Respuestas eliminadas. Volviste al paso 1.</p>' : '';
+  caseResetNotice = false;
   return `<section class="container page">${breadcrumb('Mi caso')}${intro('Tu toro, tu finca', 'Exploremos las condiciones de tu reproductor', 'Responde según lo que conoces. Si no tienes un dato, elige «No sé». Cada condición se interpretará por separado.')}
+    ${resetNotice}
     <div class="case-layout"><aside><ol class="step-list" aria-label="Pasos del formulario">${FACTORS.map((f, i) => `<li class="${i === state.step ? 'current' : groupComplete(f.id) ? 'done' : ''}"${i === state.step ? ' aria-current="step"' : ''}><span class="step-number">${i !== state.step && groupComplete(f.id) ? icon('check', true) : i + 1}</span><div><strong>${esc(f.title)}</strong><small>${groupQuestions(f.id).length} preguntas</small></div></li>`).join('')}</ol><div class="case-aside-note">${icon('shield')}<h3>Una mirada por condición</h3><p>La herramienta reconoce puntos de atención. No calcula la calidad del semen ni determina si el toro es fértil o infértil.</p></div></aside>
     <div><form class="case-form" id="case-form" novalidate><div class="case-visual">${factorPhoto(factor.id,{className:"case-photo",sizes:"(max-width: 700px) 90vw, 900px",loading:"eager"})}<span class="photo-credit">Imagen de contexto generada con IA</span></div><div class="case-form-top"><div><span class="icon-box">${icon(factor.icon)}</span><div><h2>${esc(factor.title)}</h2><p>${esc(factor.short)}</p></div></div><span class="step-counter">Paso ${state.step + 1} de ${FACTORS.length}</span></div>
       <div class="progress" role="progressbar" aria-label="Avance por grupos" aria-valuenow="${state.step + 1}" aria-valuemin="1" aria-valuemax="${FACTORS.length}"><span style="width:${(state.step + 1) * 20}%"></span></div>
       <p class="case-description">${state.step === 0 ? 'Comencemos por el lugar donde permanece habitualmente. Selecciona una respuesta por pregunta.' : 'Selecciona una respuesta por pregunta. Puedes volver al grupo anterior sin perder lo que has respondido.'}</p><div class="form-error" id="form-error" role="alert"></div>
       ${questions.map(q => `<fieldset class="question"><legend><span class="question-number">${questionNumbers.get(q.id)}.</span>${esc(q.title)}</legend><p class="question-hint" id="hint-${q.id}">${esc(q.hint)}</p><div class="options">${q.options.map(o => `<label class="radio-option"><input type="radio" name="${q.id}" value="${o.value}" aria-describedby="hint-${q.id}" required ${state.answers[q.id] === o.value ? 'checked' : ''}><span>${esc(o.label)}</span></label>`).join('')}</div></fieldset>`).join('')}
       <div class="form-actions">${state.step > 0 ? `<button type="button" class="button button-outline" data-action="previous">${icon('back')} Anterior</button>` : `<span>${QUESTIONS.length} preguntas · ${FACTORS.length} grupos</span>`}<button class="button" type="submit">${state.step === FACTORS.length - 1 ? 'Ver mis puntos' : 'Siguiente grupo'} ${icon('arrow')}</button></div>
-    </form><p class="privacy-note">${icon('lock')} Tus respuestas se conservan solo en esta pestaña durante la visita. No se envían ni se piden datos personales.</p></div></div>
+    </form><div class="case-reset"><button type="button" class="case-reset-button" data-action="reset-case">Limpiar respuestas y volver a empezar</button><p>Borra todas las respuestas de esta visita y regresa al paso 1.</p></div><p class="privacy-note">${icon('lock')} Tus respuestas se conservan solo en esta pestaña durante la visita. No se envían ni se piden datos personales.</p></div></div>
   </section>`;
 }
 
@@ -155,7 +159,7 @@ function evaluationPage() {
 function resourcesPage() {
   return `<section class="container page">${breadcrumb('Recursos')}${intro('Para seguir aprendiendo', 'Ciencia que puedes consultar', 'Las publicaciones ayudan a comprender los factores y la evaluación. Aquí encuentras la bibliografía del proyecto y guías universitarias complementarias.')}
     <div class="resource-layout"><div>${SOURCES.map((source,i) => `<article class="source-card"><span class="source-index">${String(i+1).padStart(2,'0')}</span><div><div class="source-year">${esc(source.label)}</div><h2><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a></h2><p>${esc(source.summary)}</p><a class="text-link" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">Consultar publicación ${icon('external',true)}</a></div></article>`).join('')}</div>
-    <aside class="resource-aside"><div class="project-card"><div class="project-photo">${labPhoto()}<span class="photo-credit">Imagen generada con IA</span></div><p class="eyebrow">Acerca del proyecto</p><h2>Conocer para cuidar</h2><p>Una herramienta de divulgación científica creativa en andrología para acercar el conocimiento a productores con distintos niveles de formación.</p><p><strong>Autores</strong><br>Dikson Aarón Guzmán Sibaja<br>José Ángel Aguirre Reyes</p><p>Instituto Tecnológico de Costa Rica<br>Campus Local San Carlos</p><hr><p><strong>Primera versión de revisión</strong><br>3 de noviembre de 2026. El cuestionario y sus colores son una propuesta pendiente de revisión docente.</p><a class="text-link" href="#criterios">Revisar la tabla de criterios ${icon('arrow',true)}</a><hr><p>Fotografías de contexto generadas con IA. Las animaciones y el modelo celular son representaciones educativas hechas con código, sin escala; no muestran resultados de laboratorio.</p><p>Las respuestas de «Mi caso» se conservan solo durante esta visita en la pestaña. No se envían a un servidor.</p></div></aside></div>
+    <aside class="resource-aside"><div class="project-card"><div class="project-photo">${labPhoto()}<span class="photo-credit">Imagen generada con IA</span></div><p class="eyebrow">Acerca del proyecto</p><h2>Conocer para cuidar</h2><p>Una herramienta de divulgación científica creativa en andrología para acercar el conocimiento a productores con distintos niveles de formación.</p><div class="project-authors"><strong>Autores</strong><ul><li>Dikson Aarón Guzmán Sibaja <a href="https://orcid.org/0009-0004-0368-7781" target="_blank" rel="noopener noreferrer" aria-label="ORCID de Dikson Aarón Guzmán Sibaja">ORCID ↗</a></li><li>José Ángel Aguirre Reyes <a href="https://orcid.org/0009-0001-4447-772X" target="_blank" rel="noopener noreferrer" aria-label="ORCID de José Ángel Aguirre Reyes">ORCID ↗</a></li><li>Joseph Fonseca Nuñez</li></ul></div><p>Instituto Tecnológico de Costa Rica<br>Campus Local San Carlos</p><hr><p><strong>Primera versión de revisión</strong><br>3 de noviembre de 2026. El cuestionario y sus colores son una propuesta pendiente de revisión docente.</p><a class="text-link" href="#criterios">Revisar la tabla de criterios ${icon('arrow',true)}</a><hr><p>Fotografías de contexto generadas con IA. Las animaciones y el modelo celular son representaciones educativas hechas con código, sin escala; no muestran resultados de laboratorio.</p><p>Las respuestas de «Mi caso» se conservan solo durante esta visita en la pestaña. No se envían a un servidor.</p></div></aside></div>
   </section>`;
 }
 
@@ -233,6 +237,13 @@ main.addEventListener('click', event => {
     location.hash = 'mi-caso';
   } else if (action === 'previous') {
     state.step = Math.max(0,state.step - 1);saveState();renderPage();
+  } else if (action === 'reset-case') {
+    state = { answers: {}, step: 0, completed: false };
+    pendingQuestionFocus = null;
+    try { sessionStorage.removeItem(storageKey); } catch { /* State is still cleared in memory. */ }
+    caseResetNotice = true;
+    renderPage(false);
+    main.querySelector('.case-reset-notice')?.focus();
   }
 });
 main.addEventListener('change', event => {

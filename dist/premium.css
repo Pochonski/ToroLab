@@ -237,6 +237,18 @@ h3, h4 { letter-spacing: -.025em; }
 .project-photo { position: relative; height: 185px; margin: -27px -27px 27px; }
 .project-card h2 { font-size: 28px; }
 .project-card p { font-size: 13px; line-height: 1.85; }
+.project-authors { margin: 17px 0; color: #607056; font-size: 13px; line-height: 1.85; }
+.project-authors ul { list-style: none; margin: 5px 0 0; padding: 0; }
+.project-authors li + li { margin-top: 4px; }
+.project-authors a { margin-left: 4px; color: #24593f; font-size: .88em; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.project-authors a:hover { color: #137255; }
+.project-authors a:focus-visible, .footer-authors a:focus-visible, .case-reset-button:focus-visible { outline: 3px solid #d5ab5c; outline-offset: 3px; }
+.case-reset { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 18px; margin-top: 17px; }
+.case-reset-button { border: 0; background: transparent; color: #315c4b; padding: 9px 0; font: inherit; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.case-reset-button:hover { color: #123e31; }
+.case-reset p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.case-reset-notice { margin: 0 0 20px; padding: 14px 18px; border: 1px solid #a9c9aa; border-radius: 9px; background: #eaf4e7; color: #224b35; font-weight: 650; }
+.case-reset-notice:focus { outline: 3px solid #d5ab5c; outline-offset: 3px; }
 .criteria-heading { font-size: 29px; margin-top: 38px; }
 .criteria-table-wrap { border-radius: 11px; }
 .criteria-table { font-size: 12px; }
@@ -250,6 +262,8 @@ h3, h4 { letter-spacing: -.025em; }
 .footer-brand .footer-brand-name small { display: block; color: #c2cdb7; font-family: 'DM Sans', Arial, sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0; margin-top: 5px; }
 .footer-top p { color: #c2cdb7; font-size: 11px; }
 .footer-project strong, .footer-link { font-size: 12px; font-weight: 500; }
+.footer-authors a { color: #e3efd0; font-size: .9em; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.footer-authors a:hover { color: white; }
 .footer-bottom { border-color: #ffffff24; color: #c2cbb5; padding-block: 23px; font-size: 10px; }
 
 @media (min-width: 1450px) {

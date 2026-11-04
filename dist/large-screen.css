@@ -79,6 +79,8 @@
   .radio-option { font-size: clamp(18px, .94vw, 23px); min-height: 64px; padding: 16px 20px; }
   .radio-option input { width: 22px; height: 22px; }
   .privacy-note { font-size: clamp(15px, .77vw, 19px); }
+  .case-reset-button { font-size: clamp(17px, .82vw, 21px); }
+  .case-reset p, .case-reset-notice { font-size: clamp(15px, .75vw, 19px); }
   .form-actions>span { font-size: clamp(15px, .75vw, 19px); }
 
   .results-cover { min-height: 300px; }
@@ -106,6 +108,7 @@
   .resource-layout { grid-template-columns: minmax(0, 1fr) clamp(385px, 25vw, 520px); gap: 50px; }
   .source-card h2 { font-size: clamp(22px, 1.1vw, 28px); }
   .source-card p, .project-card p { font-size: clamp(17px, .88vw, 22px); }
+  .project-authors { font-size: clamp(17px, .88vw, 22px); }
   .source-year, .source-card .text-link { font-size: clamp(15px, .75vw, 19px); }
   .project-card h2 { font-size: clamp(35px, 1.8vw, 46px); }
   .criteria-heading { font-size: clamp(37px, 1.9vw, 49px); }

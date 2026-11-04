@@ -34,14 +34,14 @@ test('An individual priority never changes other conditions or produces a global
   assert.ok(results.every(r => Object.keys(r).sort().join(',') === 'answer,question,status'));
 });
 
-test('Prior examinations and periods without mating remain contextual', () => {
-  const results = evaluateAnswers({ evaluacion: 'yes', monta: 'inactive', 'cantidad-vacas': 'planned' });
-  for (const id of ['evaluacion','monta','cantidad-vacas']) assert.equal(results.find(r => r.question.id === id).status, 'context');
+test('Mating context and periods without mating remain contextual', () => {
+  const results = evaluateAnswers({ 'modalidad-monta': 'continua', monta: 'inactive', 'cantidad-vacas': 'planned' });
+  for (const id of ['modalidad-monta','monta','cantidad-vacas']) assert.equal(results.find(r => r.question.id === id).status, 'context');
   assert.ok(!QUESTIONS.some(q => q.id === 'raza'));
 });
 
-test('Age ranges and every reproductive period are descriptive context, never fertility classifications', () => {
-  for (const id of ['edad','periodo']) {
+test('Age, mating modality and reproductive period are descriptive context, never fertility classifications', () => {
+  for (const id of ['edad','modalidad-monta','periodo']) {
     const q = QUESTIONS.find(q => q.id === id);
     assert.ok(q, `Missing contextual question ${id}`);
     for (const option of q.options) {
@@ -52,16 +52,38 @@ test('Age ranges and every reproductive period are descriptive context, never fe
   }
 });
 
-test('Older cases retain their individual results while the two newly introduced questions remain unknown', () => {
-  const oldAnswers = Object.fromEntries(QUESTIONS.filter(q=>!['edad','periodo'].includes(q.id)).map(q=>[q.id,q.options[0].value]));
+test('Older cases retain other results while changed questions await fresh answers', () => {
+  const changedIds = ['edad','periodo','perdida-peso','modalidad-monta'];
+  const oldAnswers = Object.fromEntries(QUESTIONS.filter(q=>!changedIds.includes(q.id)).map(q=>[q.id,q.options[0].value]));
+  oldAnswers.condicion = 'loss';
+  oldAnswers.evaluacion = 'yes';
   const oldResults = evaluateAnswers(oldAnswers);
-  for (const result of oldResults) assert.equal(result.status, ['edad','periodo'].includes(result.question.id) ? 'unknown' : result.question.options[0].status);
+  for (const result of oldResults) assert.equal(result.status, changedIds.includes(result.question.id) ? 'unknown' : result.question.options[0].status);
   for (const period of QUESTIONS.find(q=>q.id === 'periodo').options) {
     const changed = evaluateAnswers({...oldAnswers,edad:'under2',periodo:period.value});
-    for (const oldResult of oldResults.filter(r=>!['edad','periodo'].includes(r.question.id))) {
+    for (const oldResult of oldResults.filter(r=>!changedIds.includes(r.question.id))) {
       assert.equal(changed.find(r=>r.question.id === oldResult.question.id).status,oldResult.status);
     }
   }
+});
+
+test('Questions 5 and 12 use the requested wording and answers', () => {
+  const weight = QUESTIONS[4];
+  assert.equal(weight.id, 'perdida-peso');
+  assert.equal(weight.title, 'En los últimos dos meses, ¿ha observado pérdida marcada de peso o de condición corporal?');
+  assert.deepEqual(weight.options.map(o=>o.value), ['yes','no','unknown']);
+  assert.equal(evaluateAnswers({'perdida-peso':'yes'}).find(r=>r.question.id === weight.id).status,'attention');
+  const mating = QUESTIONS[11];
+  assert.equal(mating.id, 'modalidad-monta');
+  assert.equal(mating.title, '¿Cómo se maneja el período de monta del toro reproductor en la finca?');
+  assert.deepEqual(mating.options.map(o=>o.label), [
+    'Monta continua: el toro permanece con las vacas durante todo el año.',
+    'Monta estacional: el toro se utiliza únicamente durante determinados meses.',
+    'Monta controlada: el toro se introduce con las vacas en períodos programados.',
+    'No existe un manejo reproductivo definido.',
+    'No sé'
+  ]);
+  assert.ok(mating.options.every(o=>o.status === (o.value === 'unknown' ? 'unknown' : 'context')));
 });
 
 test('The four health questions preserve prior answers and leave new conditions unknown in older visits', () => {
@@ -86,9 +108,9 @@ test('Vaccination records and father–daughter mating remain separate managemen
   assert.equal(results.find(r => r.question.id === 'registro-vacunas').status, 'context');
   assert.equal(evaluateAnswers({'registro-vacunas':'no'}).find(r => r.question.id === 'registro-vacunas').status, 'attention');
   assert.equal(evaluateAnswers({vacunas:'yes'}).find(r => r.question.id === 'registro-vacunas').status, 'unknown');
-  assert.match(results.find(r => r.question.id === 'registro-vacunas').answer.explanation, /no confirma que el toro esté protegido/);
+  assert.match(results.find(r => r.question.id === 'registro-vacunas').answer.explanation, /no demuestra que todas las vacunas estén vigentes/);
   assert.equal(results.find(r => r.question.id === 'hijas').status, 'attention');
-  assert.match(results.find(r => r.question.id === 'hijas').question.explanation, /no demuestra un problema de calidad seminal/);
+  assert.match(results.find(r => r.question.id === 'hijas').question.explanation, /no significa que el semen del toro sea de mala calidad/);
   assert.equal(evaluateAnswers({hijas:'unknown'}).find(r => r.question.id === 'hijas').status, 'unknown');
 });
 
@@ -99,6 +121,14 @@ test('The increased-cow question uses the requested wording and retains independ
   assert.equal(evaluateAnswers({'cantidad-vacas':'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'attention');
   assert.equal(evaluateAnswers({'cantidad-vacas':'unknown'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');
   assert.equal(evaluateAnswers({demanda:'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');
+});
+
+test('Result explanations distinguish answers that need different actions', () => {
+  for (const id of ['sombra','agua','modalidad-monta']) {
+    const q = QUESTIONS.find(q => q.id === id);
+    const known = q.options.filter(o => o.value !== 'unknown');
+    assert.equal(new Set(known.map(o => o.explanation || q.explanation)).size, known.length);
+  }
 });
 
 test('All five groups and every published option have traceable explanations and sources', () => {
@@ -125,7 +155,11 @@ test('The review matrix includes every question and each answer option', async (
   const matrix = await readFile(new URL('../docs/criterios-revision.md', import.meta.url), 'utf8');
   for (const q of QUESTIONS) {
     assert.equal(matrix.split(q.title).length - 1, 1, `Question ${q.id} should appear once in the review matrix`);
-    for (const o of q.options) assert.ok(matrix.includes(o.label), `Missing option ${q.id}/${o.value}`);
+    for (const o of q.options) {
+      assert.ok(matrix.includes(o.label), `Missing option ${q.id}/${o.value}`);
+      assert.ok(matrix.includes(o.explanation || q.explanation), `Outdated explanation ${q.id}/${o.value}`);
+      assert.ok(matrix.includes(o.recommendation || q.recommendation), `Outdated recommendation ${q.id}/${o.value}`);
+    }
   }
   assert.match(matrix, /no validan las preguntas/);
 });

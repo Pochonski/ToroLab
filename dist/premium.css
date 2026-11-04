@@ -137,6 +137,10 @@ h3, h4 { letter-spacing: -.025em; }
 /* Questionnaire */
 .case-layout { grid-template-columns: 240px minmax(0,1fr); gap: 35px; }
 .case-layout>aside { position: sticky; top: 30px; }
+.step-link { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 13px; width: 100%; margin: -5px 0 0 -5px; padding: 5px; border: 0; border-radius: 10px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.step-link:hover { background: #eaf0e5; }
+.step-link:focus-visible { outline: 3px solid #a7721e; outline-offset: 2px; }
+.step-copy { min-width: 0; }
 .step-list strong { font-size: 13px; line-height: 1.5; }
 .step-list small { font-size: 11px; }
 .case-aside-note { border-radius: 12px; background: #edf0e5; }
@@ -436,6 +440,7 @@ h3, h4 { letter-spacing: -.025em; }
   .factor-cta p, .educational-note { font-size: 12px; }
   .case-layout { grid-template-columns: 1fr; gap: 24px; }
   .case-layout>aside { position: static; }
+  .step-link { flex-direction: column; align-items: center; gap: 0; margin: -4px auto 0; padding: 4px 1px; text-align: center; }
   .step-list li strong { font-size: 10px; }
   .case-form { --form-pad: 23px; border-radius: 15px; }
   .case-visual { height: 185px; margin-bottom: 25px; }

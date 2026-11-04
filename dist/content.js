@@ -105,7 +105,7 @@ export const FACTORS = [
   {
     id: 'nutricion', icon: 'leaf', title: 'Nutrición',
     short: 'Alimentación y condición corporal',
-    description: 'Observe la disponibilidad de alimento, los cambios de dieta y la condición corporal. Alimentar más no siempre significa alimentar mejor: las necesidades cambian con el crecimiento y la actividad.',
+    description: 'Observe la disponibilidad de alimento, los cambios de dieta y la pérdida de peso o condición corporal. Alimentar más no siempre significa alimentar mejor: las necesidades cambian con el crecimiento y la actividad.',
     technical: 'Harrison y colaboradores estudiaron diferentes niveles de alimentación en 11 toros Angus. Encontraron cambios en morfología y circunferencia escrotal, sin efecto significativo sobre motilidad. Esto apoya revisar la nutrición, pero no permite calcular la calidad del semen a partir del aspecto del toro.',
     sourceIds: ['harrison2022', 'unl2021']
   },
@@ -118,8 +118,8 @@ export const FACTORS = [
   },
   {
     id: 'reproductor', icon: 'bull', title: 'El reproductor',
-    short: 'Historia y respuesta individual',
-    description: 'Cada toro tiene su propia historia. La edad, la raza y la apariencia ayudan a describirlo, pero no permiten asignarle una calidad seminal. Conozca sus evaluaciones y el seguimiento indicado.',
+    short: 'Edad, monta y seguimiento',
+    description: 'Cada toro tiene su propia historia. La edad, la forma en que se utiliza durante la monta y el seguimiento indicado aportan contexto, pero no permiten asignarle una calidad seminal.',
     technical: 'Existen diferencias individuales frente al calor y diversidad en las subpoblaciones espermáticas. Los resultados obtenidos en una raza o subespecie no determinan el estado de un individuo. Una evaluación profesional informa sobre un momento y puede requerir repetición según el caso.',
     sourceIds: ['netherton2022', 'sevilla2025', 'msu2019']
   },
@@ -132,16 +132,16 @@ export const FACTORS = [
   }
 ];
 
-const unknownOption = () => ({ value: 'unknown', label: 'No sé', status: 'unknown', explanation: 'No hay información suficiente para interpretar esta condición.', recommendation: 'Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta.' });
+const unknownOption = () => ({ value: 'unknown', label: 'No sé', status: 'unknown', explanation: 'Elegiste «No sé». Por ahora no podemos valorar este punto.', recommendation: 'Revisa lo que sabes, consulta los registros o pregunta al encargado del toro. Puedes volver y cambiar esta respuesta.' });
 
 export const QUESTIONS = [
   {
     id: 'sombra', group: 'ambiente', title: '¿El toro puede usar sombra durante las horas de mayor calor?',
     hint: 'Piense en el potrero o corral donde permanece habitualmente.',
     options: [
-      { value: 'always', label: 'Sí, tiene sombra disponible', status: 'adequate', explanation: 'Según lo declarado, hay sombra disponible. Esto describe el manejo de este aspecto; no demuestra que el semen esté normal.', recommendation: 'Mantenga la sombra accesible y observe que el toro realmente pueda utilizarla.' },
-      { value: 'sometimes', label: 'Solo en algunos momentos', status: 'attention' },
-      { value: 'never', label: 'No tiene sombra disponible', status: 'attention' },
+      { value: 'always', label: 'Sí, tiene sombra disponible', status: 'adequate', explanation: 'El toro puede refugiarse del sol cuando hace calor. Eso es favorable para su manejo, aunque no indica cómo está su semen.', recommendation: 'Comprueba que pueda entrar a la sombra durante las horas más calurosas.' },
+      { value: 'sometimes', label: 'Solo en algunos momentos', status: 'attention', explanation: 'El toro puede quedarse sin sombra en parte del día, incluso cuando hace calor. Conviene revisar cuándo puede refugiarse.', recommendation: 'Observa las horas en que falta sombra y busca una opción accesible para ese momento.' },
+      { value: 'never', label: 'No tiene sombra disponible', status: 'attention', explanation: 'El toro no tiene dónde refugiarse del sol. Esto merece un cambio de manejo; la respuesta no indica si su semen está afectado.', recommendation: 'Busca una forma de ofrecerle sombra y consulta qué opción funciona en tu finca.' },
       unknownOption()
     ],
     explanation: 'Una disponibilidad limitada de sombra merece revisión como medida de manejo frente al calor. La respuesta seminal no puede deducirse de esta observación.',
@@ -152,9 +152,9 @@ export const QUESTIONS = [
     id: 'agua', group: 'ambiente', title: '¿Tiene acceso continuo a agua limpia para beber?',
     hint: 'Incluya fallas del bebedero, acceso bloqueado o interrupciones del suministro.',
     options: [
-      { value: 'continuous', label: 'Sí, el acceso es continuo', status: 'adequate', explanation: 'Se declara acceso continuo a agua. Este resultado solo describe la disponibilidad de agua y no evalúa el semen.', recommendation: 'Siga comprobando el suministro, el funcionamiento y la limpieza del bebedero.' },
-      { value: 'interrupted', label: 'A veces se interrumpe el acceso', status: 'attention' },
-      { value: 'unavailable', label: 'Actualmente no tiene acceso', status: 'priority', recommendation: 'Restablezca el acceso a agua limpia y revise la causa de la interrupción. Si observa al animal enfermo o decaído, consulte al profesional.' },
+      { value: 'continuous', label: 'Sí, el acceso es continuo', status: 'adequate', explanation: 'El toro tiene agua limpia disponible de forma continua, según tu respuesta. Esto no nos dice cómo está su semen.', recommendation: 'Sigue revisando que el bebedero funcione, esté limpio y sea accesible.' },
+      { value: 'interrupted', label: 'A veces se interrumpe el acceso', status: 'attention', explanation: 'El toro se queda sin acceso al agua en algunos momentos. Conviene encontrar la causa y corregirla.', recommendation: 'Revisa el suministro y el bebedero; comprueba que el toro pueda llegar al agua en todo momento.' },
+      { value: 'unavailable', label: 'Actualmente no tiene acceso', status: 'priority', explanation: 'El toro no tiene acceso al agua ahora. Es una necesidad inmediata de manejo y bienestar, independiente de cómo esté su semen.', recommendation: 'Restablece el acceso a agua limpia cuanto antes. Si el toro se ve enfermo o decaído, llama al veterinario.' },
       unknownOption()
     ],
     explanation: 'La disponibilidad de agua es una necesidad de manejo y ayuda a enfrentar el calor. El nivel de atención propuesto no representa una predicción de calidad seminal.',
@@ -166,11 +166,11 @@ export const QUESTIONS = [
     hint: 'Los dos meses son un marco para recordar lo observado, no un límite diagnóstico.',
     options: [
       { value: 'yes', label: 'Sí, he observado esa situación', status: 'attention' },
-      { value: 'no', label: 'No he observado esa situación', status: 'adequate', explanation: 'No se declara esa exposición. La ausencia de esta observación no descarta otros factores ni confirma calidad seminal normal.', recommendation: 'Continúe observando las condiciones del ambiente y mantenga disponibles sombra y agua.' },
+      { value: 'no', label: 'No he observado esa situación', status: 'adequate', explanation: 'No has observado varios días de calor intenso sin refugio. Esto no descarta otros problemas ni confirma cómo está el semen.', recommendation: 'Mantén disponibles la sombra y el agua, y observa si las condiciones cambian.' },
       unknownOption()
     ],
-    explanation: 'Se declara una exposición al calor que conviene revisar. Los estudios muestran diferencias entre animales y posibles cambios posteriores; no se puede determinar el efecto en este toro con la respuesta.',
-    recommendation: 'Revise sombra, agua y horarios de manejo. Comente la exposición con el profesional al solicitar una evaluación.',
+    explanation: 'El toro pasó varios días de mucho calor sin poder refugiarse. El calor puede afectar a algunos toros, pero esta respuesta no permite saber si afectó a este.',
+    recommendation: 'Revisa dónde encuentra sombra y agua, y comenta esos días de calor al veterinario cuando evalúe al toro.',
     sourceIds: ['netherton2022', 'unl2021']
   },
   {
@@ -178,24 +178,23 @@ export const QUESTIONS = [
     hint: 'Se pregunta por disponibilidad; la cantidad necesaria debe valorarse según el animal y la finca.',
     options: [
       { value: 'yes', label: 'Sí, ha faltado repetidamente', status: 'attention' },
-      { value: 'no', label: 'No, ha habido alimento disponible', status: 'adequate', explanation: 'Se declara disponibilidad de alimento. Eso no confirma que la dieta cubra todas sus necesidades ni informa sobre la calidad seminal.', recommendation: 'Revise periódicamente la calidad de la dieta y las necesidades del toro con apoyo técnico.' },
+      { value: 'no', label: 'No, ha habido alimento disponible', status: 'adequate', explanation: 'No ha faltado alimento de forma repetida. Aun así, disponer de comida no asegura que la dieta cubra las necesidades del toro.', recommendation: 'Revisa con quien asesora la alimentación si la cantidad y la calidad del alimento son apropiadas.' },
       unknownOption()
     ],
-    explanation: 'Las interrupciones de alimento justifican revisar la nutrición. No se puede estimar su efecto seminal a partir de esta respuesta.',
-    recommendation: 'Revise las reservas de forraje y solicite orientación para una alimentación ajustada al reproductor.',
+    explanation: 'Al toro le ha faltado alimento varias veces. Conviene revisar su alimentación; esta respuesta no indica cómo está su semen.',
+    recommendation: 'Revisa las reservas de forraje y pide ayuda para ajustar la alimentación del toro.',
     sourceIds: ['harrison2022', 'unl2021']
   },
   {
-    id: 'condicion', group: 'nutricion', title: 'En los últimos dos meses, ¿ha observado pérdida marcada de condición o exceso de grasa?',
-    hint: 'Es una observación general. No sustituye la valoración de condición corporal por una persona capacitada.',
+    id: 'perdida-peso', group: 'nutricion', title: 'En los últimos dos meses, ¿ha observado pérdida marcada de peso o de condición corporal?',
+    hint: 'Compare con la apariencia anterior y los registros disponibles. Esta observación no sustituye una valoración profesional de la condición corporal.',
     options: [
-      { value: 'loss', label: 'Ha perdido condición de forma marcada', status: 'attention' },
-      { value: 'excess', label: 'Observo exceso de grasa', status: 'attention' },
-      { value: 'neither', label: 'No he observado ninguna de las dos', status: 'adequate', explanation: 'No se declara ninguno de estos cambios. La observación externa no determina la condición corporal exacta ni la calidad del semen.', recommendation: 'Mantenga el seguimiento y solicite una valoración de condición corporal cuando corresponda.' },
+      { value: 'yes', label: 'Sí, he observado una pérdida marcada', status: 'attention' },
+      { value: 'no', label: 'No he observado una pérdida marcada', status: 'adequate', explanation: 'No has notado una pérdida marcada de peso o condición corporal. Eso no permite saber su condición exacta ni cómo está su semen.', recommendation: 'Sigue observando al toro y pide una valoración de condición corporal si tienes dudas.' },
       unknownOption()
     ],
-    explanation: 'La pérdida de condición o el exceso de grasa son motivos para revisar la dieta y el estado del animal; no son un diagnóstico seminal.',
-    recommendation: 'Solicite una valoración de condición corporal y de la alimentación antes de realizar ajustes importantes.',
+    explanation: 'Has observado que el toro perdió bastante peso o condición corporal. Conviene averiguar por qué; esto no significa por sí solo que su semen esté alterado.',
+    recommendation: 'Pide al veterinario o a quien asesora la nutrición que revise su condición y su alimentación antes de hacer cambios grandes.',
     sourceIds: ['harrison2022', 'unl2021']
   },
   {
@@ -203,12 +202,12 @@ export const QUESTIONS = [
     hint: 'Por ejemplo, un cambio grande de alimento, suplementación o disponibilidad de pasto.',
     options: [
       { value: 'abrupt', label: 'Sí, hubo un cambio sin planificación', status: 'attention' },
-      { value: 'planned', label: 'Cambió con una transición planificada', status: 'context', explanation: 'Se declara un cambio planificado. Es un dato de contexto; esta herramienta no comprueba la adecuación de la dieta ni su efecto sobre el semen.', recommendation: 'Revise la respuesta del animal y siga el plan de alimentación con apoyo técnico.' },
-      { value: 'stable', label: 'No hubo un cambio importante', status: 'context', explanation: 'No se declara un cambio importante. Una dieta estable también necesita revisión de calidad y cantidad.', recommendation: 'Conserve los registros de alimentación y observe la condición corporal.' },
+      { value: 'planned', label: 'Cambió con una transición planificada', status: 'context', explanation: 'La dieta cambió siguiendo un plan. Eso describe cómo se hizo el cambio, pero no demuestra que la nueva dieta sea adecuada.', recommendation: 'Observa cómo responde el toro y revisa el plan con quien asesora la alimentación.' },
+      { value: 'stable', label: 'No hubo un cambio importante', status: 'context', explanation: 'La dieta no tuvo cambios importantes. Aun así, vale la pena revisar si el toro recibe alimento suficiente y de buena calidad.', recommendation: 'Conserva los registros de alimentación y observa su peso y condición corporal.' },
       unknownOption()
     ],
-    explanation: 'Un cambio de alimentación sin planificación invita a revisar el manejo nutricional. No todo cambio dietético es perjudicial y el cuestionario no determina una alteración seminal.',
-    recommendation: 'Revise el cambio con quien asesora la nutrición de la finca y evite ajustes grandes sin valorar las necesidades del toro.',
+    explanation: 'La dieta cambió de forma importante sin una transición planificada. Conviene revisar cómo respondió el toro; no se puede saber el efecto sobre su semen con esta respuesta.',
+    recommendation: 'Comenta el cambio con quien asesora la alimentación y evita nuevos cambios grandes sin revisar sus necesidades.',
     sourceIds: ['harrison2022', 'unl2021']
   },
   {
@@ -216,11 +215,11 @@ export const QUESTIONS = [
     hint: 'Tome en cuenta lo observado, los registros y lo indicado por un profesional. Si tiene dudas, elija «No sé».',
     options: [
       { value: 'yes', label: 'Sí, hay ese antecedente', status: 'priority' },
-      { value: 'no', label: 'No hay un antecedente conocido', status: 'adequate', explanation: 'No se declara ese antecedente. Esto no descarta una enfermedad ni confirma la calidad del semen.', recommendation: 'Conserve el registro sanitario y consulte si aparecen cambios en el estado o desempeño del toro.' },
+      { value: 'no', label: 'No hay un antecedente conocido', status: 'adequate', explanation: 'No conoces episodios de fiebre ni enfermedades atendidas en los últimos dos meses. Eso no descarta problemas que no se hayan detectado.', recommendation: 'Guarda los registros de salud y consulta al veterinario si notas cambios en el toro.' },
       unknownOption()
     ],
-    explanation: 'El antecedente de fiebre o enfermedad merece seguimiento profesional por su posible relación con la reproducción. No prueba que el semen esté alterado.',
-    recommendation: 'Comente el antecedente, sus fechas y el tratamiento recibido con el profesional; él decidirá si se necesita evaluación o seguimiento.',
+    explanation: 'El toro tuvo fiebre o una enfermedad atendida recientemente. Conviene contarle esto al veterinario porque puede ser importante para su reproducción; no prueba que el semen esté alterado.',
+    recommendation: 'Anota cuándo ocurrió y qué tratamiento recibió. Comparte esos datos con el veterinario para decidir si necesita seguimiento.',
     sourceIds: ['mu2026', 'msu2019']
   },
   {
@@ -228,11 +227,11 @@ export const QUESTIONS = [
     hint: 'Observe desde una distancia segura. No intente manipular al toro para responder.',
     options: [
       { value: 'yes', label: 'Sí, observo alguno de estos signos', status: 'priority' },
-      { value: 'no', label: 'No he observado estos signos', status: 'adequate', explanation: 'No se declaran estos signos visibles. Algunas alteraciones solo se detectan mediante examen profesional.', recommendation: 'Continúe observando el movimiento y el estado general desde una distancia segura.' },
+      { value: 'no', label: 'No he observado estos signos', status: 'adequate', explanation: 'No has visto cojera, dolor al moverse ni lesiones que dificulten caminar. Eso no sustituye un examen veterinario.', recommendation: 'Sigue observando cómo camina y se comporta, siempre desde una distancia segura.' },
       unknownOption()
     ],
-    explanation: 'Estos signos pueden interferir con el bienestar o la capacidad de monta y requieren una valoración. Su presencia no permite conocer la calidad seminal.',
-    recommendation: 'Solicite valoración veterinaria del signo observado. Evite forzar el servicio o manipular al toro para responder.',
+    explanation: 'El toro cojea, parece tener dolor al moverse o tiene una lesión visible. Esto puede dificultar la monta y necesita revisión; no indica cómo está su semen.',
+    recommendation: 'Pide al veterinario que revise al toro. No lo fuerces a montar ni intentes examinarlo de cerca para responder.',
     sourceIds: ['mu2026', 'msu2019']
   },
   {
@@ -240,32 +239,32 @@ export const QUESTIONS = [
     hint: 'Observe desde una distancia segura; no toque ni examine al toro para responder.',
     options: [
       { value: 'yes', label: 'Sí, he observado alguno de estos cambios', status: 'priority' },
-      { value: 'no', label: 'No he observado esos cambios', status: 'adequate', explanation: 'No se declaran cambios visibles en estas zonas. Eso no descarta alteraciones que solo detecta un examen profesional ni demuestra calidad seminal normal.', recommendation: 'Continúe observando de forma segura y comunique cualquier cambio al veterinario.' },
+      { value: 'no', label: 'No he observado esos cambios', status: 'adequate', explanation: 'No has visto hinchazón, heridas ni secreción en el escroto o el prepucio. Un examen profesional puede detectar problemas que no se ven a simple vista.', recommendation: 'Sigue observando desde una distancia segura y avisa al veterinario si notas algún cambio.' },
       unknownOption()
     ],
-    explanation: 'Los cambios visibles en el escroto o el prepucio ameritan valoración profesional. La causa y su posible relación con la reproducción no pueden determinarse con esta respuesta.',
-    recommendation: 'Solicite valoración veterinaria y describa lo que observó; evite manipular la zona para comprobarlo.',
+    explanation: 'Viste hinchazón, una herida o secreción en la zona reproductiva. Un veterinario debe revisar la causa; esta respuesta no permite saber si afecta la reproducción.',
+    recommendation: 'Describe al veterinario lo que viste. No toques ni manipules la zona para comprobarlo.',
     sourceIds: ['msu2019', 'unl2021']
   },
   {
     id: 'registro-vacunas', group: 'salud', title: '¿El toro cuenta con su registro de vacunas completo?',
     hint: 'Revise si el registro permite comprobar las vacunas indicadas para este toro por el veterinario, con sus fechas. Un registro completo no prueba por sí solo que la protección esté vigente.',
     options: [
-      { value: 'yes', label: 'Sí, el registro está completo', status: 'context', explanation: 'Se declara que existe un registro completo de vacunas. Esto documenta el manejo sanitario; no confirma que el toro esté protegido ni informa sobre su semen.', recommendation: 'Conserve el registro y revise con el veterinario si las vacunas indicadas están vigentes.' },
+      { value: 'yes', label: 'Sí, el registro está completo', status: 'context', explanation: 'Tienes un registro completo de las vacunas del toro. Eso ayuda a revisar su historial, pero no demuestra que todas las vacunas estén vigentes.', recommendation: 'Guarda el registro y comprueba con el veterinario qué vacunas necesita ahora.' },
       { value: 'no', label: 'No, está incompleto o no existe', status: 'attention' },
       unknownOption()
     ],
-    explanation: 'Un registro incompleto dificulta comprobar los antecedentes de vacunación. No demuestra que falte una vacuna, que el toro esté desprotegido o que su semen esté alterado.',
-    recommendation: 'Reúna las fechas y comprobantes disponibles y revise con el veterinario qué vacunas y registros corresponden a este toro.',
+    explanation: 'Faltan datos en el registro de vacunas o no hay registro. Por eso no se puede comprobar qué vacunas recibió; no significa necesariamente que le falte alguna.',
+    recommendation: 'Reúne las fechas y comprobantes disponibles. Revisa con el veterinario qué vacunas necesita y cómo dejar el registro al día.',
     sourceIds: ['muVacc2025', 'unl2021']
   },
   {
     id: 'edad', group: 'reproductor', title: '¿Cuál es la edad aproximada del toro?',
     hint: 'Los rangos solo describen la edad. No indican madurez, aptitud ni fertilidad.',
     options: [
-      { value: 'under2', label: 'Menos de 2 años', status: 'context', explanation: 'Se registra una edad aproximada menor de 2 años como dato de contexto. Este rango no determina madurez ni calidad seminal.', recommendation: 'Conserve la fecha de nacimiento o la estimación disponible para compartirla durante la evaluación profesional.' },
-      { value: '2to5', label: 'De 2 a 5 años', status: 'context', explanation: 'Se registra una edad aproximada de 2 a 5 años como dato de contexto. Este rango no indica aptitud reproductiva ni fertilidad.', recommendation: 'Conserve la fecha de nacimiento o la estimación disponible junto con los antecedentes individuales del toro.' },
-      { value: 'over5', label: 'Más de 5 años', status: 'context', explanation: 'Se registra una edad aproximada mayor de 5 años como dato de contexto. Este rango no califica al reproductor ni informa sobre su semen.', recommendation: 'Comparta la edad estimada y los antecedentes individuales con el profesional, sin deducir un resultado a partir de la edad.' },
+      { value: 'under2', label: 'Menos de 2 años', status: 'context', explanation: 'El toro tiene menos de 2 años, según tu estimación. La edad sola no permite saber si está listo para reproducirse ni cómo está su semen.', recommendation: 'Guarda la fecha de nacimiento o tu mejor estimación para compartirla con el veterinario.' },
+      { value: '2to5', label: 'De 2 a 5 años', status: 'context', explanation: 'El toro tiene entre 2 y 5 años, según tu estimación. Este dato no dice por sí solo si puede reproducirse ni cómo está su semen.', recommendation: 'Guarda su edad aproximada junto con los demás antecedentes del toro.' },
+      { value: 'over5', label: 'Más de 5 años', status: 'context', explanation: 'El toro tiene más de 5 años, según tu estimación. La edad sola no permite saber si puede reproducirse ni cómo está su semen.', recommendation: 'Comparte la edad y los antecedentes del toro con el veterinario cuando lo evalúe.' },
       unknownOption()
     ],
     explanation: 'La edad describe al reproductor. Las agrupaciones de esta pregunta son una decisión editorial, no puntos de corte derivados de los artículos ni criterios de diagnóstico.',
@@ -273,39 +272,40 @@ export const QUESTIONS = [
     sourceIds: ['msu2019', 'mu2026', 'netherton2022']
   },
   {
-    id: 'evaluacion', group: 'reproductor', title: '¿Cuenta con una evaluación andrológica profesional para el periodo de monta actual o próximo?',
-    hint: 'Una evaluación incluye más que mirar al toro o comprobar que monta.',
+    id: 'modalidad-monta', group: 'reproductor', title: '¿Cómo se maneja el período de monta del toro reproductor en la finca?',
+    hint: 'Describe la organización de la monta en la finca. Ninguna modalidad permite conocer por sí sola la calidad seminal.',
     options: [
-      { value: 'yes', label: 'Sí, cuento con el informe', status: 'context', explanation: 'Disponer del informe aporta información individual. Describe el momento de la evaluación y no garantiza fertilidad futura ni reemplaza el seguimiento.', recommendation: 'Consulte el informe y siga las indicaciones del profesional, especialmente si el estado del toro ha cambiado.' },
-      { value: 'older', label: 'Solo tengo una evaluación de otro periodo', status: 'attention' },
-      { value: 'no', label: 'No cuento con una evaluación', status: 'attention' },
+      { value: 'continua', label: 'Monta continua: el toro permanece con las vacas durante todo el año.', status: 'context', explanation: 'El toro permanece con las vacas todo el año. Esto describe cómo se organiza la finca; no indica cómo está su semen.', recommendation: 'Anota qué vacas estuvieron con el toro y cuándo. Revisa periódicamente su condición y su desempeño con apoyo profesional.' },
+      { value: 'estacional', label: 'Monta estacional: el toro se utiliza únicamente durante determinados meses.', status: 'context', explanation: 'El toro se usa para la monta solo en algunos meses. Este dato ayuda a ubicar su actividad, pero no califica su fertilidad.', recommendation: 'Guarda las fechas de inicio y fin de cada temporada y el grupo de vacas servido.' },
+      { value: 'controlada', label: 'Monta controlada: el toro se introduce con las vacas en períodos programados.', status: 'context', explanation: 'El toro entra con las vacas en períodos programados. Esto permite describir el manejo, pero no evalúa su semen.', recommendation: 'Conserva las fechas programadas y los registros de las vacas que sirvió.' },
+      { value: 'sin-manejo', label: 'No existe un manejo reproductivo definido.', status: 'context', explanation: 'No hay un plan definido para cuándo usar al toro. Es un dato de organización de la finca, no una conclusión sobre su fertilidad.', recommendation: 'Describe cómo se usa actualmente al toro y conversa con un profesional sobre cómo registrar y organizar la monta.' },
       unknownOption()
     ],
-    explanation: 'Sin una evaluación aplicable al periodo, falta información profesional sobre este reproductor. La edad, la raza o la apariencia no la sustituyen.',
-    recommendation: 'Planifique con el profesional una evaluación y lleve los antecedentes individuales del toro.',
-    sourceIds: ['msu2019', 'mu2026']
+    explanation: 'La modalidad declarada describe cómo se utiliza este toro en la finca. No califica su capacidad reproductiva, la calidad del semen ni la eficacia del manejo.',
+    recommendation: 'Anote las fechas y el grupo de vacas servido, y comparta el contexto con el profesional durante la evaluación del reproductor.',
+    sourceIds: ['unl2021', 'araya2024']
   },
   {
     id: 'seguimiento', group: 'reproductor', title: '¿Hay una recomendación profesional de repetir una prueba o revisar un hallazgo que siga pendiente?',
     hint: 'Piense en indicaciones anteriores específicas de este toro; no en su edad o raza.',
     options: [
       { value: 'pending', label: 'Sí, sigue pendiente', status: 'priority' },
-      { value: 'completed', label: 'La indicación ya fue atendida', status: 'context', explanation: 'Se declara que el seguimiento indicado fue atendido. Este dato no reemplaza el resultado de ese seguimiento.', recommendation: 'Conserve el informe y siga las nuevas indicaciones recibidas.' },
-      { value: 'none', label: 'No conozco una indicación pendiente', status: 'context', explanation: 'No se declara una indicación pendiente. Esto no equivale a haber sido evaluado ni demuestra un estado seminal normal.', recommendation: 'Revise los antecedentes disponibles y compártalos durante la evaluación profesional.' },
+      { value: 'completed', label: 'La indicación ya fue atendida', status: 'context', explanation: 'Ya hiciste el seguimiento que pidió el profesional. Para saber qué se encontró, hace falta revisar el resultado de esa visita o prueba.', recommendation: 'Guarda el informe y sigue las nuevas indicaciones que te hayan dado.' },
+      { value: 'none', label: 'No conozco una indicación pendiente', status: 'context', explanation: 'No conoces una revisión pendiente para este toro. Eso no significa que haya sido evaluado ni que su semen esté bien.', recommendation: 'Revisa los informes que tengas y compártelos en la próxima evaluación del toro.' },
       unknownOption()
     ],
-    explanation: 'Existe un seguimiento profesional sin completar. La herramienta no reinterpreta el hallazgo ni reemplaza la prueba solicitada.',
-    recommendation: 'Retome con el profesional la recomendación pendiente y acuerde cómo completarla.',
+    explanation: 'Un profesional pidió repetir una prueba o revisar un hallazgo y aún está pendiente. Esta página no puede interpretar ese hallazgo.',
+    recommendation: 'Contacta al profesional que hizo la recomendación y acuerda cómo completar la revisión.',
     sourceIds: ['msu2019']
   },
   {
     id: 'periodo', group: 'manejo', title: '¿En qué momento del periodo reproductivo se encuentra el toro?',
     hint: 'Esta respuesta describe el momento de manejo. Ninguna etapa determina por sí sola la calidad seminal.',
     options: [
-      { value: 'before', label: 'Antes de iniciar la monta', status: 'context', explanation: 'Se registra que el toro está antes del periodo de monta. Es un dato para situar las observaciones, sin calificar su estado reproductivo.', recommendation: 'Anote el periodo previsto y comparta esa información junto con los antecedentes del toro durante la revisión profesional.' },
-      { value: 'during', label: 'Durante la monta', status: 'context', explanation: 'Se registra que el toro está en monta. Esta etapa por sí sola no demuestra una alteración ni una condición favorable del semen.', recommendation: 'Sitúe en este periodo los registros de manejo y las observaciones del reproductor, sin convertirlos en un diagnóstico.' },
-      { value: 'after', label: 'Después de terminar la monta', status: 'context', explanation: 'Se registra que terminó el periodo de monta. Esto describe el manejo y no permite concluir cómo está el semen.', recommendation: 'Conserve las fechas y observaciones del periodo para comentarlas con el profesional.' },
-      { value: 'undefined', label: 'No hay un periodo de monta definido', status: 'context', explanation: 'Se registra que la finca no tiene un periodo de monta definido. Esta modalidad de manejo no genera una calificación del toro.', recommendation: 'Describa cómo se organiza la monta en la finca y comparta ese contexto al revisar los antecedentes reproductivos.' },
+      { value: 'before', label: 'Antes de iniciar la monta', status: 'context', explanation: 'El toro todavía no empezó el período de monta. Esta respuesta solo indica en qué momento está.', recommendation: 'Anota cuándo comenzará la monta y lleva esa fecha a la evaluación del toro.' },
+      { value: 'during', label: 'Durante la monta', status: 'context', explanation: 'El toro está en período de monta. Estar con las vacas no indica por sí solo cómo está su semen.', recommendation: 'Registra cuándo comenzó, qué vacas sirve y cualquier cambio que observes.' },
+      { value: 'after', label: 'Después de terminar la monta', status: 'context', explanation: 'El período de monta ya terminó. Eso ayuda a ordenar los antecedentes, pero no permite saber cómo está el semen.', recommendation: 'Conserva las fechas del período y las observaciones para comentarlas en la próxima revisión.' },
+      { value: 'undefined', label: 'No hay un periodo de monta definido', status: 'context', explanation: 'En la finca no hay fechas de monta definidas. Esto describe la organización, sin calificar al toro.', recommendation: 'Explica cómo se usa el toro durante el año y, si puedes, comienza a registrar las fechas de servicio.' },
       unknownOption()
     ],
     explanation: 'El momento del periodo reproductivo ayuda a ubicar la historia y las observaciones del animal. Se registra como contexto, sin asignar calidad seminal ni aptitud.',
@@ -317,12 +317,12 @@ export const QUESTIONS = [
     hint: 'Compare la cantidad de vacas asignadas antes y ahora. La capacidad del toro requiere valoración profesional; este formulario no fija una proporción toro:vacas.',
     options: [
       { value: 'unplanned', label: 'Sí, aumentó sin evaluar su capacidad', status: 'attention' },
-      { value: 'planned', label: 'Aumentó, pero se evaluó su capacidad', status: 'context', explanation: 'Se declara una revisión de la capacidad del toro antes de aumentar las vacas asignadas. Es un dato de manejo; no confirma calidad seminal ni garantiza preñez.', recommendation: 'Conserve la evaluación y continúe observando el servicio, el movimiento y la condición corporal.' },
-      { value: 'same', label: 'No aumentó la cantidad de vacas', status: 'context', explanation: 'No se declara un aumento de vacas asignadas. La cantidad actual todavía debe corresponder al animal y a las condiciones de la finca.', recommendation: 'Mantenga la observación y revise la capacidad del toro si cambian las condiciones de monta.' },
+      { value: 'planned', label: 'Aumentó, pero se evaluó su capacidad', status: 'context', explanation: 'Se asignaron más vacas después de evaluar al toro. Es una decisión de manejo; no garantiza preñez ni calidad del semen.', recommendation: 'Guarda la evaluación y sigue observando cómo se mueve y realiza la monta.' },
+      { value: 'same', label: 'No aumentó la cantidad de vacas', status: 'context', explanation: 'No aumentó la cantidad de vacas asignadas. Aun así, conviene revisar si la carga actual es apropiada para este toro.', recommendation: 'Observa su desempeño y revisa la cantidad de vacas si cambian el terreno o las condiciones de monta.' },
       unknownOption()
     ],
-    explanation: 'Aumentar las vacas asignadas sin valorar la capacidad del toro merece revisar el manejo. Esta respuesta no permite inferir la calidad seminal ni calcular cuántas vacas puede cubrir.',
-    recommendation: 'Revise con apoyo profesional la cantidad de vacas, el terreno, el estado individual del toro y lo observado durante la monta.',
+    explanation: 'Se asignaron más vacas sin comprobar si este toro puede cubrirlas. Conviene revisar esa decisión; la respuesta no dice cómo está su semen.',
+    recommendation: 'Revisa con un profesional la cantidad de vacas, el terreno y lo que has observado durante la monta.',
     sourceIds: ['unl2021', 'araya2024']
   },
   {
@@ -330,12 +330,12 @@ export const QUESTIONS = [
     hint: 'Si el toro no está en monta, puede indicar «No está en monta».',
     options: [
       { value: 'difficulty', label: 'Sí, he observado esa dificultad', status: 'priority' },
-      { value: 'none', label: 'No he observado esa dificultad', status: 'adequate', explanation: 'No se declara esa dificultad de servicio. Completar una monta no demuestra calidad seminal normal ni garantiza preñez.', recommendation: 'Siga observando el servicio desde una distancia segura y registre cambios.' },
-      { value: 'inactive', label: 'No está en monta', status: 'context', explanation: 'La capacidad de servicio no se está observando en este momento. No se asigna una valoración de calidad seminal.', recommendation: 'Planifique la evaluación y la observación para el periodo reproductivo que corresponda.' },
+      { value: 'none', label: 'No he observado esa dificultad', status: 'adequate', explanation: 'No has visto intentos repetidos de monta sin completarla. Eso no demuestra que el semen esté bien ni garantiza preñez.', recommendation: 'Sigue observando el servicio desde una distancia segura y anota si cambia algo.' },
+      { value: 'inactive', label: 'No está en monta', status: 'context', explanation: 'El toro no está en período de monta, así que ahora no puedes observar si completa el servicio.', recommendation: 'Cuando corresponda, planifica la observación de la monta y la evaluación profesional.' },
       unknownOption()
     ],
-    explanation: 'La dificultad de servicio necesita valoración de la capacidad de monta. Su causa no se determina mediante este formulario y puede ser distinta de una alteración del semen.',
-    recommendation: 'Registre lo observado y solicite una revisión profesional del toro y de las condiciones de servicio.',
+    explanation: 'Has visto varios intentos de monta que no se completan. Un profesional debe revisar qué ocurre; puede haber causas distintas de un problema del semen.',
+    recommendation: 'Anota lo que viste y pide al veterinario que revise al toro y las condiciones de la monta.',
     sourceIds: ['mu2026', 'unl2021']
   },
   {
@@ -343,12 +343,12 @@ export const QUESTIONS = [
     hint: 'Se pregunta por una preocupación del hato. No permite atribuir la causa al toro.',
     options: [
       { value: 'concern', label: 'Sí, hay una preocupación', status: 'attention' },
-      { value: 'none', label: 'No he observado una preocupación', status: 'context', explanation: 'No se declara una preocupación del hato. Ese dato no evalúa por sí solo al reproductor ni su semen.', recommendation: 'Mantenga los registros y la revisión reproductiva del hato.' },
-      { value: 'unmeasured', label: 'Aún no hay resultados del periodo', status: 'context', explanation: 'Todavía no hay resultados del periodo para revisar. No se considera una condición favorable ni desfavorable.', recommendation: 'Planifique con el profesional el seguimiento reproductivo del grupo.' },
+      { value: 'none', label: 'No he observado una preocupación', status: 'context', explanation: 'No has notado problemas de celos repetidos ni resultados de preñez preocupantes en el grupo. Eso no evalúa por sí solo al toro.', recommendation: 'Continúa registrando servicios, celos y resultados de preñez.' },
+      { value: 'unmeasured', label: 'Aún no hay resultados del periodo', status: 'context', explanation: 'Todavía no hay resultados suficientes para revisar cómo va este grupo de vacas.', recommendation: 'Acuerda con el profesional cuándo revisar los resultados del período.' },
       unknownOption()
     ],
-    explanation: 'Un resultado preocupante del hato justifica una revisión integral. Puede relacionarse con las hembras, el toro, la nutrición, la sanidad o el manejo; no demuestra una causa seminal.',
-    recommendation: 'Reúna los registros de servicios, celos y preñez y revíselos con el profesional junto con la evaluación de los animales.',
+    explanation: 'Hay celos repetidos o resultados de preñez que te preocupan. Pueden deberse a las vacas, al toro o al manejo; esta respuesta no identifica la causa.',
+    recommendation: 'Reúne los registros de monta, celos y preñez y revísalos con un profesional junto con los animales.',
     sourceIds: ['mu2026', 'msu2019']
   },
   {
@@ -356,11 +356,11 @@ export const QUESTIONS = [
     hint: 'Revise la identificación de las hembras y los registros de monta o inseminación. Si no puede comprobar el parentesco, elija «No sé».',
     options: [
       { value: 'yes', label: 'Sí, los registros muestran ese uso', status: 'attention' },
-      { value: 'no', label: 'No, los registros muestran que no ocurrió', status: 'context', explanation: 'Los registros disponibles no muestran ese cruce. Es un dato de planificación genética, no una evaluación del semen o de la fertilidad del toro.', recommendation: 'Mantenga identificados padres e hijas y revise el parentesco antes de asignar nuevos servicios.' },
+      { value: 'no', label: 'No, los registros muestran que no ocurrió', status: 'context', explanation: 'Según los registros, el toro no se usó con sus propias hijas. Esto habla del parentesco, no de la calidad de su semen.', recommendation: 'Mantén identificados padres e hijas y revisa el parentesco antes de nuevas montas.' },
       unknownOption()
     ],
-    explanation: 'El cruce padre–hija es un apareamiento entre animales estrechamente emparentados. Merece revisar el plan genético por sus posibles efectos en la descendencia; no demuestra un problema de calidad seminal del toro.',
-    recommendation: 'Revise los registros de parentesco y los próximos apareamientos con asesoría en reproducción o genética bovina.',
+    explanation: 'Los registros muestran que el toro se usó con una o más de sus hijas. Ese parentesco cercano puede afectar a las crías; no significa que el semen del toro sea de mala calidad.',
+    recommendation: 'Revisa los registros de parentesco y las próximas montas con alguien que asesore en reproducción o genética bovina.',
     sourceIds: ['muInbreed2021']
   }
 ];

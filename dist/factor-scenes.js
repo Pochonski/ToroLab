@@ -16,7 +16,7 @@ export const FACTOR_SCENES = {
     alt: 'Toro junto a un comedero con forraje y una reserva de alimento en una finca tropical. Fotografía de contexto generada con IA.',
     topics: [
       { id:'alimento', title:'Alimento', x:16, y:61, description:'Revisa la disponibilidad de pasto, forraje y alimento a lo largo del periodo.', observation:'¿Ha habido interrupciones repetidas del alimento disponible?' },
-      { id:'condicion', title:'Condición corporal', x:50, y:49, description:'Compara lo que observas hoy con los registros del toro. Su apariencia no permite conocer la calidad del semen.', observation:'¿Has observado pérdida marcada de condición o exceso de grasa?' },
+      { id:'perdida-peso', title:'Peso y condición', x:50, y:49, description:'Compara su peso y condición corporal actual con lo observado o registrado en los últimos dos meses. Su apariencia no permite conocer la calidad del semen.', observation:'¿Has observado una pérdida marcada de peso o condición corporal?' },
       { id:'dieta', title:'Cambios de dieta', x:89, y:47, description:'Ubica los cambios de pasto, alimento o suplementación y cómo se planificó la transición.', observation:'¿Hubo cambios importantes sin una transición planificada?' }
     ]
   },
@@ -33,7 +33,7 @@ export const FACTOR_SCENES = {
     alt: 'Toro en un corral con un cuaderno de registros sostenido en primer plano, fuera de la cerca. Fotografía de contexto generada con IA.',
     topics: [
       { id:'edad', title:'Edad e historia', x:22, y:28, description:'La edad ayuda a describir al animal. Un rango de edad no determina madurez, aptitud ni fertilidad.', observation:'¿Conoces su edad aproximada o su fecha de nacimiento?' },
-      { id:'evaluacion', title:'Evaluación individual', x:75, y:59, description:'El informe profesional aporta información sobre este toro en el momento de la evaluación.', observation:'¿Cuentas con un informe para el periodo actual o próximo?' },
+      { id:'modalidad-monta', title:'Organización de la monta', x:75, y:59, description:'Identifica si el toro permanece con las vacas todo el año o se introduce por temporadas o períodos programados.', observation:'¿Cómo se organiza el período de monta de este reproductor?' },
       { id:'seguimiento', title:'Seguimiento', x:87, y:78, description:'Reúne las indicaciones anteriores del profesional y revisa si alguna sigue pendiente.', observation:'¿Se indicó repetir una prueba o revisar un hallazgo?' }
     ]
   },

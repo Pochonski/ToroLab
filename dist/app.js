@@ -1,6 +1,6 @@
 import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from './content.js';
 import { FACTOR_SCENES, sceneTopic, renderFactorScene, renderSceneDetail, factorPhoto, factorCover } from './factor-scenes.js';
-import { CELL_PARTS, renderScientificVisual } from './science-visuals.js';
+import { createExplorerState, renderScientificExplorer, mountScientificExplorer } from './science-visuals.js';
 
 const main = document.querySelector('main');
 const nav = document.querySelector('#primary-nav');
@@ -64,10 +64,8 @@ let state = loadState();
 let activeFactor = 'ambiente';
 const sceneSelections = {};
 let pendingQuestionFocus = null;
-let movement = 'progressive';
-let density = 'less';
-let cellPart = 'head';
-let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const explorerState = createExplorerState(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+let explorerController = null;
 const saveState = () => { try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch { /* The questionnaire also works in memory when storage is unavailable. */ } };
 const answeredCount = () => Object.keys(state.answers).length;
 const reviewNotice = () => `<div class="review-notice">${icon('info')}<p><strong>Propuesta para revisión académica.</strong> Los niveles de atención son criterios educativos provisionales. Las fuentes respaldan el contenido general, pero no validan este cuestionario ni sus colores. <a href="#criterios">Consultar los criterios</a>.</p></div>`;
@@ -140,16 +138,11 @@ function resultsPage() {
   </section>`;
 }
 
-function semenVisual(kind) {
-  return renderScientificVisual(kind,{movement,density,paused,part:cellPart});
-}
 function evaluationPage() {
   return `<section class="container page">${breadcrumb('Evaluación seminal')}${intro('Del factor a la evaluación', '¿Cómo se conoce la calidad del semen?', 'Observar al toro y su ambiente aporta información. Para valorar el semen, un profesional analiza la muestra y la interpreta junto con el examen del animal.')}
     <div class="evaluation-cover"><div><p class="eyebrow">La ciencia detrás de la muestra</p><h2>Tres conceptos.<br>Una mirada más completa.</h2><p>Explora los modelos para reconocer qué se observa en el laboratorio. Son representaciones educativas, sin escala.</p><span class="editorial-tag">01 Movimiento <span>·</span> 02 Estructura <span>·</span> 03 Cantidad</span></div><div class="evaluation-cover-image">${labPhoto('lab-photo','eager')}<span class="photo-credit">Imagen de contexto generada con IA</span></div></div>
-    <div class="concept-grid"><article class="concept-card">${semenVisual('motility')}<div class="concept-body"><div class="concept-number">01 · EL MOVIMIENTO</div><h2>Motilidad</h2><p>Describe cómo se mueven los espermatozoides. Se observa su movimiento y, entre otras características, si avanzan de forma progresiva.</p><div class="concept-control" role="group" aria-label="Comparación de movimiento"><button id="motion-progressive" class="chip" data-action="movement" data-value="progressive" aria-pressed="${movement === 'progressive'}">Movimiento progresivo</button><button id="motion-reduced" class="chip" data-action="movement" data-value="reduced" aria-pressed="${movement === 'reduced'}">Movimiento reducido</button><button id="motion-pause" class="chip" data-action="pause">${paused ? 'Reanudar' : 'Pausar'} animación</button></div><p class="concept-note">Comparación ilustrativa. No reproduce una muestra real ni permite decidir si un semen es apto.</p></div></article>
-    <article class="concept-card">${semenVisual('morphology')}<div class="concept-body"><div class="concept-number">02 · LA ESTRUCTURA</div><h2>Morfología</h2><p>Observa la estructura de los espermatozoides, incluidas la cabeza, la pieza intermedia y la cola, para identificar y describir sus características.</p><div class="concept-control" role="group" aria-label="Partes del espermatozoide">${Object.entries(CELL_PARTS).map(([id,part]) => `<button id="cell-${id}" class="chip" data-action="cell-part" data-value="${id}" aria-pressed="${cellPart===id}">${part.label}</button>`).join('')}</div><details class="technical"><summary>¿Todas las diferencias significan lo mismo?</summary><p>No. La interpretación depende del tipo y la proporción de las formas observadas, la muestra y el método de evaluación. El modelo permite reconocer las partes; no representa alteraciones específicas.</p></details><p class="concept-note">Modelo ilustrativo generado con IA. No permite clasificar muestras ni representa proporciones reales.</p></div></article>
-    <article class="concept-card">${semenVisual('concentration')}<div class="concept-body"><div class="concept-number">03 · LA CANTIDAD POR VOLUMEN</div><h2>Concentración</h2><p>Es la cantidad de espermatozoides presente en un volumen de semen. Para medirla se utilizan métodos y equipos adecuados.</p><div class="concept-control" role="group" aria-label="Comparación de cantidad en igual volumen"><button id="density-less" class="chip" data-action="density" data-value="less" aria-pressed="${density === 'less'}">Menor cantidad</button><button id="density-more" class="chip" data-action="density" data-value="more" aria-pressed="${density === 'more'}">Mayor cantidad</button></div><p class="concept-note">Se ilustra igual volumen con cantidades distintas. Más células no significa automáticamente mejor calidad.</p></div></article></div>
-    ${sourceLinks(['valverde2021','araya2024','msu2019'])}
+    ${renderScientificExplorer(explorerState)}
+    ${sourceLinks(['valverde2021','araya2024','nongbua2020','msu2019'])}
     <div class="evaluation-bottom"><div><h2>¿Quieres saber más?</h2>
       <details class="technical"><summary>CASA y cinemática espermática</summary><p>Los sistemas de análisis seminal asistido por computadora (CASA) siguen trayectorias y permiten medir características como velocidades y linealidad del movimiento. Las mediciones dependen del equipo, su configuración y la preparación de la muestra. Su interpretación requiere criterios profesionales.</p>${sourceLinks(['valverde2021','araya2024'])}</details>
       <details class="technical"><summary>Espermatogénesis y termorregulación</summary><p>La espermatogénesis es el proceso de formación de los espermatozoides. La regulación de la temperatura testicular es parte de ese proceso. Una exposición al calor puede relacionarse con cambios que se manifiestan después y la respuesta varía entre individuos.</p>${sourceLinks(['netherton2022','morrell2020'])}</details>
@@ -162,7 +155,7 @@ function evaluationPage() {
 function resourcesPage() {
   return `<section class="container page">${breadcrumb('Recursos')}${intro('Para seguir aprendiendo', 'Ciencia que puedes consultar', 'Las publicaciones ayudan a comprender los factores y la evaluación. Aquí encuentras la bibliografía del proyecto y guías universitarias complementarias.')}
     <div class="resource-layout"><div>${SOURCES.map((source,i) => `<article class="source-card"><span class="source-index">${String(i+1).padStart(2,'0')}</span><div><div class="source-year">${esc(source.label)}</div><h2><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a></h2><p>${esc(source.summary)}</p><a class="text-link" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">Consultar publicación ${icon('external',true)}</a></div></article>`).join('')}</div>
-    <aside class="resource-aside"><div class="project-card"><div class="project-photo">${labPhoto()}<span class="photo-credit">Imagen generada con IA</span></div><p class="eyebrow">Acerca del proyecto</p><h2>Conocer para cuidar</h2><p>Una herramienta de divulgación científica creativa en andrología para acercar el conocimiento a productores con distintos niveles de formación.</p><p><strong>Autores</strong><br>Dikson Aarón Guzmán Sibaja<br>José Ángel Aguirre Reyes</p><p>Instituto Tecnológico de Costa Rica<br>Campus Local San Carlos</p><hr><p><strong>Primera versión de revisión</strong><br>3 de noviembre de 2026. El cuestionario y sus colores son una propuesta pendiente de revisión docente.</p><a class="text-link" href="#criterios">Revisar la tabla de criterios ${icon('arrow',true)}</a><hr><p>Fotografías de contexto y modelo celular generados con IA. Las animaciones son representaciones educativas, sin escala; no muestran resultados de laboratorio.</p><p>Las respuestas de «Mi caso» se conservan solo durante esta visita en la pestaña. No se envían a un servidor.</p></div></aside></div>
+    <aside class="resource-aside"><div class="project-card"><div class="project-photo">${labPhoto()}<span class="photo-credit">Imagen generada con IA</span></div><p class="eyebrow">Acerca del proyecto</p><h2>Conocer para cuidar</h2><p>Una herramienta de divulgación científica creativa en andrología para acercar el conocimiento a productores con distintos niveles de formación.</p><p><strong>Autores</strong><br>Dikson Aarón Guzmán Sibaja<br>José Ángel Aguirre Reyes</p><p>Instituto Tecnológico de Costa Rica<br>Campus Local San Carlos</p><hr><p><strong>Primera versión de revisión</strong><br>3 de noviembre de 2026. El cuestionario y sus colores son una propuesta pendiente de revisión docente.</p><a class="text-link" href="#criterios">Revisar la tabla de criterios ${icon('arrow',true)}</a><hr><p>Fotografías de contexto generadas con IA. Las animaciones y el modelo celular son representaciones educativas hechas con código, sin escala; no muestran resultados de laboratorio.</p><p>Las respuestas de «Mi caso» se conservan solo durante esta visita en la pestaña. No se envían a un servidor.</p></div></aside></div>
   </section>`;
 }
 
@@ -183,7 +176,10 @@ function routeInfo() {
 function renderPage(focus = true) {
   const { route, value } = routeInfo();
   if (route === 'factores' && FACTORS.some(f => f.id === value)) activeFactor = value;
+  explorerController?.dispose();
+  explorerController = null;
   main.innerHTML = pages[route]();
+  if (route === 'evaluacion') explorerController = mountScientificExplorer(main.querySelector('#science-explorer'), explorerState);
   document.title = `${pageTitles[route]} · Calidad del semen`;
   document.querySelectorAll('[data-nav]').forEach(link => {
     if (link.dataset.nav === route || (route === 'criterios' && link.dataset.nav === 'recursos')) link.setAttribute('aria-current', 'page');
@@ -196,11 +192,6 @@ function renderPage(focus = true) {
     pendingQuestionFocus = null;
     if (target) { target.focus({preventScroll:true}); target.closest('.question').scrollIntoView({block:'center',behavior:'instant'}); }
   }
-}
-function refreshKeepingFocus() {
-  const activeId = document.activeElement?.id;
-  renderPage(false);
-  if (activeId) document.getElementById(activeId)?.focus({preventScroll:true});
 }
 menu.addEventListener('click', () => {
   const isOpen = menu.getAttribute('aria-expanded') !== 'true';
@@ -242,10 +233,7 @@ main.addEventListener('click', event => {
     location.hash = 'mi-caso';
   } else if (action === 'previous') {
     state.step = Math.max(0,state.step - 1);saveState();renderPage();
-  } else if (action === 'movement') { movement = value; refreshKeepingFocus(); }
-  else if (action === 'cell-part' && Object.hasOwn(CELL_PARTS,value)) { cellPart=value;refreshKeepingFocus(); }
-  else if (action === 'density') { density = value;refreshKeepingFocus(); }
-  else if (action === 'pause') { paused = !paused;refreshKeepingFocus(); }
+  }
 });
 main.addEventListener('change', event => {
   const input = event.target;

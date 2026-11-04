@@ -24,6 +24,13 @@ export const SOURCES = [
     summary: 'Investigación original en toros Brahman con sistemas CASA: se observaron variaciones cinemáticas y morfométricas durante el periodo de monta. Estar en monta no demuestra deterioro seminal.'
   },
   {
+    id: 'nongbua2020', label: 'Nongbua et al., 2020',
+    title: 'Effects of season and single layer centrifugation on bull sperm quality in Thailand',
+    authors: 'T. Nongbua, A. Utta, N. Am-In, J. Suwimonteerabutr, A. Johannisson y J. M. Morrell',
+    year: 2020, url: 'https://doi.org/10.5713/ajas.19.0624',
+    summary: 'Investigación original que documenta distintas formas de cabeza, pieza intermedia y cola en espermatozoides bovinos. Los ejemplos de esta web son esquemas educativos, no muestras ni clasificaciones de aptitud.'
+  },
+  {
     id: 'morrell2020', label: 'Morrell, 2020',
     title: 'Heat stress and bull fertility', authors: 'J. M. Morrell',
     year: 2020, url: 'https://doi.org/10.1016/j.theriogenology.2020.05.014',

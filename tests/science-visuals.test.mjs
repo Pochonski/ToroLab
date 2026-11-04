@@ -1,35 +1,51 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
-import { CELL_PARTS, renderScientificVisual } from '../dist/science-visuals.js';
+import { existsSync, readFileSync } from 'node:fs';
+import { CELL_PARTS, MORPH_EXAMPLES, CONCENTRATION_COUNTS, createExplorerState, createMotileCells, advanceMotileCells, renderScientificExplorer } from '../dist/science-visuals.js';
 
-test('Equal-volume comparison changes cell count while retaining its educational context', () => {
-  const less = renderScientificVisual('concentration',{density:'less'});
-  const more = renderScientificVisual('concentration',{density:'more'});
-  assert.equal((less.match(/class="sperm-sprite"/g)||[]).length,4);
-  assert.equal((more.match(/class="sperm-sprite"/g)||[]).length,12);
-  for (const visual of [less,more]) {
-    assert.match(visual,/un mismo volumen, sin escala ni valor diagnóstico/);
-    assert.match(visual,/Modelo generado con IA/);
-  }
+test('The visualizer starts in progressive motion and exposes all three accessible views', () => {
+  const state = createExplorerState();
+  const markup = renderScientificExplorer(state);
+  assert.equal(state.tab, 'motility');
+  assert.equal(state.movement, 'progressive');
+  assert.equal(state.speed, 1);
+  assert.equal(state.trails, false);
+  assert.match(markup, /role="tablist"/);
+  assert.equal((markup.match(/role="tab"/g) || []).length, 3);
+  assert.match(markup, /Simulación educativa · sin escala/);
+  assert.match(markup, /Movimiento sin avance/);
+  assert.match(markup, /Inmovilidad/);
+  assert.equal(createExplorerState(true).paused, true);
 });
 
-test('Anatomy selections name the selected part and unknown selections have a safe fallback', () => {
-  for (const [part,{label,left,top}] of Object.entries(CELL_PARTS)) {
-    const visual = renderScientificVisual('morphology',{part});
-    assert.ok(visual.includes(`Parte seleccionada: ${label}`));
-    assert.ok(visual.includes(`left:${left}%;top:${top}%`));
-    assert.match(visual,/class="cell-composition"/);
+test('The motion model keeps 24 individual cells and moves along head orientation', () => {
+  const cells = createMotileCells();
+  assert.equal(cells.length, 24);
+  assert.equal(new Set(cells.map(cell => cell.x.toFixed(4) + ':' + cell.y.toFixed(4))).size, 24);
+  const before = cells.map(cell => ({ x: cell.x, y: cell.y, heading: cell.heading }));
+  advanceMotileCells(cells, 'progressive', .2, .2);
+  for (let i = 0; i < cells.length; i++) {
+    const dx = cells[i].x - before[i].x, dy = cells[i].y - before[i].y;
+    assert.ok(dx * Math.cos(cells[i].heading) + dy * Math.sin(cells[i].heading) > 0);
   }
-  assert.match(renderScientificVisual('morphology',{part:'<script>'}),/Parte seleccionada: Cabeza/);
-  assert.equal(renderScientificVisual('unexpected'),'');
+  const snapshot = structuredClone(cells);
+  advanceMotileCells(cells, 'still', .5, .7);
+  assert.deepEqual(cells, snapshot);
 });
 
-test('Movement and pause remain available with real generated assets', () => {
-  assert.match(renderScientificVisual('motility'),/sprite-flow /);
-  assert.match(renderScientificVisual('motility',{movement:'reduced',paused:true}),/scientific-visual paused/);
-  assert.match(renderScientificVisual('motility',{movement:'reduced'}),/is-reduced/);
-  for (const asset of ['celula.webp','celula-640.webp','laboratorio.webp','laboratorio-960.webp']) {
-    assert.ok(existsSync(new URL(`../dist/assets/premium/${asset}`,import.meta.url)));
-  }
+test('Morphology offers reference plus three sourced examples and the concentration fields share a stage', () => {
+  assert.deepEqual(Object.keys(CELL_PARTS), ['head', 'midpiece', 'tail']);
+  assert.deepEqual(Object.keys(MORPH_EXAMPLES), ['reference', 'pyriform', 'droplet', 'coiled']);
+  const morph = renderScientificExplorer({ ...createExplorerState(), tab: 'morphology' });
+  for (const item of Object.values(MORPH_EXAMPLES)) assert.ok(morph.includes(item.label));
+  assert.match(morph, /pmc\.ncbi\.nlm\.nih\.gov\/articles\/PMC7468166/);
+  assert.match(morph, /science-fallback/);
+  const concentration = renderScientificExplorer({ ...createExplorerState(), tab: 'concentration' });
+  assert.deepEqual(CONCENTRATION_COUNTS, [12, 24, 48]);
+  assert.match(concentration, /science-reference/);
+  assert.match(concentration, /science-comparison/);
+  assert.match(concentration, /min="1" max="3"/);
+  const three = readFileSync(new URL('../dist/vendor/three/three.module.js', import.meta.url), 'utf8');
+  assert.ok(three.length > 100000);
+  assert.ok(existsSync(new URL('../dist/vendor/three/LICENSE', import.meta.url)));
 });

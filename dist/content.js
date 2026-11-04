@@ -97,9 +97,9 @@ export const FACTORS = [
   },
   {
     id: 'salud', icon: 'heart', title: 'Salud',
-    short: 'Fiebre, enfermedad y lesiones',
-    description: 'Los antecedentes de enfermedad, fiebre o lesiones son información útil para el profesional. Un animal que parece recuperado puede necesitar seguimiento; observarlo por fuera no reemplaza el examen.',
-    technical: 'La evaluación andrológica integra antecedentes, estado físico y aparato reproductor, junto con el análisis seminal cuando corresponde. Enfermedad, fiebre y lesiones pueden afectar la producción de espermatozoides o la capacidad de monta, mediante mecanismos distintos.',
+    short: 'Antecedentes y signos de salud',
+    description: 'Los antecedentes de fiebre o enfermedad, el movimiento, los ojos y los cambios visibles en la zona reproductiva son información útil para el profesional. Observar al toro por fuera no reemplaza el examen.',
+    technical: 'La evaluación andrológica integra antecedentes, estado físico y aparato reproductor, junto con el análisis seminal cuando corresponde. Enfermedad y fiebre pueden relacionarse con cambios en el semen; lesiones y problemas de visión pueden dificultar el desplazamiento o la monta. El plan sanitario debe revisarse con el veterinario según la finca.',
     sourceIds: ['mu2026', 'msu2019']
   },
   {
@@ -198,8 +198,8 @@ export const QUESTIONS = [
     sourceIds: ['harrison2022', 'unl2021']
   },
   {
-    id: 'fiebre', group: 'salud', title: 'En los últimos dos meses, ¿ha tenido fiebre medida o una enfermedad atendida por un profesional?',
-    hint: 'No estime la fiebre tocando al animal. Incluya lo que conste en sus registros o le haya indicado el profesional.',
+    id: 'fiebre', group: 'salud', title: 'En los últimos dos meses, ¿ha tenido fiebre o una enfermedad atendida por un profesional?',
+    hint: 'Tome en cuenta lo observado, los registros y lo indicado por un profesional. Si tiene dudas, elija «No sé».',
     options: [
       { value: 'yes', label: 'Sí, hay ese antecedente', status: 'priority' },
       { value: 'no', label: 'No hay un antecedente conocido', status: 'adequate', explanation: 'No se declara ese antecedente. Esto no descarta una enfermedad ni confirma la calidad del semen.', recommendation: 'Conserve el registro sanitario y consulte si aparecen cambios en el estado o desempeño del toro.' },
@@ -210,7 +210,7 @@ export const QUESTIONS = [
     sourceIds: ['mu2026', 'msu2019']
   },
   {
-    id: 'lesiones', group: 'salud', title: '¿Observa actualmente cojera, dolor al moverse o una lesión visible en la zona genital?',
+    id: 'lesiones', group: 'salud', title: '¿Observa actualmente cojera, dolor al moverse o una lesión que dificulte caminar?',
     hint: 'Observe desde una distancia segura. No intente manipular al toro para responder.',
     options: [
       { value: 'yes', label: 'Sí, observo alguno de estos signos', status: 'priority' },
@@ -218,8 +218,44 @@ export const QUESTIONS = [
       unknownOption()
     ],
     explanation: 'Estos signos pueden interferir con el bienestar o la capacidad de monta y requieren una valoración. Su presencia no permite conocer la calidad seminal.',
-    recommendation: 'Solicite valoración veterinaria del signo observado. Evite forzar el servicio o manipular la zona afectada.',
+    recommendation: 'Solicite valoración veterinaria del signo observado. Evite forzar el servicio o manipular al toro para responder.',
     sourceIds: ['mu2026', 'msu2019']
+  },
+  {
+    id: 'zona-reproductiva', group: 'salud', title: '¿Ha observado hinchazón, heridas o secreción en el escroto o el prepucio?',
+    hint: 'Observe desde una distancia segura; no toque ni examine al toro para responder.',
+    options: [
+      { value: 'yes', label: 'Sí, he observado alguno de estos cambios', status: 'priority' },
+      { value: 'no', label: 'No he observado esos cambios', status: 'adequate', explanation: 'No se declaran cambios visibles en estas zonas. Eso no descarta alteraciones que solo detecta un examen profesional ni demuestra calidad seminal normal.', recommendation: 'Continúe observando de forma segura y comunique cualquier cambio al veterinario.' },
+      unknownOption()
+    ],
+    explanation: 'Los cambios visibles en el escroto o el prepucio ameritan valoración profesional. La causa y su posible relación con la reproducción no pueden determinarse con esta respuesta.',
+    recommendation: 'Solicite valoración veterinaria y describa lo que observó; evite manipular la zona para comprobarlo.',
+    sourceIds: ['msu2019', 'unl2021']
+  },
+  {
+    id: 'vision', group: 'salud', title: '¿Ha notado dificultad para ver o alguna lesión visible en los ojos del toro?',
+    hint: 'Por ejemplo, si tropieza o presenta un cambio visible en los ojos. Observe desde una distancia segura.',
+    options: [
+      { value: 'yes', label: 'Sí, he observado esa dificultad o lesión', status: 'attention' },
+      { value: 'no', label: 'No he observado dificultad ni lesión', status: 'adequate', explanation: 'No se declara un problema visible de visión. Esto no sustituye el examen físico ni informa sobre el semen.', recommendation: 'Mantenga la observación y comente cualquier cambio al profesional.' },
+      unknownOption()
+    ],
+    explanation: 'La visión ayuda al toro a desplazarse y a encontrar las vacas. Una dificultad observada requiere revisión, pero no permite inferir la calidad de su semen.',
+    recommendation: 'Comente la observación con el veterinario para que valore los ojos y la capacidad de desplazamiento.',
+    sourceIds: ['msu2019', 'mu2026']
+  },
+  {
+    id: 'plan-sanitario', group: 'salud', title: '¿Cuenta con un plan sanitario para el toro acordado con un veterinario?',
+    hint: 'Puede incluir vacunas, control de parásitos y seguimiento de enfermedades según la finca.',
+    options: [
+      { value: 'yes', label: 'Sí, hay un plan acordado', status: 'context', explanation: 'Se declara un plan sanitario. Es información de contexto; el formulario no comprueba si está actualizado o si el toro está sano.', recommendation: 'Revise con el veterinario que el plan siga ajustado al animal y a la finca.' },
+      { value: 'no', label: 'No hay un plan acordado', status: 'attention' },
+      unknownOption()
+    ],
+    explanation: 'La ausencia de un plan acordado invita a revisar la prevención y el seguimiento sanitario. No indica por sí sola una alteración del semen.',
+    recommendation: 'Consulte al veterinario qué medidas preventivas y registros corresponden a esta finca y a este toro.',
+    sourceIds: ['unl2021', 'msu2019']
   },
   {
     id: 'edad', group: 'reproductor', title: '¿Cuál es la edad aproximada del toro?',

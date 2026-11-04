@@ -5,7 +5,7 @@ import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from '../dist/content.js
 
 test('A case with missing or unrecognized answers never becomes favorable', () => {
   const empty = evaluateAnswers({});
-  assert.equal(empty.length, 15);
+  assert.equal(empty.length, 18);
   assert.ok(empty.every(r => r.status === 'unknown' && r.answer === null));
   const unrecognized = Object.fromEntries(QUESTIONS.map(q => [q.id, 'not-a-valid-answer']));
   assert.ok(evaluateAnswers(unrecognized).every(r => r.status === 'unknown'));
@@ -61,6 +61,19 @@ test('Older cases retain their individual results while the two newly introduced
     for (const oldResult of oldResults.filter(r=>!['edad','periodo'].includes(r.question.id))) {
       assert.equal(changed.find(r=>r.question.id === oldResult.question.id).status,oldResult.status);
     }
+  }
+});
+
+test('The five health questions preserve prior answers and leave new conditions unknown in older visits', () => {
+  const health = QUESTIONS.filter(q => q.group === 'salud');
+  assert.equal(health.length, 5);
+  assert.equal(health[0].id, 'fiebre');
+  assert.ok(!health[0].title.includes('fiebre medida'));
+  const newIds = ['zona-reproductiva', 'vision', 'plan-sanitario'];
+  const previousAnswers = Object.fromEntries(QUESTIONS.filter(q => !newIds.includes(q.id)).map(q => [q.id, q.options[0].value]));
+  const results = evaluateAnswers(previousAnswers);
+  for (const result of results) {
+    assert.equal(result.status, newIds.includes(result.question.id) ? 'unknown' : result.question.options[0].status);
   }
 });
 

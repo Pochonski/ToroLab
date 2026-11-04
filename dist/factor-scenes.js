@@ -24,7 +24,7 @@ export const FACTOR_SCENES = {
     title: 'Su historia sanitaria también cuenta',
     alt: 'Veterinaria con un registro observa a un toro desde fuera del cercado de un corral. Fotografía de contexto generada con IA.',
     topics: [
-      { id:'fiebre', title:'Antecedentes sanitarios', x:89, y:40, description:'Consulta las fechas y los registros de fiebre medida o enfermedad atendida por un profesional.', observation:'¿Hay antecedentes que deban compartirse durante la evaluación?' },
+      { id:'fiebre', title:'Antecedentes sanitarios', x:89, y:40, description:'Consulta las fechas y los registros de fiebre o enfermedad atendida por un profesional.', observation:'¿Hay antecedentes que deban compartirse durante la evaluación?' },
       { id:'lesiones', title:'Movimiento y lesiones', x:31, y:75, description:'Observa cómo se mueve desde una distancia segura. La imagen solo sitúa la observación; no demuestra el estado de salud del toro.', observation:'¿Has observado cojera, dolor o una lesión visible?' }
     ]
   },

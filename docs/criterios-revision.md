@@ -31,7 +31,7 @@ Cada pregunta tiene exactamente una opción «No sé» con valor `unknown` y est
 - **Calor:** Netherton et al. observaron variación estacional y respuestas individuales diferentes; no permiten transferir una clasificación por raza o una respuesta promedio a un toro particular.
 - **Nutrición:** Harrison et al. estudiaron 11 toros Angus. La morfología varió y no detectaron un efecto significativo sobre motilidad. No es correcto afirmar que su estudio demuestra que toda dieta o pérdida de condición reduce la motilidad.
 - **Monta y CASA:** Araya-Zúñiga et al. observaron variaciones en variables cinemáticas y morfométricas a lo largo del periodo de monta. El estudio no demuestra que estar en monta o tener mayor actividad signifique siempre deterioro seminal.
-- **Salud y examen:** las guías universitarias originales de Missouri, Montana y Nebraska sustentan registrar enfermedad, lesiones, capacidad de monta y antecedentes, y realizar una evaluación profesional. La elección amarillo/rojo sigue siendo editorial.
+- **Salud y examen:** las guías universitarias originales de Missouri, Montana y Nebraska sustentan registrar enfermedad, lesiones, capacidad de monta y antecedentes, y realizar una evaluación profesional. Montana describe además la observación de ojos y zona reproductiva; Nebraska recomienda acordar la prevención sanitaria con el veterinario. La elección amarillo/rojo sigue siendo editorial.
 - **Bibliografía del Word:** Morrell es una revisión; Valverde es divulgación y Vergel-Martínez es trabajo de grado. Se identifican como tales y no se presentan como validaciones de este instrumento. Sevilla et al. estudia morfometría en semen descongelado y no autoriza predecir fertilidad individual por subespecie.
 
 ## Matriz completa de respuestas
@@ -108,9 +108,9 @@ Por ejemplo, un cambio grande de alimento, suplementación o disponibilidad de p
 
 ### Salud
 
-**En los últimos dos meses, ¿ha tenido fiebre medida o una enfermedad atendida por un profesional?** (`fiebre`)
+**En los últimos dos meses, ¿ha tenido fiebre o una enfermedad atendida por un profesional?** (`fiebre`)
 
-No estime la fiebre tocando al animal. Incluya lo que conste en sus registros o le haya indicado el profesional.
+Tome en cuenta lo observado, los registros y lo indicado por un profesional. Si tiene dudas, elija «No sé».
 
 | Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
 | --- | --- | --- | --- | --- |
@@ -118,15 +118,45 @@ No estime la fiebre tocando al animal. Incluya lo que conste en sus registros o 
 | No hay un antecedente conocido (`no`) | 🟢 Adecuada según lo declarado | No se declara ese antecedente. Esto no descarta una enfermedad ni confirma la calidad del semen. | Conserve el registro sanitario y consulte si aparecen cambios en el estado o desempeño del toro. | [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
 | No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
 
-**¿Observa actualmente cojera, dolor al moverse o una lesión visible en la zona genital?** (`lesiones`)
+**¿Observa actualmente cojera, dolor al moverse o una lesión que dificulte caminar?** (`lesiones`)
 
 Observe desde una distancia segura. No intente manipular al toro para responder.
 
 | Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
 | --- | --- | --- | --- | --- |
-| Sí, observo alguno de estos signos (`yes`) | 🔴 Requiere mayor atención | Estos signos pueden interferir con el bienestar o la capacidad de monta y requieren una valoración. Su presencia no permite conocer la calidad seminal. | Solicite valoración veterinaria del signo observado. Evite forzar el servicio o manipular la zona afectada. | [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
+| Sí, observo alguno de estos signos (`yes`) | 🔴 Requiere mayor atención | Estos signos pueden interferir con el bienestar o la capacidad de monta y requieren una valoración. Su presencia no permite conocer la calidad seminal. | Solicite valoración veterinaria del signo observado. Evite forzar el servicio o manipular al toro para responder. | [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
 | No he observado estos signos (`no`) | 🟢 Adecuada según lo declarado | No se declaran estos signos visibles. Algunas alteraciones solo se detectan mediante examen profesional. | Continúe observando el movimiento y el estado general desde una distancia segura. | [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
 | No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
+
+**¿Ha observado hinchazón, heridas o secreción en el escroto o el prepucio?** (`zona-reproductiva`)
+
+Observe desde una distancia segura; no toque ni examine al toro para responder.
+
+| Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
+| --- | --- | --- | --- | --- |
+| Sí, he observado alguno de estos cambios (`yes`) | 🔴 Requiere mayor atención | Los cambios visibles en el escroto o el prepucio ameritan valoración profesional. La causa y su posible relación con la reproducción no pueden determinarse con esta respuesta. | Solicite valoración veterinaria y describa lo que observó; evite manipular la zona para comprobarlo. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| No he observado esos cambios (`no`) | 🟢 Adecuada según lo declarado | No se declaran cambios visibles en estas zonas. Eso no descarta alteraciones que solo detecta un examen profesional ni demuestra calidad seminal normal. | Continúe observando de forma segura y comunique cualquier cambio al veterinario. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+| No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view) |
+
+**¿Ha notado dificultad para ver o alguna lesión visible en los ojos del toro?** (`vision`)
+
+Por ejemplo, si tropieza o presenta un cambio visible en los ojos. Observe desde una distancia segura.
+
+| Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
+| --- | --- | --- | --- | --- |
+| Sí, he observado esa dificultad o lesión (`yes`) | 🟡 Merece atención | La visión ayuda al toro a desplazarse y a encontrar las vacas. Una dificultad observada requiere revisión, pero no permite inferir la calidad de su semen. | Comente la observación con el veterinario para que valore los ojos y la capacidad de desplazamiento. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011) |
+| No he observado dificultad ni lesión (`no`) | 🟢 Adecuada según lo declarado | No se declara un problema visible de visión. Esto no sustituye el examen físico ni informa sobre el semen. | Mantenga la observación y comente cualquier cambio al profesional. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011) |
+| No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation); [Thomas · Missouri Extension](https://extension.missouri.edu/publications/g2011) |
+
+**¿Cuenta con un plan sanitario para el toro acordado con un veterinario?** (`plan-sanitario`)
+
+Puede incluir vacunas, control de parásitos y seguimiento de enfermedades según la finca.
+
+| Respuesta / condición declarada | Color / estado propuesto | Razón comunicada | Recomendación | Fuente de contexto |
+| --- | --- | --- | --- | --- |
+| Sí, hay un plan acordado (`yes`) | 🔵 Dato de contexto | Se declara un plan sanitario. Es información de contexto; el formulario no comprueba si está actualizado o si el toro está sano. | Revise con el veterinario que el plan siga ajustado al animal y a la finca. | [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
+| No hay un plan acordado (`no`) | 🟡 Merece atención | La ausencia de un plan acordado invita a revisar la prevención y el seguimiento sanitario. No indica por sí sola una alteración del semen. | Consulte al veterinario qué medidas preventivas y registros corresponden a esta finca y a este toro. | [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
+| No sé (`unknown`) | ⚪ Información insuficiente | No hay información suficiente para interpretar esta condición. | Observe o consulte los registros y, si sigue la duda, converse con el profesional. No es necesario adivinar la respuesta. | [Wilke et al., 2021 · Nebraska](https://extensionpubs.unl.edu/publication/g2332/na/html/view); [Van Emon et al., 2019 · Montana](https://extension-store.montana.edu/montguides/bull-breeding-soundness-evaluation) |
 
 ### El reproductor
 
@@ -240,7 +270,7 @@ Se conservaron las siete referencias del Word y se añadieron tres guías univer
 
 ## Revisión pendiente antes de presentar como contenido final
 
-1. Revisión docente de las 15 preguntas, su claridad para el público y cada nivel editorial propuesto.
+1. Revisión docente de las 18 preguntas, su claridad para el público y cada nivel editorial propuesto.
 2. Revisión por un profesional de andrología de las recomendaciones y del alcance del seguimiento sanitario.
 3. Confirmar que la interfaz muestra la explicación y recomendación de la opción seleccionada cuando existen; en su ausencia, usa las de la pregunta.
 4. Comprobar que resultados omitidos/desconocidos son grises con «Información insuficiente», y contexto se presenta como contexto, sin verde automático.

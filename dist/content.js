@@ -325,16 +325,16 @@ export const QUESTIONS = [
     sourceIds: ['araya2024', 'unl2021']
   },
   {
-    id: 'demanda', group: 'manejo', title: '¿Aumentó la demanda de monta sin revisar el plan de trabajo del toro?',
-    hint: 'Por ejemplo, más vacas, más recorridos o un periodo más concentrado. No hay una proporción toro:vacas universal para este formulario.',
+    id: 'cantidad-vacas', group: 'manejo', title: '¿Se ha aumentado la cantidad de vacas que debe cubrir el toro reproductor sin evaluar si tiene la capacidad para hacerlo?',
+    hint: 'Compare la cantidad de vacas asignadas antes y ahora. La capacidad del toro requiere valoración profesional; este formulario no fija una proporción toro:vacas.',
     options: [
-      { value: 'unplanned', label: 'Sí, aumentó sin revisar el plan', status: 'attention' },
-      { value: 'planned', label: 'Aumentó y se revisó el plan', status: 'context', explanation: 'La demanda se revisó según lo declarado. Estar en monta no implica por sí solo una alteración seminal.', recommendation: 'Continúe observando el servicio, el movimiento y la condición corporal durante el periodo.' },
-      { value: 'same', label: 'No aumentó la demanda', status: 'context', explanation: 'No se declara un aumento. La demanda actual aún debe corresponder al animal y a las condiciones de la finca.', recommendation: 'Mantenga la observación y revise el plan si cambian las condiciones de monta.' },
+      { value: 'unplanned', label: 'Sí, aumentó sin evaluar su capacidad', status: 'attention' },
+      { value: 'planned', label: 'Aumentó, pero se evaluó su capacidad', status: 'context', explanation: 'Se declara una revisión de la capacidad del toro antes de aumentar las vacas asignadas. Es un dato de manejo; no confirma calidad seminal ni garantiza preñez.', recommendation: 'Conserve la evaluación y continúe observando el servicio, el movimiento y la condición corporal.' },
+      { value: 'same', label: 'No aumentó la cantidad de vacas', status: 'context', explanation: 'No se declara un aumento de vacas asignadas. La cantidad actual todavía debe corresponder al animal y a las condiciones de la finca.', recommendation: 'Mantenga la observación y revise la capacidad del toro si cambian las condiciones de monta.' },
       unknownOption()
     ],
-    explanation: 'Un aumento sin planificación merece revisar el manejo. La actividad de monta no permite inferir una mala calidad seminal ni calcular la capacidad de servicio.',
-    recommendation: 'Revise con apoyo profesional la demanda, el terreno, el estado individual del toro y la observación durante la monta.',
+    explanation: 'Aumentar las vacas asignadas sin valorar la capacidad del toro merece revisar el manejo. Esta respuesta no permite inferir la calidad seminal ni calcular cuántas vacas puede cubrir.',
+    recommendation: 'Revise con apoyo profesional la cantidad de vacas, el terreno, el estado individual del toro y lo observado durante la monta.',
     sourceIds: ['unl2021', 'araya2024']
   },
   {

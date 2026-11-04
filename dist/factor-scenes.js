@@ -42,7 +42,7 @@ export const FACTOR_SCENES = {
     alt: 'Toro y vacas en un potrero cercado, con un cuaderno de registros sobre una cerca en primer plano. Fotografía de contexto generada con IA.',
     topics: [
       { id:'periodo', title:'Periodo reproductivo', x:15, y:25, description:'Ubica si está antes, durante o después de la monta, o si la finca no tiene un periodo definido.', observation:'Esta etapa se registra como contexto y no califica al toro.' },
-      { id:'demanda', title:'Demanda de monta', x:28, y:45, description:'Piensa en los cambios del grupo de vacas, los recorridos y la organización del trabajo del toro.', observation:'¿Cambió la demanda sin revisar el plan de manejo?' },
+      { id:'cantidad-vacas', title:'Demanda de monta', x:28, y:45, description:'Compara la cantidad de vacas asignadas al toro antes y ahora, y revisa si se valoró su capacidad.', observation:'¿Aumentó la cantidad de vacas sin evaluar si el toro puede cubrirlas?' },
       { id:'monta', title:'Observación del servicio', x:70, y:38, description:'Observa el servicio desde una distancia segura. Completar una monta no demuestra la calidad del semen.', observation:'¿Has observado dificultades repetidas para completar el servicio?' },
       { id:'hato', title:'Registros del hato', x:78, y:74, description:'Reúne los registros de servicios, celos y preñez. Una preocupación del hato puede tener distintas causas.', observation:'¿Hay resultados que convenga revisar con el profesional?' }
     ]

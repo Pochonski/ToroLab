@@ -35,8 +35,8 @@ test('An individual priority never changes other conditions or produces a global
 });
 
 test('Prior examinations and periods without mating remain contextual', () => {
-  const results = evaluateAnswers({ evaluacion: 'yes', monta: 'inactive', demanda: 'planned' });
-  for (const id of ['evaluacion','monta','demanda']) assert.equal(results.find(r => r.question.id === id).status, 'context');
+  const results = evaluateAnswers({ evaluacion: 'yes', monta: 'inactive', 'cantidad-vacas': 'planned' });
+  for (const id of ['evaluacion','monta','cantidad-vacas']) assert.equal(results.find(r => r.question.id === id).status, 'context');
   assert.ok(!QUESTIONS.some(q => q.id === 'raza'));
 });
 
@@ -86,6 +86,15 @@ test('Vaccination and father–daughter mating remain separate management condit
   assert.equal(results.find(r => r.question.id === 'hijas').status, 'attention');
   assert.match(results.find(r => r.question.id === 'hijas').question.explanation, /no demuestra un problema de calidad seminal/);
   assert.equal(evaluateAnswers({hijas:'unknown'}).find(r => r.question.id === 'hijas').status, 'unknown');
+});
+
+test('The increased-cow question uses the requested wording and retains independent criteria', () => {
+  const q = QUESTIONS.find(q => q.id === 'cantidad-vacas');
+  assert.equal(q.title, '¿Se ha aumentado la cantidad de vacas que debe cubrir el toro reproductor sin evaluar si tiene la capacidad para hacerlo?');
+  assert.equal(QUESTIONS.indexOf(q) + 1, 16);
+  assert.equal(evaluateAnswers({'cantidad-vacas':'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'attention');
+  assert.equal(evaluateAnswers({'cantidad-vacas':'unknown'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');
+  assert.equal(evaluateAnswers({demanda:'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');
 });
 
 test('All five groups and every published option have traceable explanations and sources', () => {

@@ -72,6 +72,20 @@ export const SOURCES = [
     summary: 'Guía universitaria revisada en julio de 2026: integra historia, examen físico y semen; explica que enfermedad, fiebre o lesiones pueden afectar la reproducción. El desempeño del hato tiene múltiples causas.'
   },
   {
+    id: 'muVacc2025', label: 'Payne y Morris, 2025 · Missouri',
+    title: 'Vaccination Program for a Cow-Calf Operation',
+    authors: 'C. A. Payne y C. Morris · University of Missouri Extension',
+    year: 2025, url: 'https://extension.missouri.edu/publications/g2104',
+    summary: 'Guía veterinaria para programas de vacunación en hatos de cría, incluidos toros reproductores. Las vacunas apropiadas dependen del riesgo y deben acordarse con el veterinario; la vacunación no evalúa la calidad seminal.'
+  },
+  {
+    id: 'muInbreed2021', label: 'Vogt et al., 2021 · Missouri',
+    title: 'Inbreeding: Its Meaning, Uses and Effects on Farm Animals',
+    authors: 'D. Vogt, H. A. Swartz y J. Massey · University of Missouri Extension',
+    year: 2021, url: 'https://extension.missouri.edu/publications/g2911',
+    summary: 'Guía universitaria sobre apareamientos entre animales emparentados; describe el cruce padre–hija y los posibles efectos de consanguinidad en la descendencia. Ese antecedente de manejo no informa sobre el semen del toro.'
+  },
+  {
     id: 'msu2019', label: 'Van Emon et al., 2019 · Montana',
     title: 'Bull Breeding Soundness Evaluation (MT201901AG)',
     authors: 'M. Van Emon, C. Buck y M. Hammond · Montana State University Extension',
@@ -97,10 +111,10 @@ export const FACTORS = [
   },
   {
     id: 'salud', icon: 'heart', title: 'Salud',
-    short: 'Antecedentes y signos de salud',
-    description: 'Los antecedentes de fiebre o enfermedad, el movimiento, los ojos y los cambios visibles en la zona reproductiva son información útil para el profesional. Observar al toro por fuera no reemplaza el examen.',
-    technical: 'La evaluación andrológica integra antecedentes, estado físico y aparato reproductor, junto con el análisis seminal cuando corresponde. Enfermedad y fiebre pueden relacionarse con cambios en el semen; lesiones y problemas de visión pueden dificultar el desplazamiento o la monta. El plan sanitario debe revisarse con el veterinario según la finca.',
-    sourceIds: ['mu2026', 'msu2019']
+    short: 'Antecedentes, signos y vacunas',
+    description: 'Los antecedentes de fiebre o enfermedad, el movimiento, los ojos, los cambios visibles en la zona reproductiva y las vacunas son información útil para el profesional. Observar al toro por fuera no reemplaza el examen.',
+    technical: 'La evaluación andrológica integra antecedentes, estado físico y aparato reproductor, junto con el análisis seminal cuando corresponde. Enfermedad y fiebre pueden relacionarse con cambios en el semen; lesiones y problemas de visión pueden dificultar el desplazamiento o la monta. Las vacunas necesarias dependen del riesgo y del programa acordado con el veterinario para cada finca.',
+    sourceIds: ['mu2026', 'msu2019', 'muVacc2025']
   },
   {
     id: 'reproductor', icon: 'bull', title: 'El reproductor',
@@ -111,10 +125,10 @@ export const FACTORS = [
   },
   {
     id: 'manejo', icon: 'calendar', title: 'Manejo reproductivo',
-    short: 'Periodo de monta y observación',
-    description: 'Durante la monta, observe cómo se mueve y sirve el toro, y registre lo que ocurre en el hato. La demanda de trabajo se debe planificar según el reproductor y las condiciones de la finca.',
-    technical: 'Un estudio con toros Brahman detectó variaciones cinemáticas y morfométricas entre momentos del periodo de monta, sin demostrar que toda actividad reproductiva deteriore el semen. Los sistemas CASA miden trayectorias y velocidades; sus resultados requieren protocolos y una interpretación profesional.',
-    sourceIds: ['araya2024', 'valverde2021', 'unl2021', 'mu2026']
+    short: 'Monta, registros y parentesco',
+    description: 'Durante la monta, observe cómo se mueve y sirve el toro, y registre lo que ocurre en el hato. Revise también el parentesco de las hembras destinadas a ese reproductor. Estos datos de manejo no permiten evaluar su semen.',
+    technical: 'Un estudio con toros Brahman detectó variaciones cinemáticas y morfométricas entre momentos del periodo de monta, sin demostrar que toda actividad reproductiva deteriore el semen. Los sistemas CASA miden trayectorias y velocidades; sus resultados requieren protocolos y una interpretación profesional. El cruce padre–hija es un asunto de consanguinidad de la descendencia, separado de la calidad seminal del reproductor.',
+    sourceIds: ['araya2024', 'valverde2021', 'unl2021', 'mu2026', 'muInbreed2021']
   }
 ];
 
@@ -246,16 +260,16 @@ export const QUESTIONS = [
     sourceIds: ['msu2019', 'mu2026']
   },
   {
-    id: 'plan-sanitario', group: 'salud', title: '¿Cuenta con un plan sanitario para el toro acordado con un veterinario?',
-    hint: 'Puede incluir vacunas, control de parásitos y seguimiento de enfermedades según la finca.',
+    id: 'vacunas', group: 'salud', title: '¿El toro cuenta con todas sus vacunas?',
+    hint: '«Todas» se refiere a las vacunas indicadas por el veterinario para este toro y esta finca; no existe una lista universal.',
     options: [
-      { value: 'yes', label: 'Sí, hay un plan acordado', status: 'context', explanation: 'Se declara un plan sanitario. Es información de contexto; el formulario no comprueba si está actualizado o si el toro está sano.', recommendation: 'Revise con el veterinario que el plan siga ajustado al animal y a la finca.' },
-      { value: 'no', label: 'No hay un plan acordado', status: 'attention' },
+      { value: 'yes', label: 'Sí, están al día según el plan veterinario', status: 'context', explanation: 'Se declara que recibió las vacunas indicadas para este toro. Es un dato de manejo; no confirma ausencia de enfermedad ni calidad seminal normal.', recommendation: 'Conserve el registro de vacunación y revise con el veterinario las próximas fechas.' },
+      { value: 'no', label: 'No, hay vacunas indicadas pendientes', status: 'attention' },
       unknownOption()
     ],
-    explanation: 'La ausencia de un plan acordado invita a revisar la prevención y el seguimiento sanitario. No indica por sí sola una alteración del semen.',
-    recommendation: 'Consulte al veterinario qué medidas preventivas y registros corresponden a esta finca y a este toro.',
-    sourceIds: ['unl2021', 'msu2019']
+    explanation: 'Una vacuna indicada pendiente es un punto de manejo sanitario para revisar. No demuestra una alteración del semen ni permite juzgar la protección del animal.',
+    recommendation: 'Revise el registro con el veterinario y acuerde qué vacunas corresponden, sin aplicar un calendario universal.',
+    sourceIds: ['muVacc2025', 'unl2021']
   },
   {
     id: 'edad', group: 'reproductor', title: '¿Cuál es la edad aproximada del toro?',
@@ -348,6 +362,18 @@ export const QUESTIONS = [
     explanation: 'Un resultado preocupante del hato justifica una revisión integral. Puede relacionarse con las hembras, el toro, la nutrición, la sanidad o el manejo; no demuestra una causa seminal.',
     recommendation: 'Reúna los registros de servicios, celos y preñez y revíselos con el profesional junto con la evaluación de los animales.',
     sourceIds: ['mu2026', 'msu2019']
+  },
+  {
+    id: 'hijas', group: 'manejo', title: '¿Existen registros de que el reproductor haya sido utilizado para cubrir o inseminar a sus propias hijas?',
+    hint: 'Revise la identificación de las hembras y los registros de monta o inseminación. Si no puede comprobar el parentesco, elija «No sé».',
+    options: [
+      { value: 'yes', label: 'Sí, los registros muestran ese uso', status: 'attention' },
+      { value: 'no', label: 'No, los registros muestran que no ocurrió', status: 'context', explanation: 'Los registros disponibles no muestran ese cruce. Es un dato de planificación genética, no una evaluación del semen o de la fertilidad del toro.', recommendation: 'Mantenga identificados padres e hijas y revise el parentesco antes de asignar nuevos servicios.' },
+      unknownOption()
+    ],
+    explanation: 'El cruce padre–hija es un apareamiento entre animales estrechamente emparentados. Merece revisar el plan genético por sus posibles efectos en la descendencia; no demuestra un problema de calidad seminal del toro.',
+    recommendation: 'Revise los registros de parentesco y los próximos apareamientos con asesoría en reproducción o genética bovina.',
+    sourceIds: ['muInbreed2021']
   }
 ];
 

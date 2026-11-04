@@ -5,7 +5,7 @@ import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from '../dist/content.js
 
 test('A case with missing or unrecognized answers never becomes favorable', () => {
   const empty = evaluateAnswers({});
-  assert.equal(empty.length, 18);
+  assert.equal(empty.length, 19);
   assert.ok(empty.every(r => r.status === 'unknown' && r.answer === null));
   const unrecognized = Object.fromEntries(QUESTIONS.map(q => [q.id, 'not-a-valid-answer']));
   assert.ok(evaluateAnswers(unrecognized).every(r => r.status === 'unknown'));
@@ -69,12 +69,23 @@ test('The five health questions preserve prior answers and leave new conditions 
   assert.equal(health.length, 5);
   assert.equal(health[0].id, 'fiebre');
   assert.ok(!health[0].title.includes('fiebre medida'));
-  const newIds = ['zona-reproductiva', 'vision', 'plan-sanitario'];
+  assert.equal(health[4].id, 'vacunas');
+  assert.ok(!QUESTIONS.some(q => q.id === 'plan-sanitario'));
+  const newIds = ['zona-reproductiva', 'vision', 'vacunas', 'hijas'];
   const previousAnswers = Object.fromEntries(QUESTIONS.filter(q => !newIds.includes(q.id)).map(q => [q.id, q.options[0].value]));
   const results = evaluateAnswers(previousAnswers);
   for (const result of results) {
     assert.equal(result.status, newIds.includes(result.question.id) ? 'unknown' : result.question.options[0].status);
   }
+});
+
+test('Vaccination and father–daughter mating remain separate management conditions, not semen conclusions', () => {
+  assert.equal(QUESTIONS.filter(q => q.group === 'manejo').length, 5);
+  const results = evaluateAnswers({ vacunas: 'yes', hijas: 'yes' });
+  assert.equal(results.find(r => r.question.id === 'vacunas').status, 'context');
+  assert.equal(results.find(r => r.question.id === 'hijas').status, 'attention');
+  assert.match(results.find(r => r.question.id === 'hijas').question.explanation, /no demuestra un problema de calidad seminal/);
+  assert.equal(evaluateAnswers({hijas:'unknown'}).find(r => r.question.id === 'hijas').status, 'unknown');
 });
 
 test('All five groups and every published option have traceable explanations and sources', () => {
@@ -100,7 +111,7 @@ test('All five groups and every published option have traceable explanations and
 test('The review matrix includes every question and each answer option', async () => {
   const matrix = await readFile(new URL('../docs/criterios-revision.md', import.meta.url), 'utf8');
   for (const q of QUESTIONS) {
-    assert.ok(matrix.includes(q.title), `Missing question ${q.id}`);
+    assert.equal(matrix.split(q.title).length - 1, 1, `Question ${q.id} should appear once in the review matrix`);
     for (const o of q.options) assert.ok(matrix.includes(o.label), `Missing option ${q.id}/${o.value}`);
   }
   assert.match(matrix, /no validan las preguntas/);

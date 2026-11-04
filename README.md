@@ -28,13 +28,13 @@ Las respuestas se guardan en `sessionStorage`, solo en la pestaña de la visita,
 
 Los estados son `adequate`, `attention`, `priority`, `unknown` y `context`. No se suman, promedian ni producen una etiqueta global. Una respuesta desconocida o ausente siempre es `unknown`; edad y raza nunca generan calificaciones. Revisar los criterios con el docente antes de cualquier difusión pública.
 
-El cuestionario tiene 18 preguntas, cinco de ellas en Salud. La edad aproximada y el momento del periodo reproductivo se registran exclusivamente como contexto (azul); sus opciones desconocidas son información insuficiente (gris). Los rangos de edad son agrupaciones descriptivas y no umbrales clínicos. Las visitas que habían completado versiones de 13 o 15 preguntas conservan sus respuestas y se reanudan en el primer grupo con una pregunta nueva pendiente.
+El cuestionario tiene 19 preguntas: cinco en Salud y cinco en Manejo reproductivo. La edad aproximada y el momento del periodo reproductivo se registran exclusivamente como contexto (azul); sus opciones desconocidas son información insuficiente (gris). Los rangos de edad son agrupaciones descriptivas y no umbrales clínicos. Las visitas que habían completado versiones anteriores conservan sus respuestas reconocidas y se reanudan en el primer grupo con una pregunta nueva pendiente. La pregunta anterior sobre el plan sanitario se sustituyó por una sobre vacunas; su respuesta anterior no se reutiliza como respuesta a vacunas.
 
 En «Factores» se pueden seleccionar los puntos de la escena o sus botones con texto. La selección abre una explicación educativa y no registra respuestas. «Relacionarlo con mi caso» lleva al grupo correspondiente y enfoca la pregunta, sin seleccionar ninguna opción. El contenido se puede recorrer con teclado sin completar el caso.
 
 ## Recursos y acceso
 
-El sitio contiene diez referencias enlazadas y modelos educativos de movimiento, estructura y cantidad por volumen. Las fotografías y los modelos generados con IA no son resultados de laboratorio ni tienen escala diagnóstica. No hay videos, descargas ficticias ni estadísticas inventadas. La tipografía puede descargarse desde Google Fonts; si no está disponible, se usan fuentes del dispositivo. Los enlaces bibliográficos abren las páginas externas solo al seleccionarlos.
+El sitio contiene doce referencias enlazadas y modelos educativos de movimiento, estructura y cantidad por volumen. Las fotografías y los modelos generados con IA no son resultados de laboratorio ni tienen escala diagnóstica. No hay videos, descargas ficticias ni estadísticas inventadas. La tipografía puede descargarse desde Google Fonts; si no está disponible, se usan fuentes del dispositivo. Los enlaces bibliográficos abren las páginas externas solo al seleccionarlos.
 
 La publicación en Vercel es pública por solicitud del propietario. El repositorio de GitHub conserva sus permisos independientes. La configuración anterior de Sites se conserva en `.openai/hosting.json`; no interviene en los despliegues de Vercel. La etiqueta `noindex` se mantiene para esta versión de revisión académica y no limita el acceso mediante enlace.
 

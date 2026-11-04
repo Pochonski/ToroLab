@@ -85,5 +85,14 @@ export function renderFactorScene(group, selectedId) {
   const scene = FACTOR_SCENES[group];
   if (!scene) return '';
   const selected = sceneTopic(group,selectedId);
-  return `<figure class="interactive-scene" data-interactive-scene="${group}"><figcaption class="scene-heading"><h3>${esc(scene.title)}</h3><p>Selecciona un punto y descubre qué observar.</p></figcaption><div class="scene-stage">${factorPhoto(group,{className:"scene-photo",sizes:"(max-width: 700px) 90vw, 850px",loading:"eager"})}${scene.topics.map((t,i) => `<button class="scene-marker" style="left:${t.x}%;top:${t.y}%" data-action="scene-topic" data-value="${t.id}" data-group="${group}" data-caption="${esc(t.title)}" aria-label="${esc(t.title)}, punto ${i+1}" aria-pressed="${selected.id===t.id}" aria-controls="scene-detail"><span>${i+1}</span></button>`).join('')}<span class="scene-caption">Imagen de contexto generada con IA</span></div><div class="scene-topic-list" role="group" aria-label="Temas de la escena">${scene.topics.map((t,i) => `<button class="scene-topic-button" data-action="scene-topic" data-value="${t.id}" data-group="${group}" aria-pressed="${selected.id===t.id}" aria-controls="scene-detail"><span>${i+1}</span>${esc(t.title)}</button>`).join('')}</div><div class="scene-detail" id="scene-detail" aria-live="polite" aria-atomic="true">${renderSceneDetail(group,selected.id)}</div></figure>`;
+  return `<figure class="interactive-scene" data-interactive-scene="${group}">
+    <figcaption class="scene-heading"><h3>${esc(scene.title)}</h3><p>Selecciona un punto y descubre qué observar.</p></figcaption>
+    <div class="scene-interaction">
+      <div class="scene-visual">
+        <div class="scene-stage">${factorPhoto(group,{className:"scene-photo",sizes:"(max-width: 700px) 90vw, 55vw",loading:"eager"})}${scene.topics.map((t,i) => `<button class="scene-marker" style="left:${t.x}%;top:${t.y}%" data-action="scene-topic" data-value="${t.id}" data-group="${group}" data-caption="${esc(t.title)}" aria-label="${esc(t.title)}, punto ${i+1}" aria-pressed="${selected.id===t.id}" aria-controls="scene-detail"><span>${i+1}</span></button>`).join('')}<span class="scene-caption">Imagen de contexto generada con IA</span></div>
+        <div class="scene-topic-list" role="group" aria-label="Temas de la escena">${scene.topics.map((t,i) => `<button class="scene-topic-button" data-action="scene-topic" data-value="${t.id}" data-group="${group}" aria-pressed="${selected.id===t.id}" aria-controls="scene-detail"><span>${i+1}</span>${esc(t.title)}</button>`).join('')}</div>
+      </div>
+      <div class="scene-detail" id="scene-detail" aria-live="polite" aria-atomic="true">${renderSceneDetail(group,selected.id)}</div>
+    </div>
+  </figure>`;
 }

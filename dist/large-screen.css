@@ -1,0 +1,118 @@
+/* Readable proportions for large laptop and desktop monitors.
+   Small screens keep their existing layout and typography. */
+@media screen and (min-width: 1600px) {
+  .container { width: min(82vw, 1760px); }
+  .topline { font-size: clamp(13px, .72vw, 16px); }
+  .topline .container { height: 42px; }
+  .header-inner { height: clamp(110px, 6.5vw, 132px); gap: 36px; }
+  .brand { gap: 15px; }
+  .brand-mark { width: clamp(66px, 3.8vw, 82px); height: clamp(66px, 3.8vw, 82px); }
+  .brand strong { font-size: clamp(24px, 1.3vw, 32px); }
+  .brand small { font-size: clamp(13px, .72vw, 17px); }
+  .site-header nav { gap: clamp(27px, 1.7vw, 42px); }
+  .site-header nav a { font-size: clamp(17px, .82vw, 21px); }
+  .site-header nav a[aria-current=page]:after { bottom: 26px; }
+  .page { padding-block: 58px 110px; }
+  .breadcrumb { font-size: clamp(14px, .72vw, 17px); margin-bottom: 38px; }
+  .eyebrow { font-size: clamp(13px, .7vw, 17px); }
+  .page-intro { max-width: 1180px; margin-bottom: 48px; }
+  .page-intro h1 { font-size: clamp(50px, 2.8vw, 72px); }
+  .page-intro>p:not(.eyebrow) { font-size: clamp(18px, .95vw, 23px); max-width: 1040px; }
+  .button { font-size: clamp(17px, .8vw, 20px); min-height: 58px; padding: 15px 27px; }
+  .text-link { font-size: clamp(16px, .8vw, 20px); }
+  .sources-inline { font-size: clamp(14px, .72vw, 18px); }
+
+  .home { padding-block: 40px 110px; }
+  .hero { height: clamp(650px, 38vw, 820px); }
+  .hero h1 { font-size: clamp(60px, 3vw, 78px); max-width: 650px; }
+  .hero-panel p { font-size: clamp(18px, .94vw, 23px); max-width: 540px; }
+  .hero-secondary { font-size: clamp(16px, .8vw, 20px); }
+  .hero-caption, .photo-credit { font-size: clamp(12px, .65vw, 15px); }
+  .quick-card { padding: 31px 30px; }
+  .quick-card h2 { font-size: clamp(19px, 1vw, 24px); }
+  .quick-card p { font-size: clamp(15px, .8vw, 19px); }
+  .quick-card .icon-box { width: 44px; }
+  .quick-card .icon { width: 34px; height: 34px; }
+  .section-heading h2 { font-size: clamp(42px, 2.25vw, 57px); }
+  .section-heading p { font-size: clamp(18px, .95vw, 23px); }
+  .factor-preview { min-height: clamp(340px, 19vw, 425px); }
+  .factor-preview h3 { font-size: clamp(21px, 1.12vw, 27px); max-width: none; }
+  .factor-preview p { font-size: clamp(15px, .8vw, 19px); max-width: none; }
+  .factor-preview-number { width: 38px; height: 38px; font-size: 14px; }
+  .lab-feature { min-height: 480px; }
+  .lab-feature-copy { padding: 60px; }
+  .lab-feature h2 { font-size: clamp(47px, 2.5vw, 62px); }
+  .lab-feature-copy>p:not(.eyebrow) { font-size: clamp(18px, .95vw, 23px); max-width: 520px; }
+  .journey-banner h3 { font-size: clamp(22px, 1.1vw, 27px); }
+  .journey-banner p, .how-card p { font-size: clamp(16px, .85vw, 21px); }
+  .home-how h2 { font-size: clamp(40px, 2vw, 52px); }
+  .how-card h3 { font-size: clamp(20px, 1vw, 25px); }
+
+  .factor-layout { grid-template-columns: clamp(310px, 18vw, 380px) minmax(0, 1fr); gap: 38px; }
+  .factor-tab { min-height: 102px; font-size: clamp(17px, .85vw, 21px); }
+  .factor-tab-photo { width: 75px; height: 75px; }
+  .factor-content h2 { font-size: clamp(43px, 2.2vw, 56px); }
+  .factor-content-top p:not(.eyebrow), .factor-cta p { font-size: clamp(18px, .95vw, 22px); }
+  .scene-heading h3 { font-size: clamp(21px, 1.1vw, 27px); }
+  .scene-heading p { font-size: clamp(17px, .85vw, 21px); }
+  .scene-marker>span { width: 43px; height: 43px; font-size: 17px; }
+  .scene-topic-button { font-size: clamp(16px, .82vw, 20px); min-height: 59px; }
+  .scene-detail h3 { font-size: clamp(27px, 1.4vw, 36px); }
+  .scene-detail p, .technical p { font-size: clamp(17px, .9vw, 22px); }
+  .scene-detail .scene-case-link, .technical summary { font-size: clamp(17px, .85vw, 21px); }
+  .educational-note { font-size: clamp(16px, .82vw, 20px); }
+
+  .case-layout { grid-template-columns: clamp(285px, 18vw, 365px) minmax(0, 1fr); gap: 50px; }
+  .step-list strong { font-size: clamp(18px, .92vw, 23px); }
+  .step-list small { font-size: clamp(15px, .75vw, 19px); }
+  .step-number { width: 43px; height: 43px; font-size: 18px; }
+  .case-aside-note p { font-size: clamp(16px, .82vw, 20px); }
+  .case-aside-note h3 { font-size: clamp(20px, 1vw, 25px); }
+  .case-form { --form-pad: clamp(42px, 2.5vw, 62px); }
+  .case-visual { height: clamp(280px, 16vw, 390px); }
+  .case-form-top h2 { font-size: clamp(39px, 2vw, 51px); }
+  .case-form-top p, .step-counter { font-size: clamp(16px, .8vw, 20px); }
+  .case-description { font-size: clamp(18px, .94vw, 23px); }
+  .question legend { font-size: clamp(21px, 1.08vw, 27px); }
+  .question-hint { font-size: clamp(17px, .85vw, 21px); }
+  .options { gap: 14px; }
+  .radio-option { font-size: clamp(18px, .94vw, 23px); min-height: 64px; padding: 16px 20px; }
+  .radio-option input { width: 22px; height: 22px; }
+  .privacy-note { font-size: clamp(15px, .77vw, 19px); }
+  .form-actions>span { font-size: clamp(15px, .75vw, 19px); }
+
+  .results-cover { min-height: 300px; }
+  .results-cover h2 { font-size: clamp(39px, 2vw, 52px); }
+  .results-cover p:not(.eyebrow), .result-detail p, .result-footer p { font-size: clamp(18px, .94vw, 23px); }
+  .review-notice p, .answer-line { font-size: clamp(16px, .82vw, 20px); }
+  .result-legend, .status-label { font-size: clamp(15px, .77vw, 19px); }
+  .result-group h2 { font-size: clamp(36px, 1.9vw, 49px); }
+  .result-title strong { font-size: clamp(20px, 1vw, 25px); }
+  .result-detail h3 { font-size: clamp(19px, .95vw, 24px); }
+
+  .evaluation-cover { min-height: 420px; }
+  .evaluation-cover h2 { font-size: clamp(42px, 2.2vw, 58px); }
+  .evaluation-cover p:not(.eyebrow), .professional-card p { font-size: clamp(18px, .94vw, 23px); }
+  .editorial-tag { font-size: clamp(14px, .72vw, 18px); }
+  .science-heading>p:last-child, .science-info p { font-size: clamp(18px, .94vw, 23px); }
+  .science-tabs button, .science-chip, .science-play, .science-camera button { font-size: clamp(17px, .85vw, 21px); }
+  .science-stage { height: clamp(500px, 32vw, 650px); }
+  .science-stamp { font-size: clamp(14px, .7vw, 17px); }
+  .science-control-group>span, .science-kicker { font-size: clamp(14px, .72vw, 18px); }
+  .science-info { min-height: 500px; }
+  .science-fine { font-size: clamp(16px, .8vw, 20px) !important; }
+  .evaluation-bottom h2 { font-size: clamp(38px, 2vw, 52px); }
+
+  .resource-layout { grid-template-columns: minmax(0, 1fr) clamp(385px, 25vw, 520px); gap: 50px; }
+  .source-card h2 { font-size: clamp(22px, 1.1vw, 28px); }
+  .source-card p, .project-card p { font-size: clamp(17px, .88vw, 22px); }
+  .source-year, .source-card .text-link { font-size: clamp(15px, .75vw, 19px); }
+  .project-card h2 { font-size: clamp(35px, 1.8vw, 46px); }
+  .criteria-heading { font-size: clamp(37px, 1.9vw, 49px); }
+  .criteria-table { font-size: clamp(15px, .75vw, 19px); }
+  .criteria-table caption { font-size: clamp(19px, .95vw, 24px); }
+  .criteria-table th { font-size: clamp(15px, .75vw, 19px); }
+
+  .footer-brand-name { font-size: clamp(24px, 1.2vw, 30px); }
+  .footer-top p, .footer-project, .footer-link, .footer-bottom { font-size: clamp(15px, .77vw, 19px); }
+}

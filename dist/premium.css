@@ -246,6 +246,10 @@ h3, h4 { letter-spacing: -.025em; }
 .project-authors li + li { margin-top: 4px; }
 .project-authors a { margin-left: 4px; color: #24593f; font-size: .88em; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 .project-authors a:hover { color: #137255; }
+.author-links { display: inline-flex; align-items: center; gap: 7px; vertical-align: middle; }
+.project-authors .author-portfolio, .footer-authors .author-portfolio { margin-left: 0; font-size: inherit; font-weight: inherit; }
+.project-authors .author-linkedin, .footer-authors .author-linkedin { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; flex: none; margin-left: 0; border-radius: 3px; background: #0a66c2; color: #fff; font: 700 13px/1 Arial, sans-serif; letter-spacing: -.07em; text-decoration: none; }
+.project-authors .author-linkedin:hover, .footer-authors .author-linkedin:hover { background: #004182; color: #fff; }
 .project-authors a:focus-visible, .footer-authors a:focus-visible, .case-reset-button:focus-visible { outline: 3px solid #d5ab5c; outline-offset: 3px; }
 .case-reset { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 18px; margin-top: 17px; }
 .case-reset-button { border: 0; background: transparent; color: #315c4b; padding: 9px 0; font: inherit; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }

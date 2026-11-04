@@ -42,7 +42,7 @@ La publicación en Vercel es pública por solicitud del propietario. El reposito
 
 ## Autoría académica
 
-Dikson Aarón Guzmán Sibaja ([ORCID](https://orcid.org/0009-0004-0368-7781)), José Ángel Aguirre Reyes ([ORCID](https://orcid.org/0009-0001-4447-772X)) y Joseph Fonseca Nuñez. Instituto Tecnológico de Costa Rica, Campus Local San Carlos. La identificación del proyecto no implica una aprobación institucional de la herramienta o de sus criterios.
+Dikson Aarón Guzmán Sibaja ([ORCID](https://orcid.org/0009-0004-0368-7781)), José Ángel Aguirre Reyes ([ORCID](https://orcid.org/0009-0001-4447-772X)) y [Joseph Fonseca Nuñez](https://joseph-fonseca-dev.vercel.app/) ([LinkedIn](https://www.linkedin.com/in/joseph-fonseca-n/)). Instituto Tecnológico de Costa Rica, Campus Local San Carlos. La identificación del proyecto no implica una aprobación institucional de la herramienta o de sus criterios.
 
 ## Despliegue automático en Vercel
 

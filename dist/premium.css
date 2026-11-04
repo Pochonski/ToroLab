@@ -22,7 +22,7 @@ h3, h4 { letter-spacing: -.025em; }
 .header-inner { height: 96px; }
 .site-header nav { gap: 30px; }
 .site-header nav a { font-size: 13px; }
-.brand-mark { width: 49px; height: 49px; padding: 5px; border: 1px solid #d8dece; border-radius: 50%; }
+.brand-mark { width: 57px; height: 57px; padding: 0; border: 0; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .brand strong { font-size: 20px; }
 .brand small { letter-spacing: .08em; font-size: 10px; }
 .skip-link { top: 12px; transform: translateY(-180%); visibility: hidden; }
@@ -244,8 +244,11 @@ h3, h4 { letter-spacing: -.025em; }
 .criteria-table th { font-size: 11px; }
 .site-footer { background: #173c30; color: #eff1e4; border-top: 0; padding-top: 49px; }
 .footer-top { padding-bottom: 35px; }
-.footer-brand { color: #f2f1df; font-size: 20px; }
-.footer-brand span, .footer-top p { color: #c2cdb7; font-size: 11px; }
+.footer-brand { display: inline-flex; align-items: center; gap: 13px; color: #f2f1df; font-size: 20px; }
+.footer-brand-mark { width: 62px; height: 62px; flex-shrink: 0; border-radius: 50%; object-fit: cover; background: #fffefa; }
+.footer-brand .footer-brand-name { color: #f2f1df; font: inherit; letter-spacing: inherit; }
+.footer-brand .footer-brand-name small { display: block; color: #c2cdb7; font-family: 'DM Sans', Arial, sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0; margin-top: 5px; }
+.footer-top p { color: #c2cdb7; font-size: 11px; }
 .footer-project strong, .footer-link { font-size: 12px; font-weight: 500; }
 .footer-bottom { border-color: #ffffff24; color: #c2cbb5; padding-block: 23px; font-size: 10px; }
 
@@ -334,7 +337,7 @@ h3, h4 { letter-spacing: -.025em; }
   .topline .container { height: 29px; }
   .header-inner { height: 80px; }
   .brand strong { font-size: 18px; }
-  .brand-mark { width: 43px; height: 43px; }
+  .brand-mark { width: 49px; height: 49px; }
   .brand small { font-size: 9px; }
   .menu-toggle { background: #fffefa; min-height: 43px; }
   .site-header nav { top: 79px; z-index: 10; background: #fffefa; }
@@ -492,7 +495,7 @@ h3, h4 { letter-spacing: -.025em; }
   .container { width: calc(100% - 28px); }
   .brand strong { font-size: 16px; }
   .brand { gap: 7px; }
-  .brand-mark { width: 38px; height: 38px; }
+  .brand-mark { width: 44px; height: 44px; }
   .menu-toggle { padding-inline: 9px; }
   .hero h1 { font-size: 33px; }
   .hero-panel { padding-inline: 23px; }

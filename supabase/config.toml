@@ -1,0 +1,7 @@
+[auth]
+site_url = "https://torolab-bovino.vercel.app/"
+additional_redirect_urls = [
+  "https://torolab-bovino.vercel.app/?auth=callback",
+  "https://calidad-seminal-bovina.vercel.app/?auth=callback",
+  "http://127.0.0.1:4173/?auth=callback"
+]

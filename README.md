@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="dist/assets/logo-calidad-seminal.png" alt="Logo de Calidad del semen bovino" width="110">
-  <h1>Calidad del semen bovino</h1>
-  <p><strong>Conocer para cuidar.</strong> Una experiencia educativa en español para explorar los factores que pueden relacionarse con la calidad seminal de un toro reproductor.</p>
-  <p><a href="https://calidad-seminal-bovina.vercel.app/">Visitar la web</a> · <a href="https://calidad-seminal-bovina.vercel.app/#factores">Explorar los factores</a> · <a href="https://calidad-seminal-bovina.vercel.app/#recursos">Revisar las fuentes</a></p>
+  <img src="dist/assets/torolab-logo.svg" alt="Logo de ToroLab" width="110">
+  <h1>ToroLab</h1>
+  <p><strong>Explora, Analiza y aprende.</strong> Una experiencia educativa en español para explorar los factores que pueden relacionarse con la calidad seminal de un toro reproductor.</p>
+  <p><a href="https://torolab-bovino.vercel.app/">Visitar la web</a> · <a href="https://torolab-bovino.vercel.app/#factores">Explorar los factores</a> · <a href="https://torolab-bovino.vercel.app/#recursos">Revisar las fuentes</a></p>
 </div>
 
 <p align="center">
@@ -64,13 +64,13 @@ Las respuestas se conservan en `sessionStorage` durante la visita a esa pestaña
 
 El identificador del proyecto está en [`dist/supabase-config.js`](dist/supabase-config.js). Coloca allí la clave pública `sb_publishable_…` desde **Supabase > Project Settings > API Keys**. La conexión PostgreSQL que empieza con `postgresql://` se usa para administrar el esquema y requiere la contraseña real en lugar de `[YOUR-PASSWORD]`. La página se conecta mediante la API HTTPS de Supabase con la clave pública. La contraseña de PostgreSQL y la clave secreta de Google deben permanecer fuera de `dist/`.
 
-Ejecuta [`supabase/migrations/20261112000000_saved_cases.sql`](supabase/migrations/20261112000000_saved_cases.sql) en el editor SQL del proyecto. Configura un cliente OAuth web de Google y agrega `https://dbraawsvosmipleetfbu.supabase.co/auth/v1/callback` como URI de redirección autorizada. Activa ese proveedor en **Supabase > Authentication > Providers > Google** con el ID y secreto del cliente. En **Authentication > URL Configuration**, define `https://calidad-seminal-bovina.vercel.app/` como URL del sitio y autoriza `https://calidad-seminal-bovina.vercel.app/?auth=callback` y `http://127.0.0.1:4173/?auth=callback` como direcciones de retorno. Publica la aplicación OAuth para usuarios externos cuando el acceso se destine a todos los visitantes.
+Ejecuta [`supabase/migrations/20261112000000_saved_cases.sql`](supabase/migrations/20261112000000_saved_cases.sql) en el editor SQL del proyecto. Configura un cliente OAuth web de Google y agrega `https://dbraawsvosmipleetfbu.supabase.co/auth/v1/callback` como URI de redirección autorizada. Activa ese proveedor en **Supabase > Authentication > Providers > Google** con el ID y secreto del cliente. [`supabase/config.toml`](supabase/config.toml) define `https://torolab-bovino.vercel.app/` como URL del sitio y autoriza el retorno de Google a la dirección nueva, la anterior y el servidor local. Publica la aplicación OAuth para usuarios externos cuando el acceso se destine a todos los visitantes.
 
 La interfaz incluye controles con etiquetas, navegación por teclado, indicaciones que no dependen solo del color y soporte para la preferencia de movimiento reducido. Las animaciones se detienen fuera de pantalla o cuando la pestaña está oculta; el modelo 3D dispone de una representación estática alternativa.
 
 ## Publicación y revisión
 
-La rama `main` se despliega automáticamente en [Vercel](https://calidad-seminal-bovina.vercel.app/) mediante la integración con GitHub. [`vercel.json`](vercel.json) ejecuta `npm run check` y publica `dist/`. La web es accesible mediante su enlace y mantiene `noindex` mientras se revisa el contenido académico.
+La rama `main` se despliega automáticamente en [Vercel](https://torolab-bovino.vercel.app/) mediante la integración con GitHub. [`vercel.json`](vercel.json) ejecuta `npm run check` y publica `dist/`. La web es accesible mediante su enlace y mantiene `noindex` mientras se revisa el contenido académico.
 
 Las referencias respaldan el contexto general, pero **no validan el cuestionario ni sus niveles de atención**. Las correcciones científicas o editoriales deben contrastarse con las fuentes y actualizar tanto [`dist/content.js`](dist/content.js) como la [matriz de criterios](docs/criterios-revision.md). Antes de proponer cambios, ejecuta `npm run check`.
 

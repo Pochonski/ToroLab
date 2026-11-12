@@ -26,8 +26,8 @@ El contenido educativo se puede recorrer sin completar el cuestionario. Las foto
 Necesitas **Python 3** para el servidor local y **Node.js** para las comprobaciones. El cuestionario público funciona sin cuenta. Para guardar casos se usa Supabase Auth con Google y la base de datos del proyecto.
 
 ```bash
-git clone https://github.com/Pochonski/calidad-seminal-bovina.git
-cd calidad-seminal-bovina
+git clone https://github.com/Pochonski/ToroLab.git
+cd ToroLab
 npm run dev
 ```
 

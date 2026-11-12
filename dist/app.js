@@ -6,6 +6,7 @@ import { supabaseUrl, supabasePublishableKey } from './supabase-config.js';
 const main = document.querySelector('main');
 const nav = document.querySelector('#primary-nav');
 const menu = document.querySelector('#menu-toggle');
+const accountButton = document.querySelector('#account-button');
 const storageKey = 'calidad-seminal-caso-v1';
 const pendingKey = 'calidad-seminal-auth-pending';
 const draftKey = 'calidad-seminal-save-draft';
@@ -27,6 +28,7 @@ caseClient?.auth.onAuthStateChange((event, session) => {
     if (routeInfo().route === 'casos') cloudNotice(nextUserId ? '' : 'Sesión cerrada. Inicia sesión para consultar tus casos.');
   }
   activeUserId = nextUserId;
+  accountButton.textContent = nextUserId ? 'Mis casos' : 'Iniciar sesión';
 });
 const statusLabels = {
   adequate: 'Adecuada según lo declarado', attention: 'Merece atención',
@@ -227,7 +229,11 @@ function cloudNotice(message) {
   if (['resultados', 'casos'].includes(routeInfo().route)) renderPage(false);
 }
 async function beginGoogleLogin(action) {
-  if (!caseClient) { cloudNotice('El guardado no está disponible en este momento.'); return; }
+  if (!caseClient) {
+    if (action === 'casos') location.hash = 'casos';
+    cloudNotice('El inicio de sesión no está disponible en este momento.');
+    return;
+  }
   try {
     sessionStorage.setItem(pendingKey, action);
     const redirectTo = `${location.origin}${location.pathname}?auth=callback`;
@@ -235,6 +241,7 @@ async function beginGoogleLogin(action) {
     if (error) throw error;
   } catch {
     sessionStorage.removeItem(pendingKey);
+    if (action === 'casos') location.hash = 'casos';
     cloudNotice('No se pudo iniciar sesión con Google. Inténtalo de nuevo.');
   }
 }
@@ -339,6 +346,8 @@ function renderPage(focus = true) {
     if (link.dataset.nav === route || (route === 'criterios' && link.dataset.nav === 'recursos')) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   });
+  if (route === 'casos') accountButton.setAttribute('aria-current', 'page');
+  else accountButton.removeAttribute('aria-current');
   nav.classList.remove('is-open'); menu.setAttribute('aria-expanded','false');
   if (focus) { main.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }
   if (route === 'mi-caso' && pendingQuestionFocus) {
@@ -350,6 +359,23 @@ function renderPage(focus = true) {
 menu.addEventListener('click', () => {
   const isOpen = menu.getAttribute('aria-expanded') !== 'true';
   menu.setAttribute('aria-expanded',String(isOpen));nav.classList.toggle('is-open',isOpen);
+});
+accountButton.addEventListener('click', async () => {
+  accountButton.disabled = true;
+  try {
+    if (!caseClient) { await beginGoogleLogin('casos'); return; }
+    const { data: { session }, error } = await caseClient.auth.getSession();
+    if (error) throw error;
+    if (session) {
+      if (routeInfo().route === 'casos') await loadCases();
+      else location.hash = 'casos';
+    } else await beginGoogleLogin('casos');
+  } catch {
+    location.hash = 'casos';
+    cloudNotice('No se pudo consultar la sesión. Inténtalo de nuevo.');
+  } finally {
+    accountButton.disabled = false;
+  }
 });
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && nav.classList.contains('is-open')) { nav.classList.remove('is-open');menu.setAttribute('aria-expanded','false');menu.focus(); }

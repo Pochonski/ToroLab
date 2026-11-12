@@ -5,7 +5,7 @@ import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from '../dist/content.js
 
 test('A case with missing or unrecognized answers never becomes favorable', () => {
   const empty = evaluateAnswers({});
-  assert.equal(empty.length, 18);
+  assert.equal(empty.length, 22);
   assert.ok(empty.every(r => r.status === 'unknown' && r.answer === null));
   const unrecognized = Object.fromEntries(QUESTIONS.map(q => [q.id, 'not-a-valid-answer']));
   assert.ok(evaluateAnswers(unrecognized).every(r => r.status === 'unknown'));
@@ -35,8 +35,8 @@ test('An individual priority never changes other conditions or produces a global
 });
 
 test('Mating context and periods without mating remain contextual', () => {
-  const results = evaluateAnswers({ 'modalidad-monta': 'continua', monta: 'inactive', 'cantidad-vacas': 'planned' });
-  for (const id of ['modalidad-monta','monta','cantidad-vacas']) assert.equal(results.find(r => r.question.id === id).status, 'context');
+  const results = evaluateAnswers({ 'modalidad-monta': 'continua', monta: 'inactive', 'vacas-asignadas': '25-30' });
+  for (const id of ['modalidad-monta','monta','vacas-asignadas']) assert.equal(results.find(r => r.question.id === id).status, 'context');
   assert.ok(!QUESTIONS.some(q => q.id === 'raza'));
 });
 
@@ -67,20 +67,20 @@ test('Older cases retain other results while changed questions await fresh answe
   }
 });
 
-test('Questions 5 and 12 use the requested wording and answers', () => {
-  const weight = QUESTIONS[4];
+test('The weight and mating questions retain their wording and answers', () => {
+  const weight = QUESTIONS.find(q => q.id === 'perdida-peso');
   assert.equal(weight.id, 'perdida-peso');
   assert.equal(weight.title, 'En los últimos dos meses, ¿ha observado pérdida marcada de peso o de condición corporal?');
   assert.deepEqual(weight.options.map(o=>o.value), ['yes','no','unknown']);
   assert.equal(evaluateAnswers({'perdida-peso':'yes'}).find(r=>r.question.id === weight.id).status,'attention');
-  const mating = QUESTIONS[11];
+  const mating = QUESTIONS.find(q => q.id === 'modalidad-monta');
   assert.equal(mating.id, 'modalidad-monta');
   assert.equal(mating.title, '¿Cómo se maneja el período de monta del toro reproductor en la finca?');
   assert.deepEqual(mating.options.map(o=>o.label), [
-    'Monta continua: el toro permanece con las vacas durante todo el año.',
-    'Monta estacional: el toro se utiliza únicamente durante determinados meses.',
-    'Monta controlada: el toro se introduce con las vacas en períodos programados.',
-    'No existe un manejo reproductivo definido.',
+    'El toro permanece con las vacas todo el año',
+    'Se usa al toro solo en ciertos meses',
+    'Se introduce al toro en fechas programadas',
+    'No hay fechas ni períodos de monta definidos',
     'No sé'
   ]);
   assert.ok(mating.options.every(o=>o.status === (o.value === 'unknown' ? 'unknown' : 'context')));
@@ -114,13 +114,28 @@ test('Vaccination records and father–daughter mating remain separate managemen
   assert.equal(evaluateAnswers({hijas:'unknown'}).find(r => r.question.id === 'hijas').status, 'unknown');
 });
 
-test('The increased-cow question uses the requested wording and retains independent criteria', () => {
-  const q = QUESTIONS.find(q => q.id === 'cantidad-vacas');
-  assert.equal(q.title, '¿Se ha aumentado la cantidad de vacas que debe cubrir el toro reproductor sin evaluar si tiene la capacidad para hacerlo?');
-  assert.equal(QUESTIONS.indexOf(q) + 1, 15);
-  assert.equal(evaluateAnswers({'cantidad-vacas':'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'attention');
-  assert.equal(evaluateAnswers({'cantidad-vacas':'unknown'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');
-  assert.equal(evaluateAnswers({demanda:'unplanned'}).find(r => r.question.id === 'cantidad-vacas').status, 'unknown');
+test('The first case group records herd organization and both relation ranges', () => {
+  const general = QUESTIONS.filter(q => q.group === 'general');
+  assert.deepEqual(general.map(q => q.id), ['organizacion-hato', 'relacion-hato', 'numero-toros']);
+  assert.equal(general[2].parentId, 'relacion-hato');
+  assert.ok(general.every(q => q.options.every(o => o.status === (o.value === 'unknown' ? 'unknown' : 'context'))));
+  assert.equal(QUESTIONS.filter(q => !q.parentId).length, 21);
+  assert.equal(QUESTIONS.findIndex(q => q.id === 'sombra'), 3);
+  assert.equal(QUESTIONS.find(q => q.id === 'sombra').title, '¿El toro tiene acceso a sombra durante las horas de mayor temperatura?');
+  assert.equal(QUESTIONS.find(q => q.id === 'calor').title, 'En los últimos dos meses, ¿ha pasado varios días de exposición a altas temperaturas sin poder refugiarse?');
+  assert.equal(evaluateAnswers({'numero-toros':'unknown'}).find(r => r.question.id === 'numero-toros').status, 'unknown');
+});
+
+test('The andrological analysis and individual cow assignment have independent criteria', () => {
+  const analysis = QUESTIONS.find(q => q.id === 'analisis-andrologico');
+  const cows = QUESTIONS.find(q => q.id === 'vacas-asignadas');
+  assert.equal(QUESTIONS.filter(q => !q.parentId).indexOf(analysis) + 1, 15);
+  assert.equal(QUESTIONS.filter(q => !q.parentId).indexOf(cows) + 1, 18);
+  assert.deepEqual(analysis.options.map(o => o.value), ['menos-ano','ano-mas','nunca','unknown']);
+  assert.equal(evaluateAnswers({'analisis-andrologico':'ano-mas'}).find(r => r.question.id === analysis.id).status, 'attention');
+  assert.equal(evaluateAnswers({'analisis-andrologico':'nunca'}).find(r => r.question.id === analysis.id).status, 'attention');
+  assert.equal(evaluateAnswers({'vacas-asignadas':'mas-30'}).find(r => r.question.id === cows.id).status, 'context');
+  assert.equal(evaluateAnswers({'cantidad-vacas':'unplanned'}).find(r => r.question.id === cows.id).status, 'unknown');
 });
 
 test('Result explanations distinguish answers that need different actions', () => {
@@ -131,14 +146,14 @@ test('Result explanations distinguish answers that need different actions', () =
   }
 });
 
-test('All five groups and every published option have traceable explanations and sources', () => {
+test('All six case groups and every published option have traceable explanations and sources', () => {
   const ids = new Set(SOURCES.map(s => s.id));
   assert.equal(new Set(QUESTIONS.map(q => q.id)).size, QUESTIONS.length);
   assert.equal(new Set(FACTORS.map(f => f.id)).size, 5);
   assert.equal(ids.size, SOURCES.length);
   for (const factor of FACTORS) assert.ok(QUESTIONS.some(q => q.group === factor.id));
   for (const q of QUESTIONS) {
-    assert.ok(FACTORS.some(f => f.id === q.group));
+    assert.ok(q.group === 'general' || FACTORS.some(f => f.id === q.group));
     assert.ok(q.sourceIds.length > 0 && q.sourceIds.every(id => ids.has(id)));
     assert.equal(q.options.filter(o => o.value === 'unknown').length, 1);
     assert.equal(new Set(q.options.map(o => o.value)).size, q.options.length);

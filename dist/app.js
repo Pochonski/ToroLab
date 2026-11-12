@@ -1,11 +1,33 @@
 import { FACTORS, QUESTIONS, SOURCES, evaluateAnswers } from './content.js';
 import { FACTOR_SCENES, sceneTopic, renderFactorScene, renderSceneDetail, factorPhoto, factorCover } from './factor-scenes.js';
 import { createExplorerState, renderScientificExplorer, mountScientificExplorer } from './science-visuals.js';
+import { supabaseUrl, supabasePublishableKey } from './supabase-config.js';
 
 const main = document.querySelector('main');
 const nav = document.querySelector('#primary-nav');
 const menu = document.querySelector('#menu-toggle');
 const storageKey = 'calidad-seminal-caso-v1';
+const pendingKey = 'calidad-seminal-auth-pending';
+const draftKey = 'calidad-seminal-save-draft';
+const caseClient = supabasePublishableKey && window.supabase?.createClient(supabaseUrl, supabasePublishableKey, { auth: { flowType: 'pkce', detectSessionInUrl: true } });
+let cloudMessage = '';
+let cloudBusy = false;
+let savedCases = [];
+let hasMoreSavedCases = false;
+let selectedSavedCase = null;
+let cloudAuthNeeded = false;
+let activeUserId = null;
+caseClient?.auth.onAuthStateChange((event, session) => {
+  const nextUserId = session?.user?.id || null;
+  if (activeUserId && activeUserId !== nextUserId) {
+    savedCases = [];
+    hasMoreSavedCases = false;
+    selectedSavedCase = null;
+    cloudAuthNeeded = !nextUserId;
+    if (routeInfo().route === 'casos') cloudNotice(nextUserId ? '' : 'Sesión cerrada. Inicia sesión para consultar tus casos.');
+  }
+  activeUserId = nextUserId;
+});
 const statusLabels = {
   adequate: 'Adecuada según lo declarado', attention: 'Merece atención',
   priority: 'Requiere mayor atención', unknown: 'Información insuficiente', context: 'Dato de contexto'
@@ -34,7 +56,9 @@ const paths = {
 const icon = (name, small = false) => `<svg class="icon${small ? ' icon-sm' : ''}" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.info}</svg>`;
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const sourceById = new Map(SOURCES.map(source => [source.id, source]));
-const questionNumbers = new Map(QUESTIONS.map((q, i) => [q.id, i + 1]));
+const CASE_GROUPS = [{ id: 'general', icon: 'clipboard', title: 'Cuestiones generales de manejo', short: 'Organización y relación hembra-macho', photo: 'manejo' }, ...FACTORS];
+const numberedQuestions = QUESTIONS.filter(q => !q.parentId);
+const questionNumbers = new Map(numberedQuestions.map((q, i) => [q.id, i + 1]));
 const groupQuestions = group => QUESTIONS.filter(q => q.group === group);
 const groupComplete = group => groupQuestions(group).every(q => state.answers[q.id]);
 const sourceLinks = ids => `<div class="sources-inline">Fuentes: ${ids.map(id => sourceById.get(id)).filter(Boolean).map(source => `<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.label)} <span aria-hidden="true">↗</span></a>`).join(' ')}</div>`;
@@ -51,12 +75,14 @@ function loadState() {
       if (q.options.some(o => o.value === saved.answers?.[q.id])) answers[q.id] = saved.answers[q.id];
     }
     const completed = saved.completed === true && Object.keys(answers).length === QUESTIONS.length;
-    let step = Number.isInteger(saved.step) && saved.step >= 0 && saved.step < FACTORS.length ? saved.step : 0;
+    const legacyStep = Number.isInteger(saved.step) && saved.step >= 0 && saved.step < FACTORS.length ? saved.step + 1 : 0;
+    let step = CASE_GROUPS.findIndex(group => group.id === saved.groupId);
+    if (step < 0) step = legacyStep;
     // Existing visits keep their answers. A previously complete case resumes at
     // its first new question when the questionnaire gains contextual questions.
     if (saved.completed === true && !completed) {
       const missing = QUESTIONS.find(q => !answers[q.id]);
-      if (missing) step = Math.max(0, FACTORS.findIndex(f => f.id === missing.group));
+      if (missing) step = Math.max(0, CASE_GROUPS.findIndex(f => f.id === missing.group));
     }
     return { answers, step, completed };
   } catch { return empty; }
@@ -68,7 +94,7 @@ const sceneSelections = {};
 let pendingQuestionFocus = null;
 const explorerState = createExplorerState(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 let explorerController = null;
-const saveState = () => { try { sessionStorage.setItem(storageKey, JSON.stringify(state)); } catch { /* The questionnaire also works in memory when storage is unavailable. */ } };
+const saveState = () => { try { sessionStorage.setItem(storageKey, JSON.stringify({ answers: state.answers, groupId: CASE_GROUPS[state.step].id, completed: state.completed })); } catch { /* The questionnaire also works in memory when storage is unavailable. */ } };
 const answeredCount = () => Object.keys(state.answers).length;
 const reviewNotice = () => `<div class="review-notice">${icon('info')}<p><strong>Propuesta para revisión académica.</strong> Los niveles de atención son criterios educativos provisionales. Las fuentes respaldan el contenido general, pero no validan este cuestionario ni sus colores. <a href="#criterios">Consultar los criterios</a>.</p></div>`;
 const intro = (eyebrow, title, text) => `<div class="page-intro"><p class="eyebrow">${eyebrow}</p><h1>${title}</h1><p>${text}</p></div>`;
@@ -116,31 +142,49 @@ function factorsPage() {
 }
 
 function casePage() {
-  const factor = FACTORS[state.step];
+  const factor = CASE_GROUPS[state.step];
   const questions = groupQuestions(factor.id);
   const resetNotice = caseResetNotice ? '<p class="case-reset-notice" role="status" tabindex="-1">Respuestas eliminadas. Volviste al paso 1.</p>' : '';
   caseResetNotice = false;
   return `<section class="container page">${breadcrumb('Mi caso')}${intro('Tu toro, tu finca', 'Exploremos las condiciones de tu reproductor', 'Responde según lo que conoces. Si no tienes un dato, elige «No sé». Cada condición se interpretará por separado.')}
     ${resetNotice}
-    <div class="case-layout"><aside><ol class="step-list" aria-label="Pasos del formulario">${FACTORS.map((f, i) => `<li class="${i === state.step ? 'current' : groupComplete(f.id) ? 'done' : ''}"><button type="button" class="step-link" data-action="case-step" data-value="${i}"${i === state.step ? ' aria-current="step"' : ''}><span class="step-number">${i !== state.step && groupComplete(f.id) ? icon('check', true) : i + 1}</span><span class="step-copy"><strong>${esc(f.title)}</strong><small>${groupQuestions(f.id).length} preguntas</small></span></button></li>`).join('')}</ol><div class="case-aside-note">${icon('shield')}<h3>Una mirada por condición</h3><p>La herramienta reconoce puntos de atención. No calcula la calidad del semen ni determina si el toro es fértil o infértil.</p></div></aside>
-    <div><form class="case-form" id="case-form" novalidate><div class="case-visual">${factorPhoto(factor.id,{className:"case-photo",sizes:"(max-width: 700px) 90vw, 900px",loading:"eager"})}<span class="photo-credit">Imagen de contexto generada con IA</span></div><div class="case-form-top"><div><span class="icon-box">${icon(factor.icon)}</span><div><h2>${esc(factor.title)}</h2><p>${esc(factor.short)}</p></div></div><span class="step-counter">Paso ${state.step + 1} de ${FACTORS.length}</span></div>
-      <div class="progress" role="progressbar" aria-label="Avance por grupos" aria-valuenow="${state.step + 1}" aria-valuemin="1" aria-valuemax="${FACTORS.length}"><span style="width:${(state.step + 1) * 20}%"></span></div>
-      <p class="case-description">${state.step === 0 ? 'Comencemos por el lugar donde permanece habitualmente. Selecciona una respuesta por pregunta.' : 'Selecciona una respuesta por pregunta. Puedes volver al grupo anterior sin perder lo que has respondido.'}</p><div class="form-error" id="form-error" role="alert"></div>
-      ${questions.map(q => `<fieldset class="question"><legend><span class="question-number">${questionNumbers.get(q.id)}.</span>${esc(q.title)}</legend><p class="question-hint" id="hint-${q.id}">${esc(q.hint)}</p><div class="options">${q.options.map(o => `<label class="radio-option"><input type="radio" name="${q.id}" value="${o.value}" aria-describedby="hint-${q.id}" required ${state.answers[q.id] === o.value ? 'checked' : ''}><span>${esc(o.label)}</span></label>`).join('')}</div></fieldset>`).join('')}
-      <div class="form-actions">${state.step > 0 ? `<button type="button" class="button button-outline" data-action="previous">${icon('back')} Anterior</button>` : `<span>${QUESTIONS.length} preguntas · ${FACTORS.length} grupos</span>`}<button class="button" type="submit">${state.step === FACTORS.length - 1 ? 'Ver mis puntos' : 'Siguiente grupo'} ${icon('arrow')}</button></div>
-    </form><div class="case-reset"><button type="button" class="case-reset-button" data-action="reset-case">Limpiar respuestas y volver a empezar</button><p>Borra todas las respuestas de esta visita y regresa al paso 1.</p></div><p class="privacy-note">${icon('lock')} Tus respuestas se conservan solo en esta pestaña durante la visita. No se envían ni se piden datos personales.</p></div></div>
+    <div class="case-layout"><aside><ol class="step-list" aria-label="Pasos del formulario">${CASE_GROUPS.map((f, i) => `<li class="${i === state.step ? 'current' : groupComplete(f.id) ? 'done' : ''}"><button type="button" class="step-link" data-action="case-step" data-value="${i}"${i === state.step ? ' aria-current="step"' : ''}><span class="step-number">${i !== state.step && groupComplete(f.id) ? icon('check', true) : i + 1}</span><span class="step-copy"><strong>${esc(f.title)}</strong><small>${groupQuestions(f.id).filter(q => !q.parentId).length} preguntas</small></span></button></li>`).join('')}</ol><div class="case-aside-note">${icon('shield')}<h3>Una mirada por condición</h3><p>La herramienta reconoce puntos de atención. No calcula la calidad del semen ni determina si el toro es fértil o infértil.</p></div></aside>
+    <div><form class="case-form" id="case-form" novalidate><div class="case-visual">${factorPhoto(factor.photo || factor.id,{className:"case-photo",sizes:"(max-width: 700px) 90vw, 900px",loading:"eager"})}<span class="photo-credit">Imagen de contexto generada con IA</span></div><div class="case-form-top"><div><span class="icon-box">${icon(factor.icon)}</span><div><h2>${esc(factor.title)}</h2><p>${esc(factor.short)}</p></div></div><span class="step-counter">Paso ${state.step + 1} de ${CASE_GROUPS.length}</span></div>
+      <div class="progress" role="progressbar" aria-label="Avance por grupos" aria-valuenow="${state.step + 1}" aria-valuemin="1" aria-valuemax="${CASE_GROUPS.length}"><span style="width:${(state.step + 1) * 100 / CASE_GROUPS.length}%"></span></div>
+      <p class="case-description">Selecciona una respuesta por pregunta. Puedes volver a cualquier grupo sin perder lo que has respondido.</p><div class="form-error" id="form-error" role="alert"></div>
+      ${questions.map(q => `<fieldset class="question${q.parentId ? ' question-follow-up' : ''}"><legend>${q.parentId ? '' : `<span class="question-number">${questionNumbers.get(q.id)}.</span>`}${esc(q.title)}</legend><p class="question-hint" id="hint-${q.id}">${esc(q.hint)}</p><div class="options">${q.options.map(o => `<label class="radio-option"><input type="radio" name="${q.id}" value="${o.value}" aria-describedby="hint-${q.id}" required ${state.answers[q.id] === o.value ? 'checked' : ''}><span>${esc(o.label)}</span></label>`).join('')}</div></fieldset>`).join('')}
+      <div class="form-actions">${state.step > 0 ? `<button type="button" class="button button-outline" data-action="previous">${icon('back')} Anterior</button>` : `<span>${numberedQuestions.length} preguntas · ${QUESTIONS.length} respuestas · ${CASE_GROUPS.length} grupos</span>`}<button class="button" type="submit">${state.step === CASE_GROUPS.length - 1 ? 'Ver mis puntos' : 'Siguiente grupo'} ${icon('arrow')}</button></div>
+    </form><div class="case-reset"><button type="button" class="case-reset-button" data-action="reset-case">Limpiar respuestas y volver a empezar</button><p>Borra todas las respuestas de esta visita y regresa al paso 1.</p></div><p class="privacy-note">${icon('lock')} Tus respuestas se conservan en esta pestaña. Se enviarán a Supabase si eliges guardar el caso.</p></div></div>
   </section>`;
 }
 
 function resultsPage() {
-  if (!answeredCount()) return `<section class="container page">${breadcrumb('Mis puntos')}${intro('Relaciona lo aprendido', 'Tus puntos de atención', 'Aquí podrás consultar las condiciones de tu caso, una por una.')}<div class="empty-state"><div class="empty-photo">${factorPhoto("reproductor",{decorative:true})}</div><p class="eyebrow">Un punto de partida</p><h2>Comienza por conocer tu caso</h2><p>Responde sobre el ambiente, la nutrición, la salud y el manejo de tu toro. Después podrás explorar cada condición y su explicación.</p><a class="button" href="#mi-caso">Explorar mi caso ${icon('arrow')}</a><a class="text-link" href="#factores">Prefiero conocer primero los factores ${icon('arrow', true)}</a></div></section>`;
+  if (!answeredCount()) return `<section class="container page">${breadcrumb('Mis puntos')}${intro('Relaciona lo aprendido', 'Tus puntos de atención', 'Aquí podrás consultar las condiciones de tu caso, una por una.')}<div class="empty-state"><div class="empty-photo">${factorPhoto("reproductor",{decorative:true})}</div><p class="eyebrow">Un punto de partida</p><h2>Comienza por conocer tu caso</h2><p>Comienza por la organización del hato y continúa con el ambiente, la nutrición, la salud y el manejo de tu toro. Después podrás explorar cada condición y su explicación.</p><a class="button" href="#mi-caso">Explorar mi caso ${icon('arrow')}</a><a class="text-link" href="#casos">Consultar mis casos guardados ${icon('arrow', true)}</a></div></section>`;
   const results = evaluateAnswers(state.answers);
   return `<section class="container page">${breadcrumb('Mis puntos')}<div class="page-toolbar">${intro('Una condición a la vez', 'Mis puntos de atención', 'Abre cada pregunta para entender tu respuesta y ver qué puedes hacer. Estos resultados no califican al toro ni evalúan directamente su semen.')}<a class="button button-outline" href="#mi-caso">Modificar respuestas ${icon('arrow')}</a></div>
-    <div class="results-cover">${factorPhoto("reproductor",{className:"results-cover-photo",decorative:true})}<div><p class="eyebrow">Tu información, en contexto</p><h2>Cada condición tiene su propia historia.</h2><p>Abre cada punto para comprenderlo y preparar lo que quieres conversar con el profesional.</p></div><span class="photo-credit">Imagen de contexto generada con IA</span></div>${reviewNotice()}${!state.completed ? `<p class="educational-note" style="padding-top:0">Has respondido ${answeredCount()} de ${QUESTIONS.length} preguntas. Las condiciones sin respuesta aparecen como información insuficiente. <button class="text-link scene-case-link" data-action="resume-missing">Completar las preguntas pendientes</button>.</p>` : ''}
+    <div class="cloud-actions"><button type="button" class="button" data-action="save-case" ${state.completed && !cloudBusy ? '' : 'disabled'}>Guardar caso</button><a class="button button-outline" href="#casos">Mis casos guardados</a></div><p class="cloud-message" role="status">${esc(cloudMessage || (state.completed ? 'Guarda una copia de este caso para consultarla después.' : 'Completa todas las respuestas para guardar el caso.'))}</p>
+    <div class="results-cover">${factorPhoto("reproductor",{className:"results-cover-photo",decorative:true})}<div><p class="eyebrow">Tu información, en contexto</p><h2>Cada condición tiene su propia historia.</h2><p>Abre cada punto para comprenderlo y preparar lo que quieres conversar con el profesional.</p></div><span class="photo-credit">Imagen de contexto generada con IA</span></div>${reviewNotice()}${!state.completed ? `<p class="educational-note" style="padding-top:0">Has registrado ${answeredCount()} de ${QUESTIONS.length} respuestas. Las condiciones sin respuesta aparecen como información insuficiente. <button class="text-link scene-case-link" data-action="resume-missing">Completar las preguntas pendientes</button>.</p>` : ''}
     <div class="result-legend" aria-label="Leyenda de los estados">${Object.keys(statusLabels).map(statusLabel).join('')}</div>
-    ${FACTORS.map(factor => `<section class="result-group"><h2>${factorCover(factor.id,{className:"result-group-photo",sizes:"64px",decorative:true})}${esc(factor.title)}</h2>${results.filter(r => r.question.group === factor.id).map(({ question: q, answer, status }) => `<details class="result-card"><summary><div class="result-title"><strong>${esc(q.title)}</strong><p class="answer-line">Tu respuesta: ${esc(answer?.label || 'Sin responder')}</p></div>${statusLabel(status)}</summary><div class="result-detail"><h3>Qué significa tu respuesta</h3><p>${esc(answer ? (answer.explanation || q.explanation) : 'Todavía no respondiste esta pregunta. Por ahora no podemos valorar este punto.')}</p><h3>Qué puedes hacer ahora</h3><p>${esc(answer ? (answer.recommendation || q.recommendation) : 'Puedes responderla cuando tengas el dato. Revisa tus registros o pregunta al encargado del toro; no necesitas adivinar.')}</p>${sourceLinks(q.sourceIds)}</div></details>`).join('')}</section>`).join('')}
+    ${CASE_GROUPS.map(factor => `<section class="result-group"><h2>${factorCover(factor.photo || factor.id,{className:"result-group-photo",sizes:"64px",decorative:true})}${esc(factor.title)}</h2>${results.filter(r => r.question.group === factor.id).map(({ question: q, answer, status }) => `<details class="result-card"><summary><div class="result-title"><strong>${esc(q.title)}</strong><p class="answer-line">Tu respuesta: ${esc(answer?.label || 'Sin responder')}</p></div>${statusLabel(status)}</summary><div class="result-detail"><h3>Qué significa tu respuesta</h3><p>${esc(answer ? (answer.explanation || q.explanation) : 'Todavía no respondiste esta pregunta. Por ahora no podemos valorar este punto.')}</p><h3>Qué puedes hacer ahora</h3><p>${esc(answer ? (answer.recommendation || q.recommendation) : 'Puedes responderla cuando tengas el dato. Revisa tus registros o pregunta al encargado del toro; no necesitas adivinar.')}</p>${sourceLinks(q.sourceIds)}</div></details>`).join('')}</section>`).join('')}
     <div class="result-footer"><p>Encontrar un punto de atención no demuestra una alteración seminal. Para conocer el estado del reproductor, se necesita una evaluación andrológica profesional.</p><a class="button" href="#evaluacion">¿Cómo se evalúa? ${icon('arrow')}</a></div>
   </section>`;
+}
+function savedCasesPage() {
+  if (selectedSavedCase) {
+    const groups = CASE_GROUPS.map(group => {
+      const items = selectedSavedCase.results.filter(item => item.group === group.id);
+      return items.length ? `<section class="result-group"><h2>${esc(group.title)}</h2>${items.map(item => {
+        const status = Object.hasOwn(statusLabels, item.status) ? item.status : 'unknown';
+        return `<details class="result-card"><summary><div class="result-title"><strong>${esc(item.title)}</strong><p class="answer-line">Tu respuesta: ${esc(item.answerLabel)}</p></div>${statusLabel(status)}</summary><div class="result-detail"><h3>Qué significa tu respuesta</h3><p>${esc(item.explanation)}</p><h3>Qué puedes hacer ahora</h3><p>${esc(item.recommendation)}</p>${sourceLinks(Array.isArray(item.sourceIds) ? item.sourceIds : [])}</div></details>`;
+      }).join('')}</section>` : '';
+    }).join('');
+    return `<section class="container page">${breadcrumb('Mis casos guardados')}<a class="button button-outline" href="#casos" data-action="back-to-cases">Volver al historial</a>${intro('Caso guardado', new Date(selectedSavedCase.created_at).toLocaleString('es-CR'), 'Estas son las respuestas y explicaciones registradas cuando guardaste el caso.')}${reviewNotice()}${groups}</section>`;
+  }
+  return `<section class="container page">${breadcrumb('Mis casos guardados')}${intro('Tus registros', 'Mis casos guardados', 'Consulta los resultados de los casos que guardaste con tu cuenta de Google.')}
+    <div class="cloud-actions">${cloudAuthNeeded ? '<button type="button" class="button" data-action="google-login" data-value="casos">Continuar con Google</button>' : `<button type="button" class="button button-outline" data-action="load-cases" ${cloudBusy ? 'disabled' : ''}>Actualizar historial</button><button type="button" class="button button-outline" data-action="sign-out">Cerrar sesión</button>`}</div><p class="cloud-message" role="status">${esc(cloudMessage)}</p>
+    <div class="saved-cases-list">${savedCases.map(item => `<button class="saved-case-item" type="button" data-action="open-case" data-value="${esc(item.id)}"><strong>${esc(new Date(item.created_at).toLocaleString('es-CR'))}</strong><span>Ver resultados ${icon('arrow', true)}</span></button>`).join('')}</div>
+    ${hasMoreSavedCases ? '<button class="button button-outline" data-action="more-cases">Cargar más casos</button>' : ''}
+    ${!savedCases.length && !cloudBusy && !cloudMessage ? '<p>Aún no tienes casos guardados.</p>' : ''}</section>`;
 }
 
 function evaluationPage() {
@@ -160,23 +204,128 @@ function evaluationPage() {
 function resourcesPage() {
   return `<section class="container page">${breadcrumb('Recursos')}${intro('Para seguir aprendiendo', 'Ciencia que puedes consultar', 'Las publicaciones ayudan a comprender los factores y la evaluación. Aquí encuentras la bibliografía del proyecto y guías universitarias complementarias.')}
     <div class="resource-layout"><div>${SOURCES.map((source,i) => `<article class="source-card"><span class="source-index">${String(i+1).padStart(2,'0')}</span><div><div class="source-year">${esc(source.label)}</div><h2><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a></h2><p>${esc(source.summary)}</p><a class="text-link" href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">Consultar publicación ${icon('external',true)}</a></div></article>`).join('')}</div>
-    <aside class="resource-aside"><div class="project-card"><div class="project-photo">${labPhoto()}<span class="photo-credit">Imagen generada con IA</span></div><p class="eyebrow">Acerca del proyecto</p><h2>Conocer para cuidar</h2><p>Una herramienta de divulgación científica creativa en andrología para acercar el conocimiento a productores con distintos niveles de formación.</p><div class="project-authors"><strong>Autores</strong><ul><li>Dikson Aarón Guzmán Sibaja <a href="https://orcid.org/0009-0004-0368-7781" target="_blank" rel="noopener noreferrer" aria-label="ORCID de Dikson Aarón Guzmán Sibaja">ORCID ↗</a></li><li>José Ángel Aguirre Reyes <a href="https://orcid.org/0009-0001-4447-772X" target="_blank" rel="noopener noreferrer" aria-label="ORCID de José Ángel Aguirre Reyes">ORCID ↗</a></li><li>${josephLinks()}</li></ul></div><p>Instituto Tecnológico de Costa Rica<br>Campus Local San Carlos</p><hr><p><strong>Primera versión de revisión</strong><br>3 de noviembre de 2026. El cuestionario y sus colores son una propuesta pendiente de revisión docente.</p><a class="text-link" href="#criterios">Revisar la tabla de criterios ${icon('arrow',true)}</a><hr><p>Fotografías de contexto generadas con IA. Las animaciones y el modelo celular son representaciones educativas hechas con código, sin escala; no muestran resultados de laboratorio.</p><p>Las respuestas de «Mi caso» se conservan solo durante esta visita en la pestaña. No se envían a un servidor.</p></div></aside></div>
+    <aside class="resource-aside"><div class="project-card"><div class="project-photo">${labPhoto()}<span class="photo-credit">Imagen generada con IA</span></div><p class="eyebrow">Acerca del proyecto</p><h2>Conocer para cuidar</h2><p>Una herramienta de divulgación científica creativa en andrología para acercar el conocimiento a productores con distintos niveles de formación.</p><div class="project-authors"><strong>Autores</strong><ul><li>Dikson Aarón Guzmán Sibaja <a href="https://orcid.org/0009-0004-0368-7781" target="_blank" rel="noopener noreferrer" aria-label="ORCID de Dikson Aarón Guzmán Sibaja">ORCID ↗</a></li><li>José Ángel Aguirre Reyes <a href="https://orcid.org/0009-0001-4447-772X" target="_blank" rel="noopener noreferrer" aria-label="ORCID de José Ángel Aguirre Reyes">ORCID ↗</a></li><li>${josephLinks()}</li></ul></div><p>Instituto Tecnológico de Costa Rica<br>Campus Local San Carlos</p><hr><p><strong>Primera versión de revisión</strong><br>3 de noviembre de 2026. El cuestionario y sus colores son una propuesta pendiente de revisión docente.</p><a class="text-link" href="#criterios">Revisar la tabla de criterios ${icon('arrow',true)}</a><hr><p>Fotografías de contexto generadas con IA. Las animaciones y el modelo celular son representaciones educativas hechas con código, sin escala; no muestran resultados de laboratorio.</p><p>Las respuestas permanecen en esta pestaña hasta que decides guardar un caso. Los casos guardados se almacenan en Supabase bajo tu cuenta de Google.</p></div></aside></div>
   </section>`;
 }
 
 function criteriaPage() {
   return `<section class="container page">${breadcrumb('Criterios propuestos')}${intro('Material para el equipo y el docente', 'Criterios propuestos para revisión', 'Esta tabla permite revisar cómo se relaciona cada respuesta con una indicación educativa. Las asignaciones de colores son decisiones editoriales; no han sido validadas como instrumento clínico.')}${reviewNotice()}
     <p class="educational-note" style="padding-top:0"><strong>Reglas de interpretación:</strong> no se suman ni se promedian estados. Edad y raza no generan calificaciones. «No sé» y las respuestas ausentes indican información insuficiente. El marco de «últimos dos meses» ayuda a recordar observaciones; no es un umbral diagnóstico ni un periodo universal de recuperación.</p>
-    ${FACTORS.map(f => `<h2 class="criteria-heading">${esc(f.title)}</h2>${groupQuestions(f.id).map(q => `<div class="criteria-table-wrap"><table class="criteria-table"><caption>${questionNumbers.get(q.id)}. ${esc(q.title)}</caption><thead><tr><th scope="col">Respuesta</th><th scope="col">Indicación propuesta</th><th scope="col">Explicación</th><th scope="col">Recomendación</th><th scope="col">Fuentes del contexto</th></tr></thead><tbody>${q.options.map(o => `<tr><td>${esc(o.label)}</td><td>${statusLabel(o.status)}</td><td>${esc(o.explanation || q.explanation)}</td><td>${esc(o.recommendation || q.recommendation)}</td><td>${q.sourceIds.map(id => sourceById.get(id)).filter(Boolean).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a>`).join('<br>')}</td></tr>`).join('')}</tbody></table></div>`).join('')}`).join('')}
+    ${CASE_GROUPS.map(f => `<h2 class="criteria-heading">${esc(f.title)}</h2>${groupQuestions(f.id).map(q => `<div class="criteria-table-wrap"><table class="criteria-table"><caption>${q.parentId ? '' : `${questionNumbers.get(q.id)}. `}${esc(q.title)}</caption><thead><tr><th scope="col">Respuesta</th><th scope="col">Indicación propuesta</th><th scope="col">Explicación</th><th scope="col">Recomendación</th><th scope="col">Fuentes del contexto</th></tr></thead><tbody>${q.options.map(o => `<tr><td>${esc(o.label)}</td><td>${statusLabel(o.status)}</td><td>${esc(o.explanation || q.explanation)}</td><td>${esc(o.recommendation || q.recommendation)}</td><td>${q.sourceIds.map(id => sourceById.get(id)).filter(Boolean).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)}</a>`).join('<br>')}</td></tr>`).join('')}</tbody></table></div>`).join('')}`).join('')}
     <a class="button button-outline" href="#recursos">${icon('back')} Volver a las fuentes</a>
   </section>`;
 }
 
-const pages = { inicio: homePage, factores: factorsPage, 'mi-caso': casePage, resultados: resultsPage, evaluacion: evaluationPage, recursos: resourcesPage, criterios: criteriaPage };
-const pageTitles = { inicio: 'Inicio', factores: 'Factores', 'mi-caso': 'Mi caso', resultados: 'Mis puntos de atención', evaluacion: 'Evaluación seminal', recursos: 'Recursos', criterios: 'Criterios propuestos para revisión' };
+const pages = { inicio: homePage, factores: factorsPage, 'mi-caso': casePage, resultados: resultsPage, casos: savedCasesPage, evaluacion: evaluationPage, recursos: resourcesPage, criterios: criteriaPage };
+const pageTitles = { inicio: 'Inicio', factores: 'Factores', 'mi-caso': 'Mi caso', resultados: 'Mis puntos de atención', casos: 'Mis casos guardados', evaluacion: 'Evaluación seminal', recursos: 'Recursos', criterios: 'Criterios propuestos para revisión' };
 function routeInfo() {
   const [route, value] = location.hash.replace(/^#/, '').split('/');
   return { route: Object.hasOwn(pages, route) ? route : 'inicio', value };
+}
+function cloudNotice(message) {
+  cloudMessage = message;
+  if (['resultados', 'casos'].includes(routeInfo().route)) renderPage(false);
+}
+async function beginGoogleLogin(action) {
+  if (!caseClient) { cloudNotice('El guardado no está disponible en este momento.'); return; }
+  try {
+    sessionStorage.setItem(pendingKey, action);
+    const redirectTo = `${location.origin}${location.pathname}?auth=callback`;
+    const { error } = await caseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } });
+    if (error) throw error;
+  } catch {
+    sessionStorage.removeItem(pendingKey);
+    cloudNotice('No se pudo iniciar sesión con Google. Inténtalo de nuevo.');
+  }
+}
+function caseSnapshot() {
+  return evaluateAnswers(state.answers).map(({ question, answer, status }) => ({
+    group: question.group, title: question.title, answerLabel: answer?.label || 'Sin responder',
+    status, explanation: answer?.explanation || question.explanation,
+    recommendation: answer?.recommendation || question.recommendation, sourceIds: question.sourceIds
+  }));
+}
+async function saveCase() {
+  if (cloudBusy || !state.completed || answeredCount() !== QUESTIONS.length) return;
+  if (!caseClient) { cloudNotice('El guardado no está disponible en este momento.'); return; }
+  cloudBusy = true;
+  cloudNotice('Guardando el caso…');
+  try {
+    const { data: { session }, error: sessionError } = await caseClient.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (!session) { cloudBusy = false; await beginGoogleLogin('save'); return; }
+    const signature = JSON.stringify(QUESTIONS.map(q => state.answers[q.id]));
+    const previous = JSON.parse(sessionStorage.getItem(draftKey) || 'null');
+    const draft = previous?.signature === signature && previous.ownerId === session.user.id ? previous : { id: crypto.randomUUID(), signature, ownerId: session.user.id };
+    sessionStorage.setItem(draftKey, JSON.stringify(draft));
+    const row = { id: draft.id, user_id: session.user.id, answers: state.answers, results: caseSnapshot() };
+    const { error } = await caseClient.from('saved_cases').insert(row);
+    if (error && error.code === '23505') {
+      const { data: existing, error: readError } = await caseClient.from('saved_cases').select('id').eq('id', draft.id).maybeSingle();
+      if (readError || !existing) throw error;
+    } else if (error) throw error;
+    cloudNotice('Caso guardado. Puedes consultarlo en «Mis casos guardados».');
+  } catch {
+    cloudNotice('No se pudo guardar el caso. Tus respuestas siguen disponibles para reintentar.');
+  } finally {
+    cloudBusy = false;
+    if (routeInfo().route === 'resultados') renderPage(false);
+    if (routeInfo().route === 'casos') void loadCases();
+  }
+}
+async function loadCases(append = false) {
+  if (cloudBusy) return;
+  if (!caseClient) { cloudNotice('El historial no está disponible en este momento.'); return; }
+  cloudBusy = true;
+  cloudAuthNeeded = false;
+  cloudNotice('Cargando tus casos…');
+  try {
+    const { data: { session }, error: sessionError } = await caseClient.auth.getSession();
+    if (sessionError) throw sessionError;
+    if (!session) {
+      cloudAuthNeeded = true;
+      savedCases = [];
+      hasMoreSavedCases = false;
+      cloudNotice('Inicia sesión con Google para consultar tus casos guardados.');
+      return;
+    }
+    const start = append ? savedCases.length : 0;
+    const { data, error } = await caseClient.from('saved_cases').select('id, created_at, results').order('created_at', { ascending: false }).order('id', { ascending: false }).range(start, start + 49);
+    if (error) throw error;
+    savedCases = append ? [...savedCases, ...(data || [])] : data || [];
+    hasMoreSavedCases = data?.length === 50;
+    cloudNotice('');
+  } catch {
+    savedCases = [];
+    hasMoreSavedCases = false;
+    cloudNotice('No se pudo cargar el historial. Inténtalo de nuevo.');
+  } finally {
+    cloudBusy = false;
+    if (routeInfo().route === 'casos') renderPage(false);
+  }
+}
+async function restoreAuth() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('auth') !== 'callback') {
+    if (routeInfo().route === 'casos') await loadCases();
+    return;
+  }
+  const pending = sessionStorage.getItem(pendingKey);
+  sessionStorage.removeItem(pendingKey);
+  const returnRoute = pending === 'casos' ? 'casos' : 'resultados';
+  try {
+    if (!caseClient) throw new Error('Supabase no configurado');
+    const { data: { session }, error } = await caseClient.auth.getSession();
+    if (error || !session) throw error || new Error('Sin sesión');
+    history.replaceState(null, '', `${location.pathname}#${returnRoute}`);
+    renderPage(false);
+    if (pending === 'save') await saveCase();
+    else if (pending === 'casos') await loadCases();
+  } catch {
+    history.replaceState(null, '', `${location.pathname}#${returnRoute}`);
+    renderPage(false);
+    cloudNotice('El inicio de sesión se canceló o venció. Puedes intentarlo de nuevo.');
+  }
 }
 function renderPage(focus = true) {
   const { route, value } = routeInfo();
@@ -226,21 +375,21 @@ main.addEventListener('click', event => {
     scene.querySelector('#scene-detail').innerHTML = renderSceneDetail(group,value);
   } else if (action === 'start-topic') {
     if (!FACTOR_SCENES[group]?.topics.some(t => t.id === value)) return;
-    state.step = Math.max(0,FACTORS.findIndex(f => f.id === group));
+    state.step = Math.max(0,CASE_GROUPS.findIndex(f => f.id === group));
     pendingQuestionFocus = sceneTopic(group,value).id;
     saveState();location.hash = 'mi-caso';
   } else if (action === 'resume-missing') {
     const missing = QUESTIONS.find(q => !state.answers[q.id]);
-    if (missing) {state.step = Math.max(0,FACTORS.findIndex(f => f.id === missing.group));pendingQuestionFocus=missing.id;saveState();}
+    if (missing) {state.step = Math.max(0,CASE_GROUPS.findIndex(f => f.id === missing.group));pendingQuestionFocus=missing.id;saveState();}
     location.hash = 'mi-caso';
   } else if (action === 'start-group') {
-    state.step = Math.max(0, FACTORS.findIndex(f => f.id === value));saveState();
+    state.step = Math.max(0, CASE_GROUPS.findIndex(f => f.id === value));saveState();
     location.hash = 'mi-caso';
   } else if (action === 'case-step') {
     const step = Number(value);
-    if (!Number.isInteger(step) || step < 0 || step >= FACTORS.length) return;
+    if (!Number.isInteger(step) || step < 0 || step >= CASE_GROUPS.length) return;
     state.step = step;
-    pendingQuestionFocus = groupQuestions(FACTORS[step].id)[0]?.id || null;
+    pendingQuestionFocus = groupQuestions(CASE_GROUPS[step].id)[0]?.id || null;
     saveState();renderPage(false);
   } else if (action === 'previous') {
     state.step = Math.max(0,state.step - 1);saveState();renderPage();
@@ -248,9 +397,35 @@ main.addEventListener('click', event => {
     state = { answers: {}, step: 0, completed: false };
     pendingQuestionFocus = null;
     try { sessionStorage.removeItem(storageKey); } catch { /* State is still cleared in memory. */ }
+    sessionStorage.removeItem(draftKey);
     caseResetNotice = true;
     renderPage(false);
     main.querySelector('.case-reset-notice')?.focus();
+  } else if (action === 'save-case') {
+    void saveCase();
+  } else if (action === 'load-cases') {
+    void loadCases();
+  } else if (action === 'more-cases') {
+    void loadCases(true);
+  } else if (action === 'google-login') {
+    void beginGoogleLogin(value);
+  } else if (action === 'open-case') {
+    selectedSavedCase = savedCases.find(item => item.id === value) || null;
+    renderPage();
+  } else if (action === 'back-to-cases') {
+    event.preventDefault();
+    selectedSavedCase = null;
+    renderPage();
+  } else if (action === 'sign-out') {
+    if (!caseClient) { cloudNotice('El historial no está disponible en este momento.'); return; }
+    void caseClient.auth.signOut().then(({ error }) => {
+      if (error) { cloudNotice('No se pudo cerrar sesión. Inténtalo de nuevo.'); return; }
+      savedCases = [];
+      hasMoreSavedCases = false;
+      selectedSavedCase = null;
+      cloudAuthNeeded = true;
+      cloudNotice('Sesión cerrada. Inicia sesión para consultar tus casos.');
+    }).catch(() => cloudNotice('No se pudo cerrar sesión. Inténtalo de nuevo.'));
   }
 });
 main.addEventListener('change', event => {
@@ -266,13 +441,18 @@ main.addEventListener('change', event => {
 main.addEventListener('submit', event => {
   if (event.target.id !== 'case-form') return;
   event.preventDefault();
-  const missing = groupQuestions(FACTORS[state.step].id).find(q => !state.answers[q.id]);
+  const missing = groupQuestions(CASE_GROUPS[state.step].id).find(q => !state.answers[q.id]);
   if (missing) {
     document.querySelector('#form-error').textContent = 'Selecciona una respuesta en cada pregunta. Puedes elegir «No sé» cuando no tengas información.';
     document.querySelector(`input[name="${missing.id}"]`)?.focus();return;
   }
-  if (state.step < FACTORS.length - 1) {state.step++;saveState();renderPage();}
+  if (state.step < CASE_GROUPS.length - 1) {state.step++;saveState();renderPage();}
   else {state.completed = answeredCount() === QUESTIONS.length;saveState();location.hash = 'resultados';}
 });
-window.addEventListener('hashchange', () => renderPage());
+window.addEventListener('hashchange', () => {
+  selectedSavedCase = null;
+  renderPage();
+  if (routeInfo().route === 'casos') void loadCases();
+});
 renderPage(false);
+void restoreAuth();

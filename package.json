@@ -6,7 +6,7 @@
   "description": "Infografía interactiva de divulgación sobre calidad seminal bovina",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check dist/app.js && node --check dist/content.js && node --check dist/factor-scenes.js && node --check dist/science-visuals.js && node --check dist/science-3d.js && node --test tests/*.test.mjs",
+    "check": "node --check dist/app.js && node --check dist/supabase-config.js && node --check dist/content.js && node --check dist/factor-scenes.js && node --check dist/science-visuals.js && node --check dist/science-3d.js && node --test tests/*.test.mjs",
     "dev": "python3 -m http.server 4173 --bind 127.0.0.1 --directory dist"
   }
 }

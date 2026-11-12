@@ -1,57 +1,77 @@
-# Calidad del semen bovino
+<div align="center">
+  <img src="dist/assets/logo-calidad-seminal.png" alt="Logo de Calidad del semen bovino" width="110">
+  <h1>Calidad del semen bovino</h1>
+  <p><strong>Conocer para cuidar.</strong> Una experiencia educativa en español para explorar los factores que pueden relacionarse con la calidad seminal de un toro reproductor.</p>
+  <p><a href="https://calidad-seminal-bovina.vercel.app/">Visitar la web</a> · <a href="https://calidad-seminal-bovina.vercel.app/#factores">Explorar los factores</a> · <a href="https://calidad-seminal-bovina.vercel.app/#recursos">Revisar las fuentes</a></p>
+</div>
 
-Web educativa estática en español. Primera versión para revisión académica basada en el segundo avance de divulgación científica creativa en andrología. Su caso interactivo identifica condiciones de atención; no es una evaluación clínica validada ni diagnostica fertilidad.
+<p align="center">
+  <img src="dist/assets/toro-potrero.webp" alt="Toro en un potrero, imagen de contexto generada con IA" width="900">
+</p>
 
-## Uso local
+> **Alcance:** es una herramienta de divulgación científica en revisión académica. Sus indicaciones son criterios educativos provisionales: no diagnostican fertilidad, no sustituyen una evaluación andrológica y no calculan una puntuación global.
 
-Desde esta carpeta, `npm run dev` inicia la web en http://127.0.0.1:4173. No requiere instalar dependencias. Se necesita Node.js para los controles y Python 3 para el servidor local. También se puede servir `dist/` con cualquier servidor HTTP estático. Los módulos ES necesitan HTTP; no abrir directamente con `file://`.
+## Qué puedes hacer
 
-`npm run check` comprueba sintaxis y pruebas de los criterios. No hay proceso de compilación: la carpeta `dist/` contiene la web completa.
+- **Conocer cinco factores:** ambiente, nutrición, salud, características del reproductor y manejo reproductivo. Cada escena permite seleccionar puntos de interés y leer una explicación práctica.
+- **Explorar «Mi caso»:** responder 18 preguntas en cinco grupos, cambiar de grupo sin perder las respuestas de la visita y elegir «No sé» cuando falte información.
+- **Consultar «Mis puntos»:** ver cada condición por separado, con una indicación, una explicación comprensible, una acción sugerida y sus fuentes. Las respuestas desconocidas se muestran como información insuficiente.
+- **Abrir el laboratorio interactivo:** comparar motilidad, morfología y concentración mediante simulaciones educativas sin escala. Incluye movimiento controlable, un modelo 3D y una alternativa estática cuando 3D no esté disponible.
+- **Revisar la bibliografía:** acceder a 13 publicaciones y guías que aportan contexto científico y técnico.
 
-## Organización
+El contenido educativo se puede recorrer sin completar el cuestionario. Las fotografías de contexto se generaron con IA; las animaciones representan conceptos y no son imágenes ni mediciones de muestras reales.
 
-- `dist/index.html`, `styles.css`, `premium.css`, `app.js`: estructura, diseño e interacción accesible.
-- `dist/content.js`: grupos, cuestionario, reglas educativas provisionales, fuentes y función de interpretación por condición.
-- `dist/factor-scenes.js`: cinco escenas fotográficas generadas con IA con puntos seleccionables, explicaciones breves y acceso a la pregunta correspondiente de «Mi caso».
-- `dist/science-visuals.js`: modelo celular generado con IA, selección de partes y comparaciones de movimiento y cantidad, sin escala diagnóstica.
-- `dist/assets/portadas/`: cinco portadas temáticas distintas para tarjetas, selector de categorías y encabezados de resultados; ver `docs/portadas-factores.md`.
-- `dist/assets/premium/`: siete imágenes nuevas con variantes WebP para móvil; la célula conserva transparencia.
-- `docs/fotografias-premium.md` y `docs/imagenes-cientificas-premium.md`: prompts completos, procedencia y uso de las nuevas imágenes.
-- `docs/criterios-revision.md`: matriz completa para revisar con el docente, con límites y trazabilidad bibliográfica.
-- `docs/imagen-principal.md`: origen, prompt y uso de la imagen generada.
-- `tests/criteria.test.mjs`: escenarios de información desconocida, independencia de condiciones e integridad editorial.
-- `.openai/hosting.json`: identidad Sites y directorio estático; conservar el mismo `project_id` en siguientes versiones.
+## Ejecutarlo en tu equipo
 
-## Datos y comportamiento
+Necesitas **Python 3** para el servidor local y **Node.js** para las comprobaciones. El proyecto no tiene dependencias que instalar ni requiere cuentas, API o base de datos.
 
-Las respuestas se guardan en `sessionStorage`, solo en la pestaña de la visita, bajo `calidad-seminal-caso-v1`. No se transmiten a una API, no hay analítica ni formulario de datos personales. Recargar conserva la visita; cerrar la sesión de la pestaña termina su almacenamiento normal según el navegador. Las respuestas se validan contra las opciones reconocidas antes de restaurarlas.
+```bash
+git clone https://github.com/Pochonski/calidad-seminal-bovina.git
+cd calidad-seminal-bovina
+npm run dev
+```
 
-Los estados son `adequate`, `attention`, `priority`, `unknown` y `context`. No se suman, promedian ni producen una etiqueta global. Una respuesta desconocida o ausente siempre es `unknown`; edad y raza nunca generan calificaciones. Revisar los criterios con el docente antes de cualquier difusión pública.
+Abre [http://127.0.0.1:4173](http://127.0.0.1:4173). Para ejecutar las pruebas y la comprobación de sintaxis:
 
-El cuestionario tiene 18 preguntas: cuatro en Salud y cinco en Manejo reproductivo. La edad aproximada, la modalidad y el momento del periodo reproductivo se registran exclusivamente como contexto (azul); sus opciones desconocidas son información insuficiente (gris). Los rangos de edad son agrupaciones descriptivas y no umbrales clínicos. Las visitas que habían completado versiones anteriores conservan sus respuestas reconocidas y se reanudan en el primer grupo con una pregunta nueva pendiente. Las preguntas 5 y 12 cambiaron de sentido; sus respuestas antiguas no se reutilizan. La pregunta anterior sobre el plan sanitario se sustituyó por una sobre vacunas y, después, por otra sobre la integridad de su registro; ninguna respuesta anterior se reutiliza para la nueva pregunta. Se eliminó la pregunta sobre visión. La pregunta sobre la demanda de monta también cambió de sentido: las respuestas anteriores no se reutilizan para la nueva pregunta sobre la cantidad de vacas.
+```bash
+npm run check
+```
 
-En «Factores» se pueden seleccionar los puntos de la escena o sus botones con texto. La selección abre una explicación educativa y no registra respuestas. «Relacionarlo con mi caso» lleva al grupo correspondiente y enfoca la pregunta, sin seleccionar ninguna opción. El contenido se puede recorrer con teclado sin completar el caso.
+También puedes servir `dist/` con cualquier servidor HTTP estático. Los módulos JavaScript necesitan HTTP; abrir `index.html` mediante `file://` no es suficiente.
 
-En «Mi caso», los cinco pasos también son botones para ir directamente a las preguntas de cualquier grupo. Cambiar de grupo conserva las respuestas de esta visita y coloca el foco en la primera pregunta elegida.
+## Cómo está construido
 
-## Recursos y acceso
+| Parte | Función |
+| --- | --- |
+| [`dist/index.html`](dist/index.html) y hojas CSS en [`dist/`](dist/) | Estructura, navegación y diseño adaptable. |
+| [`dist/app.js`](dist/app.js) | Rutas, formulario, resultados y estado de la visita. |
+| [`dist/content.js`](dist/content.js) | Factores, preguntas, opciones, explicaciones, recomendaciones, fuentes y criterios por condición. |
+| [`dist/factor-scenes.js`](dist/factor-scenes.js) | Escenas interactivas de los cinco factores. |
+| [`dist/science-visuals.js`](dist/science-visuals.js) | Interfaz y simulaciones 2D del laboratorio educativo. |
+| [`dist/science-3d.js`](dist/science-3d.js) y [`dist/vendor/three/`](dist/vendor/three/) | Modelo de morfología en Three.js, servido junto con la web. |
+| [`tests/`](tests/) | Pruebas de criterios, escenas y visualizaciones. |
+| [`docs/criterios-revision.md`](docs/criterios-revision.md) | Matriz completa de preguntas, respuestas, indicaciones y fuentes para revisión docente. |
 
-El sitio contiene doce referencias enlazadas y modelos educativos de movimiento, estructura y cantidad por volumen. Las fotografías y los modelos generados con IA no son resultados de laboratorio ni tienen escala diagnóstica. No hay videos, descargas ficticias ni estadísticas inventadas. La tipografía puede descargarse desde Google Fonts; si no está disponible, se usan fuentes del dispositivo. Los enlaces bibliográficos abren las páginas externas solo al seleccionarlos.
+Es una web estática de **HTML, CSS y JavaScript**. No hay proceso de compilación: `dist/` contiene la versión lista para servir. Las imágenes se incluyen en el repositorio, con variantes WebP para distintos tamaños de pantalla.
 
-La publicación en Vercel es pública por solicitud del propietario. El repositorio de GitHub conserva sus permisos independientes. La configuración anterior de Sites se conserva en `.openai/hosting.json`; no interviene en los despliegues de Vercel. La etiqueta `noindex` se mantiene para esta versión de revisión académica y no limita el acceso mediante enlace.
+## Criterios, privacidad y accesibilidad
 
-## Autoría académica
+Las 18 preguntas reúnen 66 opciones. Cada respuesta se interpreta de forma independiente como **adecuada según lo declarado**, **merece atención**, **requiere mayor atención**, **información insuficiente** o **dato de contexto**. Ninguna indicación establece por sí sola el estado del semen. La edad y la modalidad de monta se registran como contexto; «No sé» y las respuestas ausentes nunca producen un resultado favorable. La [matriz de revisión](docs/criterios-revision.md) explica cada regla y su fuente.
 
-Dikson Aarón Guzmán Sibaja ([ORCID](https://orcid.org/0009-0004-0368-7781)), José Ángel Aguirre Reyes ([ORCID](https://orcid.org/0009-0001-4447-772X)) y [Joseph Fonseca Nuñez](https://joseph-fonseca-dev.vercel.app/) ([LinkedIn](https://www.linkedin.com/in/joseph-fonseca-n/)). Instituto Tecnológico de Costa Rica, Campus Local San Carlos. La identificación del proyecto no implica una aprobación institucional de la herramienta o de sus criterios.
+Las respuestas se conservan en `sessionStorage` durante la visita a esa pestaña. No se solicitan datos personales ni se envían respuestas a un servidor. El formulario permite volver a pasos anteriores y limpiar todas las respuestas.
 
-## Despliegue automático en Vercel
+La interfaz incluye controles con etiquetas, navegación por teclado, indicaciones que no dependen solo del color y soporte para la preferencia de movimiento reducido. Las animaciones se detienen fuera de pantalla o cuando la pestaña está oculta; el modelo 3D dispone de una representación estática alternativa.
 
-Web pública: https://calidad-seminal-bovina.vercel.app
+## Publicación y revisión
 
-Repositorio: https://github.com/Pochonski/calidad-seminal-bovina
+La rama `main` se despliega automáticamente en [Vercel](https://calidad-seminal-bovina.vercel.app/) mediante la integración con GitHub. [`vercel.json`](vercel.json) ejecuta `npm run check` y publica `dist/`. La web es accesible mediante su enlace y mantiene `noindex` mientras se revisa el contenido académico.
 
-Proyecto Vercel: `calidad-seminal-bovina`, equipo `pochonskis-projects`. La rama de producción es `main` y la conexión nativa de GitHub inicia un despliegue con cada push. Las demás ramas generan vistas previas.
+Las referencias respaldan el contexto general, pero **no validan el cuestionario ni sus niveles de atención**. Las correcciones científicas o editoriales deben contrastarse con las fuentes y actualizar tanto [`dist/content.js`](dist/content.js) como la [matriz de criterios](docs/criterios-revision.md). Antes de proponer cambios, ejecuta `npm run check`.
 
-`vercel.json` selecciona el proyecto estático, omite la instalación de dependencias y ejecuta `npm run check` antes de servir `dist/`. Si una comprobación falla, ese cambio no sustituye la versión publicada.
+## Autores
 
-Para publicar una actualización, revisar los cambios y usar `git add`, `git commit` y `git push origin main`. No se necesita ejecutar un despliegue manual ni guardar un token de Vercel en GitHub Actions. Los datos locales de Vercel y los archivos `.env` están excluidos del repositorio.
+- Dikson Aarón Guzmán Sibaja · [ORCID](https://orcid.org/0009-0004-0368-7781)
+- José Ángel Aguirre Reyes · [ORCID](https://orcid.org/0009-0001-4447-772X)
+- Joseph Fonseca Nuñez · [Portafolio](https://joseph-fonseca-dev.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/joseph-fonseca-n/)
+
+Proyecto académico del **Instituto Tecnológico de Costa Rica, Campus Local San Carlos**. La identificación institucional no implica aprobación de la herramienta ni de sus criterios.

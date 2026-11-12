@@ -25,7 +25,7 @@ h3, h4 { letter-spacing: -.025em; }
 .header-account { flex-shrink: 0; min-height: 43px; padding: 10px 16px; border: 1px solid var(--forest); border-radius: 9px; background: var(--forest); color: #fff; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .header-account:hover, .header-account[aria-current="page"] { background: #285747; }
 .header-account:disabled { opacity: .65; }
-.brand-mark { width: 57px; height: 57px; padding: 0; border: 0; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.brand-mark { width: 57px; height: 57px; padding: 0; border: 0; border-radius: 14px; object-fit: cover; flex-shrink: 0; }
 .brand strong { font-size: 20px; }
 .brand small { letter-spacing: .08em; font-size: 10px; }
 .skip-link { top: 12px; transform: translateY(-180%); visibility: hidden; }
@@ -268,7 +268,7 @@ h3, h4 { letter-spacing: -.025em; }
 .site-footer { background: #173c30; color: #eff1e4; border-top: 0; padding-top: 49px; }
 .footer-top { padding-bottom: 35px; }
 .footer-brand { display: inline-flex; align-items: center; gap: 13px; color: #f2f1df; font-size: 20px; }
-.footer-brand-mark { width: 62px; height: 62px; flex-shrink: 0; border-radius: 50%; object-fit: cover; background: #fffefa; }
+.footer-brand-mark { width: 62px; height: 62px; flex-shrink: 0; border-radius: 16px; object-fit: cover; }
 .footer-brand .footer-brand-name { color: #f2f1df; font: inherit; letter-spacing: inherit; }
 .footer-brand .footer-brand-name small { display: block; color: #c2cdb7; font-family: 'DM Sans', Arial, sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0; margin-top: 5px; }
 .footer-top p { color: #c2cdb7; font-size: 11px; }

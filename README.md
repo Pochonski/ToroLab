@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="dist/assets/torolab-logo.svg" alt="Logo de ToroLab" width="110">
+  <img src="dist/assets/torolab-logo.png" alt="Logo de ToroLab" width="110">
   <h1>ToroLab</h1>
   <p><strong>Explora, Analiza y aprende.</strong> Una experiencia educativa en español para explorar los factores que pueden relacionarse con la calidad seminal de un toro reproductor.</p>
   <p><a href="https://torolab-bovino.vercel.app/">Visitar la web</a> · <a href="https://torolab-bovino.vercel.app/#factores">Explorar los factores</a> · <a href="https://torolab-bovino.vercel.app/#recursos">Revisar las fuentes</a></p>
